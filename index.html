@@ -10,448 +10,740 @@
 
     <meta
         name="description"
-        content="Natalie Bookings — official booking and fan experience platform managed by Budget Designs."
+        content="Natalie Bookings — curated travel, dining and fan experience reservations managed by Budget Designs."
     >
 
-    <meta
-        name="keywords"
-        content="Natalie Bookings, celebrity bookings, dinner reservations, fan membership, travel booking"
-    >
-
-    <meta name="author" content="Budget Designs">
-
-    <meta name="theme-color" content="#f47b20">
-
-    <meta
-        property="og:title"
-        content="Natalie Bookings"
-    >
-
-    <meta
-        property="og:description"
-        content="Explore booking experiences, dinner reservations and fan membership."
-    >
-
-    <meta
-        property="og:type"
-        content="website"
-    >
-
-    <title>Natalie Bookings | Official Booking Experience</title>
+    <title>Natalie Bookings | Budget Designs</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- ================= HEADER ================= -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-    <header class="site-header">
+<header class="site-header">
 
-        <div class="container nav-container">
+    <div class="container nav-container">
 
-            <a href="#home" class="brand" aria-label="Natalie Bookings home">
-                <span class="brand-mark">NB</span>
+        <a href="#home" class="logo">
+            <span class="logo-icon">N</span>
 
-                <span class="brand-text">
-                    Natalie
-                    <strong>Bookings</strong>
-                </span>
+            <span>
+                Natalie <strong>Bookings</strong>
+            </span>
+        </a>
+
+
+        <button
+            id="menuToggle"
+            class="menu-toggle"
+            aria-label="Open menu"
+            aria-expanded="false"
+            type="button"
+        >
+            ☰
+        </button>
+
+
+        <nav id="primaryNavigation">
+
+            <a href="#home">Home</a>
+
+            <a href="#experiences">
+                Experiences
             </a>
 
-            <button
-                class="menu-toggle"
-                id="menuToggle"
-                aria-label="Open navigation menu"
-                aria-expanded="false"
-                aria-controls="primaryNavigation"
+            <a href="#community">
+                Community
+            </a>
+
+            <a href="#booking">
+                Book Now
+            </a>
+
+            <a href="#contact">
+                Contact
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section class="hero" id="home">
+
+    <!--
+        USE YOUR EXISTING IMAGES HERE.
+
+        Put the images inside:
+
+        images/
+
+        and name them:
+
+        hero1.jpg
+        hero2.jpg
+        hero3.jpg
+
+        You can also change the filenames below.
+    -->
+
+    <div
+        class="hero-slide active"
+        style="background-image:url('images/hero1.jpg');"
+    ></div>
+
+    <div
+        class="hero-slide"
+        style="background-image:url('images/hero2.jpg');"
+    ></div>
+
+    <div
+        class="hero-slide"
+        style="background-image:url('images/hero3.jpg');"
+    ></div>
+
+
+    <div class="hero-overlay"></div>
+
+
+    <div class="container hero-content">
+
+        <div class="hero-label">
+            CURATED • PERSONAL • MEMORABLE
+        </div>
+
+
+        <h1>
+            Your next
+            <span>unforgettable</span>
+            experience starts here.
+        </h1>
+
+
+        <p>
+            Discover a streamlined destination for selected
+            travel, dining and fan experiences.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="#booking"
+                class="button button-orange"
             >
-                ☰
-            </button>
+                Start a Booking
+            </a>
 
-            <nav
-                class="primary-navigation"
-                id="primaryNavigation"
-                aria-label="Primary navigation"
+
+            <a
+                href="#experiences"
+                class="button button-light"
             >
-
-                <a href="#home">Home</a>
-                <a href="#experiences">Experiences</a>
-                <a href="#about">About</a>
-                <a href="#membership">Membership</a>
-                <a href="#contact">Contact</a>
-
-                <a href="#booking" class="nav-button">
-                    Book Now
-                </a>
-
-            </nav>
+                Explore Experiences
+            </a>
 
         </div>
 
-    </header>
+
+        <div class="hero-trust">
+
+            <span>✓ Secure booking</span>
+
+            <span>✓ Dedicated support</span>
+
+            <span>✓ Managed by Budget Designs</span>
+
+        </div>
+
+    </div>
 
 
-    <main>
+    <div class="slider-controls">
 
-        <!-- ================= HERO ================= -->
+        <button
+            class="slider-dot active"
+            data-slide="0"
+            aria-label="Show slide 1"
+            type="button"
+        ></button>
 
-        <section class="hero" id="home">
+        <button
+            class="slider-dot"
+            data-slide="1"
+            aria-label="Show slide 2"
+            type="button"
+        ></button>
 
-            <div class="hero-overlay"></div>
+        <button
+            class="slider-dot"
+            data-slide="2"
+            aria-label="Show slide 3"
+            type="button"
+        ></button>
 
-            <div class="container hero-content">
+    </div>
 
-                <p class="eyebrow">
-                    CURATED • PERSONAL • MEMORABLE
-                </p>
+</section>
 
-                <h1>
-                    Your next
-                    <span>unforgettable</span>
-                    experience starts here.
-                </h1>
 
-                <p class="hero-description">
-                    Discover a streamlined destination for selected
-                    travel, dining and fan experiences.
-                </p>
+<!-- =====================================================
+     STATS
+===================================================== -->
 
-                <div class="hero-actions">
+<section class="stats">
 
-                    <a href="#booking" class="button button-primary">
-                        Start a Booking
-                    </a>
+    <div class="container stats-grid">
 
-                    <a href="#experiences" class="button button-secondary">
-                        Explore Experiences
-                    </a>
+        <div>
+            <strong>$2,500</strong>
+            <span>Reserve Pass</span>
+        </div>
 
+
+        <div>
+            <strong>$1M</strong>
+            <span>Community Goal</span>
+        </div>
+
+
+        <div>
+            <strong>50</strong>
+            <span>U.S. States</span>
+        </div>
+
+
+        <div>
+            <strong>24/7</strong>
+            <span>Booking Requests</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     EXPERIENCES
+===================================================== -->
+
+<section
+    class="section"
+    id="experiences"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span>
+                BOOKING EXPERIENCES
+            </span>
+
+            <h2>
+                Choose your experience.
+            </h2>
+
+            <p>
+                Select an experience below and submit
+                your booking request.
+            </p>
+
+        </div>
+
+
+        <div class="experience-grid">
+
+
+            <!-- FLIGHT -->
+
+            <article class="experience-card featured">
+
+                <div class="experience-number">
+                    01
                 </div>
 
-                <div class="hero-trust">
 
-                    <span>✓ Secure booking</span>
-                    <span>✓ Dedicated support</span>
-                    <span>✓ Managed by Budget Designs</span>
+                <div class="experience-image">
 
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= EXPERIENCES ================= -->
-
-        <section
-            class="section experiences"
-            id="experiences"
-        >
-
-            <div class="container">
-
-                <div class="section-heading">
-
-                    <p class="eyebrow">
-                        BOOKING EXPERIENCES
-                    </p>
-
-                    <h2>
-                        Choose your experience
-                    </h2>
-
-                    <p>
-                        Select an experience below and submit your
-                        booking request.
-                    </p>
-
-                </div>
-
-
-                <div class="experience-grid">
-
-                    <!-- FLIGHT -->
-
-                    <article class="experience-card">
-
-                        <div class="card-image">
-                            <img
-                                src="images/flight.jpg"
-                                alt="Airplane preparing for departure"
-                                loading="lazy"
-                            >
-                        </div>
-
-                        <div class="card-content">
-
-                            <span class="card-number">
-                                01
-                            </span>
-
-                            <h3>
-                                Flight Booking
-                            </h3>
-
-                            <p>
-                                Request assistance with travel
-                                arrangements for your selected
-                                experience.
-                            </p>
-
-                            <a
-                                href="#booking"
-                                class="card-link"
-                                data-booking-type="Flight Booking"
-                            >
-                                Request flight →
-                            </a>
-
-                        </div>
-
-                    </article>
-
-
-                    <!-- DINNER -->
-
-                    <article class="experience-card">
-
-                        <div class="card-image">
-                            <img
-                                src="images/dinner.jpg"
-                                alt="Elegant dinner table"
-                                loading="lazy"
-                            >
-                        </div>
-
-                        <div class="card-content">
-
-                            <span class="card-number">
-                                02
-                            </span>
-
-                            <h3>
-                                Dinner Reservation
-                            </h3>
-
-                            <p>
-                                Request a premium dining experience
-                                coordinated around your selected date.
-                            </p>
-
-                            <a
-                                href="#booking"
-                                class="card-link"
-                                data-booking-type="Dinner Reservation"
-                            >
-                                Reserve dinner →
-                            </a>
-
-                        </div>
-
-                    </article>
-
-
-                    <!-- MEMBERSHIP -->
-
-                    <article class="experience-card">
-
-                        <div class="card-image">
-                            <img
-                                src="images/membership.jpg"
-                                alt="Exclusive fan experience"
-                                loading="lazy"
-                            >
-                        </div>
-
-                        <div class="card-content">
-
-                            <span class="card-number">
-                                03
-                            </span>
-
-                            <h3>
-                                Fan Membership
-                            </h3>
-
-                            <p>
-                                Join the membership experience and
-                                access available fan-focused benefits.
-                            </p>
-
-                            <a
-                                href="#membership"
-                                class="card-link"
-                            >
-                                View membership →
-                            </a>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ABOUT ================= -->
-
-        <section class="section about" id="about">
-
-            <div class="container about-grid">
-
-                <div>
-
-                    <p class="eyebrow">
-                        ABOUT THE PLATFORM
-                    </p>
-
-                    <h2>
-                        Designed around the experience.
-                    </h2>
-
-                </div>
-
-                <div class="about-copy">
-
-                    <p>
-                        Natalie Bookings is a centralized platform
-                        designed to simplify selected booking and
-                        experience requests.
-                    </p>
-
-                    <p>
-                        From travel coordination to dining requests
-                        and fan membership, every interaction is
-                        designed to be clear, organized and secure.
-                    </p>
-
-                    <p class="management-note">
-                        <strong>Management:</strong>
-                        Budget Designs
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= MEMBERSHIP ================= -->
-
-        <section
-            class="section membership"
-            id="membership"
-        >
-
-            <div class="container membership-container">
-
-                <div class="membership-content">
-
-                    <p class="eyebrow">
-                        FAN EXPERIENCE
-                    </p>
-
-                    <h2>
-                        Become part of the experience.
-                    </h2>
-
-                    <p>
-                        Explore available membership benefits and
-                        select the option that best suits you.
-                    </p>
-
-                    <ul class="benefits">
-
-                        <li>
-                            <span>✓</span>
-                            Member-only updates
-                        </li>
-
-                        <li>
-                            <span>✓</span>
-                            Exclusive fan content
-                        </li>
-
-                        <li>
-                            <span>✓</span>
-                            Priority booking opportunities
-                        </li>
-
-                        <li>
-                            <span>✓</span>
-                            Dedicated member support
-                        </li>
-
-                    </ul>
-
-                    <a
-                        href="#booking"
-                        class="button button-primary"
+                    <img
+                        src="images/flight.jpg"
+                        alt="Flight experience"
+                        onerror="this.style.display='none'"
                     >
-                        Join the Experience
-                    </a>
 
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= BOOKING ================= -->
-
-        <section
-            class="section booking"
-            id="booking"
-        >
-
-            <div class="container booking-grid">
-
-                <div class="booking-intro">
-
-                    <p class="eyebrow">
-                        START HERE
-                    </p>
-
-                    <h2>
-                        Submit a booking request.
-                    </h2>
-
-                    <p>
-                        Complete the form and our management team
-                        can review your request.
-                    </p>
-
-                    <div class="contact-box">
-
-                        <p>
-                            <strong>Phone</strong>
-                            <a href="tel:+19382300935">
-                                +1 938 230 0935
-                            </a>
-                        </p>
-
-                        <p>
-                            <strong>Email</strong>
-                            <a href="mailto:Budgetdesignbookings@gmail.com">
-                                Budgetdesignbookings@gmail.com
-                            </a>
-                        </p>
-
+                    <div class="fallback-icon">
+                        ✈
                     </div>
 
                 </div>
 
 
-                <form
-                    class="booking-form"
-                    id="bookingForm"
+                <h3>
+                    Flight Booking
+                </h3>
+
+
+                <p>
+                    Reserve a meet-and-greet travel
+                    experience with a preferred destination
+                    in the United States.
+                </p>
+
+
+                <div class="experience-price">
+
+                    <span>
+                        Reserve Pass
+                    </span>
+
+                    <strong>
+                        $2,500
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="#booking"
+                    class="experience-link booking-selector"
+                    data-booking-type="Flight Booking"
                 >
+                    Reserve Pass →
+                </a>
+
+            </article>
+
+
+            <!-- DINNER -->
+
+            <article class="experience-card">
+
+                <div class="experience-number">
+                    02
+                </div>
+
+
+                <div class="experience-image">
+
+                    <img
+                        src="images/dinner.jpg"
+                        alt="Dinner reservation"
+                        onerror="this.style.display='none'"
+                    >
+
+                    <div class="fallback-icon">
+                        ♡
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    Dinner Reservation
+                </h3>
+
+
+                <p>
+                    Request a premium dining experience
+                    coordinated around your selected date
+                    and location.
+                </p>
+
+
+                <div class="experience-price">
+
+                    <span>
+                        Pricing
+                    </span>
+
+                    <strong>
+                        Contact
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="#booking"
+                    class="experience-link booking-selector"
+                    data-booking-type="Dinner Reservation"
+                >
+                    Reserve Dinner →
+                </a>
+
+            </article>
+
+
+            <!-- MEMBERSHIP -->
+
+            <article class="experience-card">
+
+                <div class="experience-number">
+                    03
+                </div>
+
+
+                <div class="experience-image">
+
+                    <img
+                        src="images/fan.jpg"
+                        alt="Fan experience"
+                        onerror="this.style.display='none'"
+                    >
+
+                    <div class="fallback-icon">
+                        ★
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    Fan Membership
+                </h3>
+
+
+                <p>
+                    Join the membership experience and
+                    explore available fan-focused benefits
+                    and opportunities.
+                </p>
+
+
+                <div class="experience-price">
+
+                    <span>
+                        Pricing
+                    </span>
+
+                    <strong>
+                        Contact
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="#booking"
+                    class="experience-link booking-selector"
+                    data-booking-type="Fan Membership"
+                >
+                    Join Experience →
+                </a>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section class="about-section">
+
+    <div class="container about-grid">
+
+        <div class="about-image">
+
+            <img
+                src="images/about.jpg"
+                alt="Natalie Bookings experience"
+                onerror="this.style.display='none'"
+            >
+
+            <div class="about-placeholder">
+                NATALIE BOOKINGS
+            </div>
+
+        </div>
+
+
+        <div class="about-content">
+
+            <span>
+                ABOUT THE PLATFORM
+            </span>
+
+
+            <h2>
+                Designed around
+                the experience.
+            </h2>
+
+
+            <p>
+                Natalie Bookings is a centralized platform
+                designed to simplify selected booking and
+                experience requests.
+            </p>
+
+
+            <p>
+                From travel coordination to dining requests
+                and fan membership, every interaction is
+                designed to be clear, organized and secure.
+            </p>
+
+
+            <div class="management">
+                Management:
+                <strong>Budget Designs</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     COMMUNITY GOAL
+===================================================== -->
+
+<section
+    class="community-section"
+    id="community"
+>
+
+    <div class="container community-grid">
+
+        <div>
+
+            <span>
+                COMMUNITY INITIATIVE
+            </span>
+
+
+            <h2>
+                Working toward a
+                <strong>$1,000,000</strong>
+                community goal.
+            </h2>
+
+
+            <p>
+                The community initiative brings supporters
+                together around a large-scale goal designed
+                to support selected community activities.
+            </p>
+
+
+            <p class="disclaimer">
+                The $1,000,000 figure represents the stated
+                campaign target. Only verified campaign
+                information should be represented as funds
+                raised.
+            </p>
+
+        </div>
+
+
+        <div class="goal-card">
+
+            <div class="goal-header">
+
+                <span>
+                    COMMUNITY GOAL
+                </span>
+
+                <strong>
+                    $1,000,000
+                </strong>
+
+            </div>
+
+
+            <div class="progress-track">
+
+                <div
+                    id="progressBar"
+                    class="progress-bar"
+                ></div>
+
+            </div>
+
+
+            <div class="goal-values">
+
+                <span id="raisedAmount">
+                    $0 raised
+                </span>
+
+                <span>
+                    $1M target
+                </span>
+
+            </div>
+
+
+            <p>
+                Progress will remain at verified figures only.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FAN EXPERIENCE
+===================================================== -->
+
+<section class="membership-section">
+
+    <div class="container membership-content">
+
+        <span>
+            FAN EXPERIENCE
+        </span>
+
+
+        <h2>
+            Become part of
+            the experience.
+        </h2>
+
+
+        <p>
+            Explore available membership benefits and
+            select the option that best suits you.
+        </p>
+
+
+        <div class="benefits">
+
+            <div>
+                ✓ Member-only updates
+            </div>
+
+            <div>
+                ✓ Exclusive fan content
+            </div>
+
+            <div>
+                ✓ Priority booking opportunities
+            </div>
+
+            <div>
+                ✓ Dedicated member support
+            </div>
+
+        </div>
+
+
+        <a
+            href="#booking"
+            class="button button-orange"
+        >
+            Join the Experience
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     BOOKING FORM
+===================================================== -->
+
+<section
+    class="section booking-section"
+    id="booking"
+>
+
+    <div class="container booking-grid">
+
+
+        <div class="booking-intro">
+
+            <span>
+                START HERE
+            </span>
+
+
+            <h2>
+                Submit a booking request.
+            </h2>
+
+
+            <p>
+                Complete the form and our management team
+                can review your request.
+            </p>
+
+
+            <div class="price-highlight">
+
+                <span>
+                    Flight / Reserve Pass
+                </span>
+
+                <strong>
+                    $2,500
+                </strong>
+
+                <small>
+                    Listed reservation price
+                </small>
+
+            </div>
+
+
+            <div class="contact-mini">
+
+                <div>
+                    <span>Phone</span>
+
+                    <a href="tel:+19382300935">
+                        +1 938 230 0935
+                    </a>
+                </div>
+
+
+                <div>
+                    <span>Email</span>
+
+                    <a href="mailto:Budgetdesignbookings@gmail.com">
+                        Budgetdesignbookings@gmail.com
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <form id="bookingForm">
+
+
+                <div class="form-row">
+
 
                     <div class="form-group">
 
@@ -463,7 +755,7 @@
                             type="text"
                             id="fullName"
                             name="fullName"
-                            autocomplete="name"
+                            placeholder="Your full name"
                             required
                         >
 
@@ -480,11 +772,16 @@
                             type="email"
                             id="email"
                             name="email"
-                            autocomplete="email"
+                            placeholder="you@example.com"
                             required
                         >
 
                     </div>
+
+                </div>
+
+
+                <div class="form-row">
 
 
                     <div class="form-group">
@@ -497,7 +794,7 @@
                             type="tel"
                             id="phone"
                             name="phone"
-                            autocomplete="tel"
+                            placeholder="+1"
                         >
 
                     </div>
@@ -520,7 +817,7 @@
                             </option>
 
                             <option value="Flight Booking">
-                                Flight Booking
+                                Flight Booking — $2,500
                             </option>
 
                             <option value="Dinner Reservation">
@@ -535,192 +832,229 @@
 
                     </div>
 
-
-                    <div class="form-row">
-
-                        <div class="form-group">
-
-                            <label for="bookingDate">
-                                Preferred date
-                            </label>
-
-                            <input
-                                type="date"
-                                id="bookingDate"
-                                name="bookingDate"
-                            >
-
-                        </div>
+                </div>
 
 
-                        <div class="form-group">
+                <!-- U.S. STATE -->
 
-                            <label for="guests">
-                                Guests
-                            </label>
+                <div class="form-row">
 
-                            <input
-                                type="number"
-                                id="guests"
-                                name="guests"
-                                min="1"
-                                max="20"
-                                value="1"
-                            >
 
-                        </div>
+                    <div class="form-group">
+
+                        <label for="state">
+                            Preferred U.S. state
+                        </label>
+
+                        <select
+                            id="state"
+                            name="state"
+                            required
+                        >
+
+                            <option value="">
+                                Select a state
+                            </option>
+
+                            <option value="Alabama">Alabama</option>
+                            <option value="Alaska">Alaska</option>
+                            <option value="Arizona">Arizona</option>
+                            <option value="Arkansas">Arkansas</option>
+                            <option value="California">California</option>
+                            <option value="Colorado">Colorado</option>
+                            <option value="Connecticut">Connecticut</option>
+                            <option value="Delaware">Delaware</option>
+                            <option value="Florida">Florida</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Hawaii">Hawaii</option>
+                            <option value="Idaho">Idaho</option>
+                            <option value="Illinois">Illinois</option>
+                            <option value="Indiana">Indiana</option>
+                            <option value="Iowa">Iowa</option>
+                            <option value="Kansas">Kansas</option>
+                            <option value="Kentucky">Kentucky</option>
+                            <option value="Louisiana">Louisiana</option>
+                            <option value="Maine">Maine</option>
+                            <option value="Maryland">Maryland</option>
+                            <option value="Massachusetts">Massachusetts</option>
+                            <option value="Michigan">Michigan</option>
+                            <option value="Minnesota">Minnesota</option>
+                            <option value="Mississippi">Mississippi</option>
+                            <option value="Missouri">Missouri</option>
+                            <option value="Montana">Montana</option>
+                            <option value="Nebraska">Nebraska</option>
+                            <option value="Nevada">Nevada</option>
+                            <option value="New Hampshire">New Hampshire</option>
+                            <option value="New Jersey">New Jersey</option>
+                            <option value="New Mexico">New Mexico</option>
+                            <option value="New York">New York</option>
+                            <option value="North Carolina">North Carolina</option>
+                            <option value="North Dakota">North Dakota</option>
+                            <option value="Ohio">Ohio</option>
+                            <option value="Oklahoma">Oklahoma</option>
+                            <option value="Oregon">Oregon</option>
+                            <option value="Pennsylvania">Pennsylvania</option>
+                            <option value="Rhode Island">Rhode Island</option>
+                            <option value="South Carolina">South Carolina</option>
+                            <option value="South Dakota">South Dakota</option>
+                            <option value="Tennessee">Tennessee</option>
+                            <option value="Texas">Texas</option>
+                            <option value="Utah">Utah</option>
+                            <option value="Vermont">Vermont</option>
+                            <option value="Virginia">Virginia</option>
+                            <option value="Washington">Washington</option>
+                            <option value="West Virginia">West Virginia</option>
+                            <option value="Wisconsin">Wisconsin</option>
+                            <option value="Wyoming">Wyoming</option>
+
+                        </select>
 
                     </div>
 
 
                     <div class="form-group">
 
-                        <label for="message">
-                            Additional details
+                        <label for="bookingDate">
+                            Preferred date
                         </label>
 
-                        <textarea
-                            id="message"
-                            name="message"
-                            rows="5"
-                            placeholder="Tell us about your request..."
-                        ></textarea>
-
-                    </div>
-
-
-                    <label class="checkbox">
-
                         <input
-                            type="checkbox"
+                            type="date"
+                            id="bookingDate"
+                            name="bookingDate"
                             required
                         >
 
-                        <span>
-                            I confirm that the information provided
-                            is accurate.
-                        </span>
-
-                    </label>
-
-
-                    <button
-                        type="submit"
-                        class="button button-primary button-full"
-                    >
-                        Submit Booking Request
-                    </button>
-
-                    <p
-                        class="form-status"
-                        id="formStatus"
-                        aria-live="polite"
-                    ></p>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= CONTACT ================= -->
-
-        <section
-            class="section contact"
-            id="contact"
-        >
-
-            <div class="container contact-container">
-
-                <p class="eyebrow">
-                    CONTACT
-                </p>
-
-                <h2>
-                    Let's plan your experience.
-                </h2>
-
-                <p>
-                    Have a question before booking?
-                    Contact Budget Designs.
-                </p>
-
-                <div class="contact-actions">
-
-                    <a
-                        href="tel:+19382300935"
-                        class="button button-primary"
-                    >
-                        Call +1 938 230 0935
-                    </a>
-
-                    <a
-                        href="mailto:Budgetdesignbookings@gmail.com"
-                        class="button button-secondary"
-                    >
-                        Email Management
-                    </a>
+                    </div>
 
                 </div>
 
-            </div>
 
-        </section>
+                <div class="form-group">
 
-    </main>
+                    <label for="guests">
+                        Guests
+                    </label>
+
+                    <input
+                        type="number"
+                        id="guests"
+                        name="guests"
+                        min="1"
+                        max="20"
+                        value="1"
+                        required
+                    >
+
+                </div>
 
 
-    <!-- ================= FOOTER ================= -->
+                <div class="form-group">
 
-    <footer class="site-footer">
+                    <label for="message">
+                        Additional details
+                    </label>
 
-        <div class="container footer-grid">
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="5"
+                        placeholder="Tell us about your request..."
+                    ></textarea>
+
+                </div>
+
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        id="confirmation"
+                        required
+                    >
+
+                    <span>
+                        I confirm that the information provided
+                        is accurate.
+                    </span>
+
+                </label>
+
+
+                <button
+                    type="submit"
+                    class="button button-orange submit-button"
+                >
+                    Submit Booking Request
+                </button>
+
+
+                <div
+                    id="formStatus"
+                    class="form-status"
+                    aria-live="polite"
+                ></div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+
+<section
+    class="contact-section"
+    id="contact"
+>
+
+    <div class="container contact-grid">
+
+        <div>
+
+            <span>
+                CONTACT
+            </span>
+
+
+            <h2>
+                Let's plan your experience.
+            </h2>
+
+
+            <p>
+                Have a question before booking?
+                Contact Budget Designs.
+            </p>
+
+        </div>
+
+
+        <div class="contact-box">
 
             <div>
 
-                <a href="#home" class="footer-brand">
-                    Natalie Bookings
-                </a>
-
-                <p>
-                    A curated booking experience managed by
-                    Budget Designs.
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h3>
-                    Explore
-                </h3>
-
-                <a href="#experiences">
-                    Experiences
-                </a>
-
-                <a href="#membership">
-                    Membership
-                </a>
-
-                <a href="#booking">
-                    Book Now
-                </a>
-
-            </div>
-
-
-            <div>
-
-                <h3>
-                    Contact
-                </h3>
+                <span>
+                    Call
+                </span>
 
                 <a href="tel:+19382300935">
                     +1 938 230 0935
                 </a>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Email Management
+                </span>
 
                 <a href="mailto:Budgetdesignbookings@gmail.com">
                     Budgetdesignbookings@gmail.com
@@ -730,28 +1064,87 @@
 
         </div>
 
+    </div>
 
-        <div class="footer-bottom">
+</section>
 
-            <div class="container">
+</main>
 
-                <p>
-                    © <span id="currentYear"></span>
-                    Natalie Bookings. All rights reserved.
-                </p>
 
-                <p>
-                    Managed by Budget Designs
-                </p>
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
+<footer>
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <div class="footer-logo">
+                Natalie <strong>Bookings</strong>
             </div>
+
+            <p>
+                A curated booking experience managed
+                by Budget Designs.
+            </p>
 
         </div>
 
-    </footer>
+
+        <div>
+
+            <h4>
+                Explore
+            </h4>
+
+            <a href="#experiences">
+                Experiences
+            </a>
+
+            <a href="#community">
+                Community
+            </a>
+
+            <a href="#booking">
+                Book Now
+            </a>
+
+        </div>
 
 
-    <script src="script.js"></script>
+        <div>
+
+            <h4>
+                Contact
+            </h4>
+
+            <a href="tel:+19382300935">
+                +1 938 230 0935
+            </a>
+
+            <a href="mailto:Budgetdesignbookings@gmail.com">
+                Budgetdesignbookings@gmail.com
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="container copyright">
+
+        © <span id="currentYear"></span>
+        Natalie Bookings.
+        All rights reserved.
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
 
 </body>
-</html>
+            </html>
