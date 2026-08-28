@@ -1,7 +1,6 @@
 /* =========================================================
-   NATALIE BOOKINGS
-   VANILLA JAVASCRIPT
-   SUPABASE + HERO SLIDER + BOOKING SYSTEM
+   NATALYA BOOKINGS
+   VANILLA JAVASCRIPT + SUPABASE
 ========================================================= */
 
 
@@ -25,64 +24,54 @@ let supabaseClient = null;
 
 function loadSupabase() {
 
-    return new Promise(
-        (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
-            if (window.supabase) {
+        if (window.supabase) {
 
-                resolve(
-                    window.supabase
+            resolve(window.supabase);
+
+            return;
+        }
+
+
+        const script =
+            document.createElement("script");
+
+
+        script.src =
+            "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+
+        script.onload = () => {
+
+            if (!window.supabase) {
+
+                reject(
+                    new Error(
+                        "Supabase library failed to load."
+                    )
                 );
 
                 return;
             }
 
-
-            const script =
-                document.createElement(
-                    "script"
-                );
+            resolve(window.supabase);
+        };
 
 
-            script.src =
-                "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+        script.onerror = () => {
 
-
-            script.onload = () => {
-
-                if (!window.supabase) {
-
-                    reject(
-                        new Error(
-                            "Supabase library failed to load."
-                        )
-                    );
-
-                    return;
-                }
-
-
-                resolve(
-                    window.supabase
-                );
-            };
-
-
-            script.onerror = () => {
-
-                reject(
-                    new Error(
-                        "Unable to load Supabase."
-                    )
-                );
-            };
-
-
-            document.head.appendChild(
-                script
+            reject(
+                new Error(
+                    "Unable to load Supabase."
+                )
             );
-        }
-    );
+        };
+
+
+        document.head.appendChild(script);
+
+    });
 }
 
 
@@ -94,12 +83,12 @@ async function initializeSupabase() {
 
     try {
 
-        const library =
+        const supabaseLibrary =
             await loadSupabase();
 
 
         supabaseClient =
-            library.createClient(
+            supabaseLibrary.createClient(
                 SUPABASE_URL,
                 SUPABASE_ANON_KEY
             );
@@ -119,14 +108,13 @@ async function initializeSupabase() {
             error
         );
 
-
         return false;
     }
 }
 
 
 /* =========================================================
-   PAGE START
+   PAGE INITIALIZATION
 ========================================================= */
 
 document.addEventListener(
@@ -139,13 +127,11 @@ document.addEventListener(
 
         initializeHeroSlider();
 
-        initializeBookingSelectors();
+        initializeBookingButtons();
 
         initializeBookingForm();
 
-        initializeDate();
-
-        initializeCommunityGoal();
+        initializeBookingState();
 
         initializeCurrentYear();
 
@@ -159,11 +145,8 @@ document.addEventListener(
 
 function initializeMobileMenu() {
 
-    const toggle =
-        document.getElementById(
-            "menuToggle"
-        );
-
+    const menuToggle =
+        document.getElementById("menuToggle");
 
     const navigation =
         document.getElementById(
@@ -171,65 +154,63 @@ function initializeMobileMenu() {
         );
 
 
-    if (!toggle || !navigation) {
-
-        return;
-    }
+    if (!menuToggle || !navigation) return;
 
 
-    toggle.addEventListener(
+    menuToggle.addEventListener(
         "click",
         () => {
 
-            const open =
+            const isOpen =
                 navigation.classList.toggle(
                     "active"
                 );
 
 
-            toggle.setAttribute(
+            menuToggle.setAttribute(
                 "aria-expanded",
-                String(open)
+                String(isOpen)
             );
 
 
-            toggle.setAttribute(
+            menuToggle.setAttribute(
                 "aria-label",
-                open
-                    ? "Close menu"
-                    : "Open menu"
+                isOpen
+                    ? "Close navigation"
+                    : "Open navigation"
             );
+
         }
     );
 
 
     navigation
         .querySelectorAll("a")
-        .forEach(
-            link => {
+        .forEach(link => {
 
-                link.addEventListener(
-                    "click",
-                    () => {
+            link.addEventListener(
+                "click",
+                () => {
 
-                        navigation.classList.remove(
-                            "active"
-                        );
+                    navigation.classList.remove(
+                        "active"
+                    );
 
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
 
-                        toggle.setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
-                    }
-                );
-            }
-        );
+                }
+            );
+
+        });
+
 }
 
 
 /* =========================================================
-   HERO IMAGE SLIDER
+   HERO SLIDER
 ========================================================= */
 
 function initializeHeroSlider() {
@@ -239,66 +220,65 @@ function initializeHeroSlider() {
             ".hero-slide"
         );
 
-
     const dots =
         document.querySelectorAll(
-            ".slider-dot"
+            ".slide-dot"
         );
 
 
-    if (!slides.length) {
-
-        return;
-    }
+    if (!slides.length) return;
 
 
-    let current = 0;
+    let currentSlide = 0;
 
 
     function showSlide(index) {
 
         slides.forEach(
-            (slide, i) => {
-
-                slide.classList.toggle(
-                    "active",
-                    i === index
-                );
-            }
+            slide =>
+                slide.classList.remove(
+                    "active"
+                )
         );
 
 
         dots.forEach(
-            (dot, i) => {
-
-                dot.classList.toggle(
-                    "active",
-                    i === index
-                );
-            }
+            dot =>
+                dot.classList.remove(
+                    "active"
+                )
         );
 
 
-        current = index;
+        slides[index].classList.add(
+            "active"
+        );
+
+
+        if (dots[index]) {
+
+            dots[index].classList.add(
+                "active"
+            );
+        }
+
+
+        currentSlide = index;
     }
 
 
     dots.forEach(
-        dot => {
+        (dot, index) => {
 
             dot.addEventListener(
                 "click",
                 () => {
 
-                    const index =
-                        Number(
-                            dot.dataset.slide
-                        );
-
-
                     showSlide(index);
+
                 }
             );
+
         }
     );
 
@@ -307,156 +287,138 @@ function initializeHeroSlider() {
         () => {
 
             const next =
-                (current + 1)
+                (currentSlide + 1)
                 % slides.length;
-
 
             showSlide(next);
 
         },
-        5000
+        6000
     );
+
 }
 
 
 /* =========================================================
-   BOOKING EXPERIENCE SELECTORS
+   BOOKING BUTTONS
 ========================================================= */
 
-function initializeBookingSelectors() {
+function initializeBookingButtons() {
 
-    const links =
+    const buttons =
         document.querySelectorAll(
-            ".booking-selector"
+            "[data-booking-type]"
         );
 
 
-    const select =
+    const bookingType =
         document.getElementById(
             "bookingType"
         );
 
 
-    if (!select) {
-
-        return;
-    }
+    if (!bookingType) return;
 
 
-    links.forEach(
-        link => {
+    buttons.forEach(button => {
 
-            link.addEventListener(
-                "click",
-                () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-                    const type =
-                        link.dataset.bookingType;
+                const type =
+                    button.dataset.bookingType;
 
 
-                    if (type) {
+                if (type) {
 
-                        select.value =
-                            type;
+                    bookingType.value =
+                        type;
 
-                        updatePrice(type);
-                    }
                 }
-            );
-        }
-    );
 
 
-    select.addEventListener(
-        "change",
-        () => {
+                const bookingSection =
+                    document.getElementById(
+                        "booking"
+                    );
 
-            updatePrice(
-                select.value
-            );
-        }
-    );
+
+                if (bookingSection) {
+
+                    bookingSection.scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+                }
+
+            }
+        );
+
+    });
+
 }
 
 
 /* =========================================================
-   PRICE DISPLAY
+   BOOKING STATE
 ========================================================= */
 
-function updatePrice(type) {
+function initializeBookingState() {
 
-    const price =
-        document.querySelector(
-            ".price-highlight strong"
+    const bookingType =
+        document.getElementById(
+            "bookingType"
+        );
+
+    const stateGroup =
+        document.getElementById(
+            "stateGroup"
+        );
+
+    const state =
+        document.getElementById(
+            "state"
         );
 
 
-    const title =
-        document.querySelector(
-            ".price-highlight span"
-        );
+    if (!bookingType ||
+        !stateGroup ||
+        !state) return;
 
 
-    const description =
-        document.querySelector(
-            ".price-highlight small"
-        );
+    function updateStateField() {
 
+        if (
+            bookingType.value ===
+            "Flight Booking"
+        ) {
 
-    if (!price || !title || !description) {
+            stateGroup.style.display =
+                "block";
 
-        return;
+            state.required = true;
+
+        } else {
+
+            stateGroup.style.display =
+                "block";
+
+            state.required = false;
+
+        }
+
     }
 
 
-    if (type === "Flight Booking") {
+    bookingType.addEventListener(
+        "change",
+        updateStateField
+    );
 
-        title.textContent =
-            "Flight / Reserve Pass";
 
-        price.textContent =
-            "$2,500";
+    updateStateField();
 
-        description.textContent =
-            "Listed reservation price";
-
-    } else if (
-        type === "Dinner Reservation"
-    ) {
-
-        title.textContent =
-            "Dinner Reservation";
-
-        price.textContent =
-            "Contact";
-
-        description.textContent =
-            "Management will confirm pricing";
-
-    } else if (
-        type === "Fan Membership"
-    ) {
-
-        title.textContent =
-            "Fan Membership";
-
-        price.textContent =
-            "Contact";
-
-        description.textContent =
-            "Management will confirm pricing";
-
-    } else {
-
-        title.textContent =
-            "Flight / Reserve Pass";
-
-        price.textContent =
-            "$2,500";
-
-        description.textContent =
-            "Listed reservation price";
-    }
 }
 
 
@@ -478,10 +440,7 @@ function initializeBookingForm() {
         );
 
 
-    if (!form) {
-
-        return;
-    }
+    if (!form) return;
 
 
     form.addEventListener(
@@ -503,79 +462,81 @@ function initializeBookingForm() {
             }
 
 
-            const button =
+            const submitButton =
                 form.querySelector(
                     'button[type="submit"]'
                 );
 
 
-            if (button) {
+            if (submitButton) {
 
-                button.disabled = true;
+                submitButton.disabled =
+                    true;
 
-                button.dataset.originalText =
-                    button.textContent;
+                submitButton.dataset.originalText =
+                    submitButton.textContent;
 
-                button.textContent =
+                submitButton.textContent =
                     "Submitting...";
+
             }
 
 
-            const data =
+            const formData =
                 new FormData(form);
 
 
             const fullName =
                 String(
-                    data.get("fullName") || ""
+                    formData.get("fullName") || ""
                 ).trim();
 
 
             const email =
                 String(
-                    data.get("email") || ""
+                    formData.get("email") || ""
                 ).trim();
 
 
             const phone =
                 String(
-                    data.get("phone") || ""
+                    formData.get("phone") || ""
                 ).trim();
 
 
             const bookingType =
                 String(
-                    data.get("bookingType") || ""
+                    formData.get("bookingType") || ""
                 ).trim();
 
 
             const state =
                 String(
-                    data.get("state") || ""
+                    formData.get("state") || ""
                 ).trim();
 
 
             const bookingDate =
                 String(
-                    data.get("bookingDate") || ""
+                    formData.get("bookingDate") || ""
                 ).trim();
 
 
             const guests =
                 Number(
-                    data.get("guests") || 1
+                    formData.get("guests") || 1
                 );
 
 
             const message =
                 String(
-                    data.get("message") || ""
+                    formData.get("message") || ""
                 ).trim();
 
 
-            /* -----------------------------------------
+            /* ---------------------------
                VALIDATION
-            ----------------------------------------- */
+            --------------------------- */
 
             if (fullName.length < 2) {
 
@@ -585,16 +546,13 @@ function initializeBookingForm() {
                     "error"
                 );
 
-                restoreButton(button);
+                restoreButton(submitButton);
 
                 return;
             }
 
 
-            if (
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-                    .test(email)
-            ) {
+            if (!isValidEmail(email)) {
 
                 showStatus(
                     status,
@@ -602,55 +560,32 @@ function initializeBookingForm() {
                     "error"
                 );
 
-                restoreButton(button);
+                restoreButton(submitButton);
 
                 return;
             }
 
 
+            const allowedTypes = [
+                "Flight Booking",
+                "Dinner Reservation",
+                "Fan Membership"
+            ];
+
+
             if (
-                ![
-                    "Flight Booking",
-                    "Dinner Reservation",
-                    "Fan Membership"
-                ].includes(bookingType)
+                !allowedTypes.includes(
+                    bookingType
+                )
             ) {
 
                 showStatus(
                     status,
-                    "Please select an experience.",
+                    "Please select a valid experience.",
                     "error"
                 );
 
-                restoreButton(button);
-
-                return;
-            }
-
-
-            if (!state) {
-
-                showStatus(
-                    status,
-                    "Please select your preferred U.S. state.",
-                    "error"
-                );
-
-                restoreButton(button);
-
-                return;
-            }
-
-
-            if (!bookingDate) {
-
-                showStatus(
-                    status,
-                    "Please select a preferred date.",
-                    "error"
-                );
-
-                restoreButton(button);
+                restoreButton(submitButton);
 
                 return;
             }
@@ -668,27 +603,15 @@ function initializeBookingForm() {
                     "error"
                 );
 
-                restoreButton(button);
+                restoreButton(submitButton);
 
                 return;
             }
 
 
-            /* -----------------------------------------
-               SAVE STATE INSIDE EXISTING MESSAGE FIELD
-
-               We are NOT changing the SQL table.
-            ----------------------------------------- */
-
-            const finalMessage =
-                `Preferred U.S. State: ${state}\n\n` +
-                `Additional Details:\n` +
-                `${message || "None provided."}`;
-
-
-            /* -----------------------------------------
-               SUPABASE PAYLOAD
-            ----------------------------------------- */
+            /* ---------------------------
+               BOOKING DATA
+            --------------------------- */
 
             const bookingData = {
 
@@ -704,41 +627,43 @@ function initializeBookingForm() {
                 booking_type:
                     bookingType,
 
+                state:
+                    state || null,
+
                 booking_date:
-                    bookingDate,
+                    bookingDate || null,
 
                 guests:
                     guests,
 
                 message:
-                    finalMessage,
+                    message || null,
 
                 status:
                     "pending",
 
                 payment_status:
                     "unpaid"
+
             };
 
 
-            /* -----------------------------------------
-               INSERT
-
-               IMPORTANT:
-               No .select() here.
-
-               Anonymous visitors can submit,
-               but cannot read booking records.
-            ----------------------------------------- */
-
             try {
 
-                const { error } =
-                    await supabaseClient
-                        .from("bookings")
-                        .insert(
-                            bookingData
-                        );
+                const {
+                    data,
+                    error
+                } = await supabaseClient
+
+                    .from("bookings")
+
+                    .insert(
+                        bookingData
+                    )
+
+                    .select("id")
+
+                    .single();
 
 
                 if (error) {
@@ -756,28 +681,28 @@ function initializeBookingForm() {
                     );
 
 
-                    restoreButton(button);
+                    restoreButton(
+                        submitButton
+                    );
 
                     return;
                 }
 
 
-                /* -------------------------------------
-                   SUCCESS
-                ------------------------------------- */
+                console.log(
+                    "Booking created:",
+                    data
+                );
+
 
                 showStatus(
                     status,
-                    "Booking request received successfully. Management will review your request and contact you.",
+                    "Booking request received successfully. Our management team will contact you shortly.",
                     "success"
                 );
 
 
                 form.reset();
-
-
-                updatePrice("");
-
 
             } catch (error) {
 
@@ -789,79 +714,33 @@ function initializeBookingForm() {
 
                 showStatus(
                     status,
-                    "Something went wrong while submitting your request. Please try again.",
+                    "Something went wrong while submitting your booking. Please try again.",
                     "error"
                 );
 
             } finally {
 
-                restoreButton(button);
+                restoreButton(
+                    submitButton
+                );
+
             }
+
         }
     );
+
 }
 
 
 /* =========================================================
-   DATABASE ERRORS
+   EMAIL VALIDATION
 ========================================================= */
 
-function getFriendlyError(error) {
+function isValidEmail(email) {
 
-    const message =
-        String(
-            error?.message || ""
-        ).toLowerCase();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(email);
 
-
-    if (
-        error?.code === "42501" ||
-        message.includes(
-            "row-level security"
-        ) ||
-        message.includes(
-            "permission denied"
-        )
-    ) {
-
-        return "The booking system could not authorize this request. Please contact management.";
-    }
-
-
-    if (
-        error?.code === "42P01"
-    ) {
-
-        return "The booking database could not be found. Please contact management.";
-    }
-
-
-    if (
-        error?.code === "23502"
-    ) {
-
-        return "Please complete all required booking information.";
-    }
-
-
-    if (
-        error?.code === "22P02"
-    ) {
-
-        return "One of the submitted details is invalid. Please check the form.";
-    }
-
-
-    if (
-        message.includes("network") ||
-        message.includes("fetch")
-    ) {
-
-        return "Unable to connect to the booking server. Please check your connection and try again.";
-    }
-
-
-    return "We couldn't submit your booking right now. Please try again.";
 }
 
 
@@ -875,10 +754,7 @@ function showStatus(
     type
 ) {
 
-    if (!element) {
-
-        return;
-    }
+    if (!element) return;
 
 
     element.textContent =
@@ -887,124 +763,73 @@ function showStatus(
 
     element.dataset.status =
         type;
+
+
+    element.setAttribute(
+        "role",
+        "status"
+    );
+
 }
 
 
 /* =========================================================
-   RESTORE BUTTON
+   BUTTON RESTORE
 ========================================================= */
 
 function restoreButton(button) {
 
-    if (!button) {
-
-        return;
-    }
+    if (!button) return;
 
 
-    button.disabled = false;
+    button.disabled =
+        false;
 
 
     button.textContent =
         button.dataset.originalText ||
         "Submit Booking Request";
+
 }
 
 
 /* =========================================================
-   DATE
+   DATABASE ERROR
 ========================================================= */
 
-function initializeDate() {
+function getFriendlyError(error) {
 
-    const input =
-        document.getElementById(
-            "bookingDate"
-        );
+    if (
+        error &&
+        (
+            error.code === "42501" ||
+            String(error.message)
+                .toLowerCase()
+                .includes(
+                    "row-level security"
+                )
+        )
+    ) {
 
+        return "The booking system could not authorize this request. Please contact management.";
 
-    if (!input) {
-
-        return;
     }
 
 
-    const today =
-        new Date();
+    if (
+        error &&
+        String(error.message)
+            .toLowerCase()
+            .includes("fetch")
+    ) {
 
+        return "We could not connect to the booking server. Please check your connection and try again.";
 
-    const year =
-        today.getFullYear();
-
-
-    const month =
-        String(
-            today.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const day =
-        String(
-            today.getDate()
-        ).padStart(2, "0");
-
-
-    input.min =
-        `${year}-${month}-${day}`;
-}
-
-
-/* =========================================================
-   COMMUNITY GOAL
-========================================================= */
-
-function initializeCommunityGoal() {
-
-    /*
-       Only enter a verified amount actually raised.
-
-       The target is $1,000,000.
-    */
-
-    const raised =
-        0;
-
-
-    const target =
-        1000000;
-
-
-    const percentage =
-        Math.min(
-            (raised / target) * 100,
-            100
-        );
-
-
-    const progress =
-        document.getElementById(
-            "progressBar"
-        );
-
-
-    const amount =
-        document.getElementById(
-            "raisedAmount"
-        );
-
-
-    if (progress) {
-
-        progress.style.width =
-            `${percentage}%`;
     }
 
 
-    if (amount) {
+    return "We couldn't submit your booking right now. Please try again or contact management.";
 
-        amount.textContent =
-            `$${raised.toLocaleString()} raised`;
-    }
 }
 
 
@@ -1024,5 +849,7 @@ function initializeCurrentYear() {
 
         year.textContent =
             new Date().getFullYear();
+
     }
+
 }
