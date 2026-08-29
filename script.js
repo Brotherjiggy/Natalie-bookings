@@ -411,62 +411,64 @@ function initializeHeroSlideshow() {
 function initializeStates() {
 
     const fromState =
-        document.getElementById(
-            "fromState"
-        );
+        document.getElementById("fromState");
 
     const toState =
-        document.getElementById(
-            "toState"
+        document.getElementById("toState");
+
+    if (!fromState || !toState) {
+        console.warn(
+            "State dropdowns were not found."
+        );
+        return;
+    }
+
+    /*
+        Prevent duplicate state options
+        if initialization runs more than once.
+    */
+
+    const existingStates =
+        fromState.querySelectorAll(
+            "option[data-state]"
         );
 
+    if (existingStates.length > 0) {
+        return;
+    }
 
-    if (
-        !fromState ||
-        !toState
-    ) return;
+    STATES.forEach(state => {
 
+        const optionFrom =
+            document.createElement("option");
 
-    STATES.forEach(
-        state => {
+        optionFrom.value = state;
+        optionFrom.textContent = state;
+        optionFrom.dataset.state = "true";
 
-            const optionFrom =
-                document.createElement(
-                    "option"
-                );
+        const optionTo =
+            document.createElement("option");
 
-            optionFrom.value =
-                state;
+        optionTo.value = state;
+        optionTo.textContent = state;
+        optionTo.dataset.state = "true";
 
-            optionFrom.textContent =
-                state;
+        fromState.appendChild(optionFrom);
+        toState.appendChild(optionTo);
 
+    });
 
-            const optionTo =
-                document.createElement(
-                    "option"
-                );
-
-            optionTo.value =
-                state;
-
-            optionTo.textContent =
-                state;
-
-
-            fromState.appendChild(
-                optionFrom
-            );
-
-            toState.appendChild(
-                optionTo
-            );
-
-        }
+    console.log(
+        `Loaded ${STATES.length} states into flight dropdowns.`
     );
 
-}
+    /*
+        Make sure the pricing summary
+        updates immediately.
+    */
 
+    updateFlightSummary();
+}
 
 /* =========================================================
    FLIGHT PRICING
