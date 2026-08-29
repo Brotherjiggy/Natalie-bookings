@@ -1,7 +1,7 @@
 /* =========================================================
    NATALYA BOOKINGS
-   VANILLA JAVASCRIPT
-   SUPABASE + STRIPE CHECKOUT
+   COMPLETE FRONTEND JAVASCRIPT
+   SUPABASE + STRIPE SANDBOX CHECKOUT
 ========================================================= */
 
 
@@ -26,16 +26,6 @@ let supabaseClient = null;
 ========================================================= */
 
 const RESERVE_PASS_PRICE = 2500;
-
-
-/*
-    These estimates are also defined on the
-    Supabase Edge Function.
-
-    IMPORTANT:
-    The Edge Function is the final authority
-    for the actual Stripe amount.
-*/
 
 const STATE_FEES = {
 
@@ -97,60 +87,7 @@ const STATE_FEES = {
    U.S. STATES
 ========================================================= */
 
-const STATES = [
-
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming"
-
-];
+const STATES = Object.keys(STATE_FEES);
 
 
 /* =========================================================
@@ -159,9 +96,18 @@ const STATES = [
 
 document.addEventListener(
     "DOMContentLoaded",
-    async () => {
+    () => {
 
-        await initializeSupabase();
+        console.log(
+            "Natalya Bookings JavaScript loaded."
+        );
+
+        /*
+         * Supabase is initialized independently.
+         * Visual features must not depend on it.
+         */
+
+        initializeSupabase();
 
         initializeMobileMenu();
 
@@ -183,6 +129,8 @@ document.addEventListener(
 
         initializeCurrentYear();
 
+        handlePaymentReturn();
+
     }
 );
 
@@ -191,7 +139,7 @@ document.addEventListener(
    SUPABASE INITIALIZATION
 ========================================================= */
 
-async function initializeSupabase() {
+function initializeSupabase() {
 
     try {
 
@@ -228,6 +176,7 @@ async function initializeSupabase() {
 
         return false;
     }
+
 }
 
 
@@ -251,7 +200,10 @@ function initializeMobileMenu() {
     if (
         !menuToggle ||
         !navigation
-    ) return;
+    ) {
+
+        return;
+    }
 
 
     menuToggle.addEventListener(
@@ -275,26 +227,28 @@ function initializeMobileMenu() {
 
     navigation
         .querySelectorAll("a")
-        .forEach(link => {
+        .forEach(
+            link => {
 
-            link.addEventListener(
-                "click",
-                () => {
+                link.addEventListener(
+                    "click",
+                    () => {
 
-                    navigation
-                        .classList
-                        .remove("active");
+                        navigation
+                            .classList
+                            .remove("active");
 
-                    menuToggle
-                        .setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
+                        menuToggle
+                            .setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
 
-                }
-            );
+                    }
+                );
 
-        });
+            }
+        );
 
 }
 
@@ -311,7 +265,10 @@ function initializeTheme() {
         );
 
 
-    if (!themeToggle) return;
+    if (!themeToggle) {
+
+        return;
+    }
 
 
     const savedTheme =
@@ -343,7 +300,9 @@ function initializeTheme() {
             const isDark =
                 document.body
                     .classList
-                    .contains("dark-mode");
+                    .contains(
+                        "dark-mode"
+                    );
 
 
             localStorage.setItem(
@@ -371,12 +330,66 @@ function initializeHeroSlideshow() {
         );
 
 
-    if (
-        slides.length <= 1
-    ) return;
+    console.log(
+        "Hero slides found:",
+        slides.length
+    );
 
+
+    if (
+        slides.length === 0
+    ) {
+
+        console.warn(
+            "No .hero-slide elements found."
+        );
+
+        return;
+    }
+
+
+    /*
+     * Make sure exactly one slide starts active.
+     */
 
     let currentSlide = 0;
+
+
+    slides.forEach(
+        (slide, index) => {
+
+            if (
+                slide.classList.contains(
+                    "active"
+                )
+            ) {
+
+                currentSlide = index;
+
+            }
+
+        }
+    );
+
+
+    slides.forEach(
+        (slide, index) => {
+
+            slide.classList.toggle(
+                "active",
+                index === currentSlide
+            );
+
+        }
+    );
+
+
+    if (
+        slides.length <= 1
+    ) {
+
+        return;
+    }
 
 
     setInterval(
@@ -390,12 +403,19 @@ function initializeHeroSlideshow() {
             currentSlide =
                 (
                     currentSlide + 1
-                ) % slides.length;
+                ) %
+                slides.length;
 
 
             slides[currentSlide]
                 .classList
                 .add("active");
+
+
+            console.log(
+                "Hero slide:",
+                currentSlide + 1
+            );
 
         },
         5000
@@ -411,64 +431,144 @@ function initializeHeroSlideshow() {
 function initializeStates() {
 
     const fromState =
-        document.getElementById("fromState");
+        document.getElementById(
+            "fromState"
+        );
 
     const toState =
-        document.getElementById("toState");
-
-    if (!fromState || !toState) {
-        console.warn(
-            "State dropdowns were not found."
-        );
-        return;
-    }
-
-    /*
-        Prevent duplicate state options
-        if initialization runs more than once.
-    */
-
-    const existingStates =
-        fromState.querySelectorAll(
-            "option[data-state]"
+        document.getElementById(
+            "toState"
         );
 
-    if (existingStates.length > 0) {
-        return;
-    }
-
-    STATES.forEach(state => {
-
-        const optionFrom =
-            document.createElement("option");
-
-        optionFrom.value = state;
-        optionFrom.textContent = state;
-        optionFrom.dataset.state = "true";
-
-        const optionTo =
-            document.createElement("option");
-
-        optionTo.value = state;
-        optionTo.textContent = state;
-        optionTo.dataset.state = "true";
-
-        fromState.appendChild(optionFrom);
-        toState.appendChild(optionTo);
-
-    });
 
     console.log(
-        `Loaded ${STATES.length} states into flight dropdowns.`
+        "State dropdowns:",
+        {
+            from: Boolean(fromState),
+            to: Boolean(toState)
+        }
     );
 
+
+    if (
+        !fromState ||
+        !toState
+    ) {
+
+        console.warn(
+            "Flight state dropdowns were not found."
+        );
+
+        return;
+    }
+
+
     /*
-        Make sure the pricing summary
-        updates immediately.
-    */
+     * Preserve the first placeholder option.
+     */
+
+    fromState.innerHTML =
+        `<option value="">
+            Select departure state
+        </option>`;
+
+
+    toState.innerHTML =
+        `<option value="">
+            Select destination state
+        </option>`;
+
+
+    STATES.forEach(
+        state => {
+
+            const optionFrom =
+                document.createElement(
+                    "option"
+                );
+
+            optionFrom.value =
+                state;
+
+            optionFrom.textContent =
+                state;
+
+
+            const optionTo =
+                document.createElement(
+                    "option"
+                );
+
+            optionTo.value =
+                state;
+
+            optionTo.textContent =
+                state;
+
+
+            fromState.appendChild(
+                optionFrom
+            );
+
+            toState.appendChild(
+                optionTo
+            );
+
+        }
+    );
+
+
+    console.log(
+        `Loaded ${STATES.length} U.S. states.`
+    );
+
 
     updateFlightSummary();
+
 }
+
+
+/* =========================================================
+   ROUTE FEE
+========================================================= */
+
+function calculateRouteFee(
+    from,
+    to
+) {
+
+    if (
+        !from ||
+        !to ||
+        from === to
+    ) {
+
+        return 0;
+    }
+
+
+    const fromFee =
+        STATE_FEES[from];
+
+    const toFee =
+        STATE_FEES[to];
+
+
+    if (
+        typeof fromFee !== "number" ||
+        typeof toFee !== "number"
+    ) {
+
+        return 0;
+    }
+
+
+    return Math.round(
+        (fromFee + toFee) / 2
+    );
+
+}
+
 
 /* =========================================================
    FLIGHT PRICING
@@ -495,7 +595,10 @@ function initializeFlightPricing() {
     if (
         !fromState ||
         !toState
-    ) return;
+    ) {
+
+        return;
+    }
 
 
     fromState.addEventListener(
@@ -526,55 +629,6 @@ function initializeFlightPricing() {
 
 
     updateFlightSummary();
-
-}
-
-
-/* =========================================================
-   ROUTE FEE
-========================================================= */
-
-function calculateRouteFee(
-    from,
-    to
-) {
-
-    if (
-        !from ||
-        !to
-    ) {
-
-        return 0;
-    }
-
-
-    if (
-        from === to
-    ) {
-
-        return 0;
-    }
-
-
-    const fromFee =
-        STATE_FEES[from];
-
-    const toFee =
-        STATE_FEES[to];
-
-
-    if (
-        typeof fromFee !== "number" ||
-        typeof toFee !== "number"
-    ) {
-
-        return 0;
-    }
-
-
-    return Math.round(
-        (fromFee + toFee) / 2
-    );
 
 }
 
@@ -625,6 +679,7 @@ function updateFlightSummary() {
     const from =
         fromState?.value || "";
 
+
     const to =
         toState?.value || "";
 
@@ -652,12 +707,12 @@ function updateFlightSummary() {
 
 
     /*
-        DISPLAY RULE:
-
-        Reserve Pass = $2,500
-
-        Route fee × number of guests
-    */
+     * Reserve Pass:
+     * $2,500
+     *
+     * Route fee:
+     * route fee × guests
+     */
 
     const total =
         RESERVE_PASS_PRICE +
@@ -721,7 +776,10 @@ function initializeDates() {
         );
 
 
-    if (!departureDate) return;
+    if (!departureDate) {
+
+        return;
+    }
 
 
     const today =
@@ -735,13 +793,19 @@ function initializeDates() {
     const month =
         String(
             today.getMonth() + 1
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
 
     const day =
         String(
             today.getDate()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
 
     const minimumDate =
@@ -762,8 +826,16 @@ function initializeDates() {
             "change",
             () => {
 
-                returnDate.min =
-                    departureDate.value;
+                if (
+                    departureDate.value
+                ) {
+
+                    returnDate.min =
+                        departureDate.value;
+
+                }
+
+                updateDateSummary();
 
             }
         );
@@ -785,6 +857,9 @@ function initializeDates() {
         );
 
     }
+
+
+    updateDateSummary();
 
 }
 
@@ -840,46 +915,6 @@ function updateDateSummary() {
 
 
 /* =========================================================
-   FORMAT DATE
-========================================================= */
-
-function formatDate(value) {
-
-    if (!value) {
-
-        return "—";
-    }
-
-
-    const date =
-        new Date(
-            `${value}T00:00:00`
-        );
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return "—";
-    }
-
-
-    return date.toLocaleDateString(
-        "en-US",
-        {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-        }
-    );
-
-}
-
-
-/* =========================================================
    GENERAL BOOKING LINKS
 ========================================================= */
 
@@ -896,7 +931,10 @@ function initializeBookingLinks() {
         );
 
 
-    if (!bookingType) return;
+    if (!bookingType) {
+
+        return;
+    }
 
 
     links.forEach(
@@ -936,7 +974,10 @@ function initializeGeneralBooking() {
         );
 
 
-    if (!form) return;
+    if (!form) {
+
+        return;
+    }
 
 
     form.addEventListener(
@@ -1061,11 +1102,6 @@ function initializeGeneralBooking() {
 
                 if (error) {
 
-                    console.error(
-                        "Booking error:",
-                        error
-                    );
-
                     throw error;
                 }
 
@@ -1079,10 +1115,10 @@ function initializeGeneralBooking() {
 
                 form.reset();
 
-
             } catch (error) {
 
                 console.error(
+                    "General booking error:",
                     error
                 );
 
@@ -1111,8 +1147,9 @@ function initializeGeneralBooking() {
 
 
 /* =========================================================
-   FLIGHT BOOKING + STRIPE CHECKOUT
+   FLIGHT BOOKING + STRIPE
 ========================================================= */
+
 function initializeFlightBooking() {
 
     const form =
@@ -1120,7 +1157,12 @@ function initializeFlightBooking() {
             "flightBookingForm"
         );
 
-    if (!form) return;
+
+    if (!form) {
+
+        return;
+    }
+
 
     form.addEventListener(
         "submit",
@@ -1128,15 +1170,20 @@ function initializeFlightBooking() {
 
             event.preventDefault();
 
+
             const errorBox =
                 document.getElementById(
                     "flightError"
                 );
 
-            hideFlightError(errorBox);
+
+            hideFlightError(
+                errorBox
+            );
+
 
             /* -----------------------------------------
-               COLLECT FORM VALUES
+               FORM VALUES
             ----------------------------------------- */
 
             const fullName =
@@ -1144,35 +1191,42 @@ function initializeFlightBooking() {
                     "flightFullName"
                 )?.value.trim() || "";
 
+
             const email =
                 document.getElementById(
                     "flightEmail"
                 )?.value.trim() || "";
+
 
             const phone =
                 document.getElementById(
                     "flightPhone"
                 )?.value.trim() || "";
 
+
             const fromState =
                 document.getElementById(
                     "fromState"
                 )?.value || "";
+
 
             const toState =
                 document.getElementById(
                     "toState"
                 )?.value || "";
 
+
             const departureDate =
                 document.getElementById(
                     "departureDate"
                 )?.value || "";
 
+
             const returnDate =
                 document.getElementById(
                     "returnDate"
                 )?.value || "";
+
 
             const guests =
                 Number(
@@ -1180,6 +1234,7 @@ function initializeFlightBooking() {
                         "flightGuests"
                     )?.value || 1
                 );
+
 
             const message =
                 document.getElementById(
@@ -1191,7 +1246,9 @@ function initializeFlightBooking() {
                VALIDATION
             ----------------------------------------- */
 
-            if (fullName.length < 2) {
+            if (
+                fullName.length < 2
+            ) {
 
                 showFlightError(
                     errorBox,
@@ -1201,7 +1258,10 @@ function initializeFlightBooking() {
                 return;
             }
 
-            if (!isValidEmail(email)) {
+
+            if (
+                !isValidEmail(email)
+            ) {
 
                 showFlightError(
                     errorBox,
@@ -1211,7 +1271,11 @@ function initializeFlightBooking() {
                 return;
             }
 
-            if (!fromState || !toState) {
+
+            if (
+                !fromState ||
+                !toState
+            ) {
 
                 showFlightError(
                     errorBox,
@@ -1221,7 +1285,10 @@ function initializeFlightBooking() {
                 return;
             }
 
-            if (fromState === toState) {
+
+            if (
+                fromState === toState
+            ) {
 
                 showFlightError(
                     errorBox,
@@ -1231,7 +1298,11 @@ function initializeFlightBooking() {
                 return;
             }
 
-            if (!departureDate || !returnDate) {
+
+            if (
+                !departureDate ||
+                !returnDate
+            ) {
 
                 showFlightError(
                     errorBox,
@@ -1240,6 +1311,7 @@ function initializeFlightBooking() {
 
                 return;
             }
+
 
             if (
                 new Date(returnDate) <
@@ -1253,6 +1325,7 @@ function initializeFlightBooking() {
 
                 return;
             }
+
 
             if (
                 !Number.isInteger(guests) ||
@@ -1278,6 +1351,7 @@ function initializeFlightBooking() {
                     "flightCheckoutButton"
                 );
 
+
             setButtonLoading(
                 submitButton,
                 true,
@@ -1288,30 +1362,21 @@ function initializeFlightBooking() {
             try {
 
                 /* -------------------------------------
-                   CALL EDGE FUNCTION
-
-                   IMPORTANT:
-                   The browser NO LONGER inserts
-                   directly into bookings.
-
-                   The Edge Function now:
-                   1. Calculates the price
-                   2. Creates the booking
-                   3. Creates Stripe Checkout
-                   4. Returns the checkout URL
+                   CALL SUPABASE EDGE FUNCTION
                 ------------------------------------- */
 
                 const functionUrl =
                     `${SUPABASE_URL}/functions/v1/${STRIPE_FUNCTION_NAME}`;
 
 
-                const checkoutResponse =
+                const response =
                     await fetch(
                         functionUrl,
                         {
                             method: "POST",
 
                             headers: {
+
                                 "Content-Type":
                                     "application/json",
 
@@ -1320,6 +1385,7 @@ function initializeFlightBooking() {
 
                                 "Authorization":
                                     `Bearer ${SUPABASE_ANON_KEY}`
+
                             },
 
                             body:
@@ -1354,75 +1420,73 @@ function initializeFlightBooking() {
 
                                     message:
                                         message
+
                                 })
                         }
                     );
 
 
                 /* -------------------------------------
-                   READ RESPONSE
+                   RESPONSE
                 ------------------------------------- */
 
-                let checkoutData = null;
+                let data;
+
 
                 try {
 
-                    checkoutData =
-                        await checkoutResponse.json();
+                    data =
+                        await response.json();
 
-                } catch (jsonError) {
-
-                    console.error(
-                        "Invalid checkout response:",
-                        jsonError
-                    );
+                } catch (error) {
 
                     throw new Error(
                         "The secure checkout service returned an invalid response."
                     );
+
                 }
 
 
-                /* -------------------------------------
-                   CHECK RESPONSE
-                ------------------------------------- */
-
                 if (
-                    !checkoutResponse.ok ||
-                    !checkoutData ||
-                    !checkoutData.success
+                    !response.ok ||
+                    !data ||
+                    !data.success
                 ) {
 
                     console.error(
-                        "Checkout error:",
-                        checkoutData
+                        "Checkout service error:",
+                        data
                     );
 
+
                     throw new Error(
-                        checkoutData?.error ||
+                        data?.error ||
                         "Unable to create secure Stripe checkout."
                     );
+
                 }
 
 
                 if (
-                    !checkoutData.checkoutUrl
+                    !data.checkoutUrl
                 ) {
 
                     throw new Error(
                         "Stripe checkout was created but no checkout URL was returned."
                     );
+
                 }
 
 
                 console.log(
-                    "Booking created:",
-                    checkoutData.bookingId
+                    "Booking ID:",
+                    data.bookingId
                 );
 
+
                 console.log(
-                    "Stripe Checkout:",
-                    checkoutData.sessionId
+                    "Stripe Session:",
+                    data.sessionId
                 );
 
 
@@ -1431,290 +1495,7 @@ function initializeFlightBooking() {
                 ------------------------------------- */
 
                 window.location.href =
-                    checkoutData.checkoutUrl;
-
-            } catch (error) {
-
-                console.error(
-                    "Flight checkout error:",
-                    error
-                );
-
-                showFlightError(
-                    errorBox,
-                    friendlyCheckoutError(
-                        error
-                    )
-                );
-
-                setButtonLoading(
-                    submitButton,
-                    false
-                );
-            }
-
-        }
-    );
-}
-
-                /* -------------------------------------
-                   CREATE BOOKING FIRST
-                ------------------------------------- */
-
-                const bookingData = {
-
-                    full_name:
-                        fullName,
-
-                    email:
-                        email,
-
-                    phone:
-                        phone || null,
-
-                    booking_type:
-                        "Flight Booking",
-
-                    booking_date:
-                        departureDate,
-
-                    guests:
-                        guests,
-
-                    message:
-                        message || null,
-
-                    from_state:
-                        fromState,
-
-                    to_state:
-                        toState,
-
-                    return_date:
-                        returnDate,
-
-                    /*
-                        This is only the current
-                        website estimate.
-
-                        Stripe calculates the final
-                        amount server-side.
-                    */
-
-                    total_amount:
-                        RESERVE_PASS_PRICE +
-                        (
-                            calculateRouteFee(
-                                fromState,
-                                toState
-                            ) * guests
-                        ),
-
-                    currency:
-                        "usd",
-
-                    status:
-                        "pending",
-
-                    payment_status:
-                        "unpaid",
-
-                    stripe_payment_status:
-                        "unpaid"
-
-                };
-
-
-                const {
-                    data,
-                    error
-                } =
-                    await supabaseClient
-                        .from("bookings")
-                        .insert(
-                            bookingData
-                        )
-                        .select("id")
-                        .single();
-
-
-                if (error) {
-
-                    console.error(
-                        "Flight booking creation error:",
-                        error
-                    );
-
-                    throw error;
-                }
-
-
-                if (
-                    !data ||
-                    !data.id
-                ) {
-
-                    throw new Error(
-                        "The booking was created but no booking ID was returned."
-                    );
-
-                }
-
-
-                const bookingId =
-                    data.id;
-
-
-                console.log(
-                    "Flight booking created:",
-                    bookingId
-                );
-
-
-                /* -------------------------------------
-                   CALL SUPABASE EDGE FUNCTION
-                ------------------------------------- */
-
-                const functionUrl =
-                    `${SUPABASE_URL}/functions/v1/${STRIPE_FUNCTION_NAME}`;
-
-
-                const checkoutResponse =
-                    await fetch(
-                        functionUrl,
-                        {
-                            method: "POST",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json",
-
-                                "apikey":
-                                    SUPABASE_ANON_KEY,
-
-                                "Authorization":
-                                    `Bearer ${SUPABASE_ANON_KEY}`
-
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    bookingId:
-                                        bookingId,
-
-                                    fullName:
-                                        fullName,
-
-                                    email:
-                                        email,
-
-                                    phone:
-                                        phone,
-
-                                    bookingType:
-                                        "Flight Booking",
-
-                                    bookingDate:
-                                        departureDate,
-
-                                    departureState:
-                                        fromState,
-
-                                    destinationState:
-                                        toState,
-
-                                    returnDate:
-                                        returnDate,
-
-                                    guests:
-                                        guests,
-
-                                    message:
-                                        message
-
-                                })
-
-                        }
-                    );
-
-
-                /* -------------------------------------
-                   READ EDGE FUNCTION RESPONSE
-                ------------------------------------- */
-
-                let checkoutData = null;
-
-
-                try {
-
-                    checkoutData =
-                        await checkoutResponse.json();
-
-                } catch (jsonError) {
-
-                    console.error(
-                        "Checkout response was not valid JSON:",
-                        jsonError
-                    );
-
-                    throw new Error(
-                        "The secure checkout service returned an invalid response."
-                    );
-
-                }
-
-
-                if (
-                    !checkoutResponse.ok ||
-                    !checkoutData ||
-                    !checkoutData.success
-                ) {
-
-                    console.error(
-                        "Stripe checkout error:",
-                        checkoutData
-                    );
-
-
-                    throw new Error(
-                        checkoutData?.error ||
-                        "Unable to create secure Stripe checkout."
-                    );
-
-                }
-
-
-                if (
-                    !checkoutData.checkoutUrl
-                ) {
-
-                    throw new Error(
-                        "Stripe checkout was created but no checkout URL was returned."
-                    );
-
-                }
-
-
-                /* -------------------------------------
-                   SUCCESS
-                ------------------------------------- */
-
-                console.log(
-                    "Stripe Checkout created:",
-                    checkoutData.sessionId
-                );
-
-
-                /*
-                    Redirect the customer directly
-                    to Stripe's hosted checkout page.
-                */
-
-                window.location.href =
-                    checkoutData.checkoutUrl;
-
+                    data.checkoutUrl;
 
             } catch (error) {
 
@@ -1746,7 +1527,149 @@ function initializeFlightBooking() {
 
 
 /* =========================================================
-   CHECKOUT ERROR HANDLING
+   PAYMENT RETURN
+========================================================= */
+
+function handlePaymentReturn() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const payment =
+        params.get(
+            "payment"
+        );
+
+
+    if (
+        payment === "success"
+    ) {
+
+        showGlobalMessage(
+            "Your payment was completed successfully. Your booking has been received."
+        );
+
+    }
+
+
+    if (
+        payment === "cancelled"
+    ) {
+
+        showGlobalMessage(
+            "Checkout was cancelled. Your booking request has not been paid."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOBAL PAYMENT MESSAGE
+========================================================= */
+
+function showGlobalMessage(
+    message
+) {
+
+    const existing =
+        document.getElementById(
+            "paymentReturnMessage"
+        );
+
+
+    if (existing) {
+
+        existing.textContent =
+            message;
+
+        return;
+    }
+
+
+    const messageBox =
+        document.createElement(
+            "div"
+        );
+
+
+    messageBox.id =
+        "paymentReturnMessage";
+
+
+    messageBox.textContent =
+        message;
+
+
+    messageBox.setAttribute(
+        "role",
+        "status"
+    );
+
+
+    messageBox.style.position =
+        "fixed";
+
+
+    messageBox.style.top =
+        "20px";
+
+
+    messageBox.style.left =
+        "20px";
+
+
+    messageBox.style.right =
+        "20px";
+
+
+    messageBox.style.zIndex =
+        "99999";
+
+
+    messageBox.style.padding =
+        "16px";
+
+
+    messageBox.style.borderRadius =
+        "12px";
+
+
+    messageBox.style.background =
+        "#ffffff";
+
+
+    messageBox.style.color =
+        "#111111";
+
+
+    messageBox.style.boxShadow =
+        "0 10px 30px rgba(0,0,0,0.2)";
+
+
+    document.body.appendChild(
+        messageBox
+    );
+
+
+    setTimeout(
+        () => {
+
+            messageBox.remove();
+
+        },
+        8000
+    );
+
+}
+
+
+/* =========================================================
+   ERROR HANDLING
 ========================================================= */
 
 function friendlyCheckoutError(
@@ -1772,7 +1695,7 @@ function friendlyCheckoutError(
         )
     ) {
 
-        return "We couldn't connect to the secure checkout service. Please check your internet connection and try again.";
+        return "We couldn't connect to the secure checkout service. Please try again.";
 
     }
 
@@ -1801,11 +1724,11 @@ function friendlyCheckoutError(
 
     if (
         message.includes(
-            "Online checkout is currently available"
+            "Missing required booking information"
         )
     ) {
 
-        return "Online checkout is currently available for Flight Booking only.";
+        return "Please complete all required booking information.";
 
     }
 
@@ -1817,117 +1740,8 @@ function friendlyCheckoutError(
 
 
 /* =========================================================
-   HELPERS
+   DATABASE ERROR
 ========================================================= */
-
-function formatCurrency(amount) {
-
-    return new Intl.NumberFormat(
-        "en-US",
-        {
-            style: "currency",
-            currency: "USD",
-            maximumFractionDigits: 0
-        }
-    ).format(amount);
-
-}
-
-
-function isValidEmail(email) {
-
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        .test(email);
-
-}
-
-
-function showStatus(
-    element,
-    message,
-    type
-) {
-
-    if (!element) return;
-
-
-    element.textContent =
-        message;
-
-
-    element.className =
-        `form-status ${type}`;
-
-}
-
-
-function showFlightError(
-    element,
-    message
-) {
-
-    if (!element) return;
-
-
-    element.textContent =
-        message;
-
-
-    element.style.display =
-        "block";
-
-}
-
-
-function hideFlightError(
-    element
-) {
-
-    if (!element) return;
-
-
-    element.textContent =
-        "";
-
-    element.style.display =
-        "none";
-
-}
-
-
-function setButtonLoading(
-    button,
-    loading,
-    text = ""
-) {
-
-    if (!button) return;
-
-
-    if (loading) {
-
-        button.dataset.originalText =
-            button.textContent;
-
-        button.disabled =
-            true;
-
-        button.textContent =
-            text;
-
-    } else {
-
-        button.disabled =
-            false;
-
-        button.textContent =
-            button.dataset.originalText ||
-            "Submit Booking Request";
-
-    }
-
-}
-
 
 function friendlyDatabaseError(
     error
@@ -1978,7 +1792,208 @@ function friendlyDatabaseError(
 
 
 /* =========================================================
-   YEAR
+   FORM STATUS
+========================================================= */
+
+function showStatus(
+    element,
+    message,
+    type
+) {
+
+    if (!element) {
+
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.className =
+        `form-status ${type}`;
+
+}
+
+
+/* =========================================================
+   FLIGHT ERROR
+========================================================= */
+
+function showFlightError(
+    element,
+    message
+) {
+
+    if (!element) {
+
+        return;
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.style.display =
+        "block";
+
+}
+
+
+function hideFlightError(
+    element
+) {
+
+    if (!element) {
+
+        return;
+    }
+
+
+    element.textContent =
+        "";
+
+
+    element.style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   BUTTON LOADING
+========================================================= */
+
+function setButtonLoading(
+    button,
+    loading,
+    text = ""
+) {
+
+    if (!button) {
+
+        return;
+    }
+
+
+    if (loading) {
+
+        if (
+            !button.dataset.originalText
+        ) {
+
+            button.dataset.originalText =
+                button.textContent;
+
+        }
+
+
+        button.disabled =
+            true;
+
+
+        button.textContent =
+            text;
+
+    } else {
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            button.dataset.originalText ||
+            "Submit Booking Request";
+
+    }
+
+}
+
+
+/* =========================================================
+   FORMAT CURRENCY
+========================================================= */
+
+function formatCurrency(
+    amount
+) {
+
+    return new Intl.NumberFormat(
+        "en-US",
+        {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+        }
+    ).format(
+        amount
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+
+        return "—";
+    }
+
+
+    const date =
+        new Date(
+            `${value}T00:00:00`
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "—";
+    }
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   EMAIL VALIDATION
+========================================================= */
+
+function isValidEmail(
+    email
+) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(
+            email
+        );
+
+}
+
+
+/* =========================================================
+   CURRENT YEAR
 ========================================================= */
 
 function initializeCurrentYear() {
@@ -1997,4 +2012,4 @@ function initializeCurrentYear() {
 
     }
 
-               }
+       }
