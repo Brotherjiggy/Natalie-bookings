@@ -1,11 +1,11 @@
 /* =========================================================
    NATALYA BOOKINGS
-   VANILLA JAVASCRIPT + SUPABASE
+   VANILLA JAVASCRIPT
 ========================================================= */
 
 
 /* =========================================================
-   SUPABASE CONFIGURATION
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -19,76 +19,191 @@ let supabaseClient = null;
 
 
 /* =========================================================
-   LOAD SUPABASE
+   FLIGHT PRICING
 ========================================================= */
 
-function loadSupabase() {
-
-    return new Promise((resolve, reject) => {
-
-        if (window.supabase) {
-
-            resolve(window.supabase);
-
-            return;
-        }
+const RESERVE_PASS_PRICE = 2500;
 
 
-        const script =
-            document.createElement("script");
+/*
+    Route coordination pricing.
 
+    These are displayed as coordination estimates,
+    not airline ticket prices.
+*/
 
-        script.src =
-            "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+const STATE_FEES = {
 
+    "Alabama": 450,
+    "Alaska": 950,
+    "Arizona": 750,
+    "Arkansas": 500,
+    "California": 850,
+    "Colorado": 700,
+    "Connecticut": 550,
+    "Delaware": 500,
+    "Florida": 700,
+    "Georgia": 550,
+    "Hawaii": 1200,
+    "Idaho": 800,
+    "Illinois": 600,
+    "Indiana": 550,
+    "Iowa": 550,
+    "Kansas": 550,
+    "Kentucky": 500,
+    "Louisiana": 600,
+    "Maine": 650,
+    "Maryland": 500,
+    "Massachusetts": 600,
+    "Michigan": 600,
+    "Minnesota": 650,
+    "Mississippi": 550,
+    "Missouri": 550,
+    "Montana": 850,
+    "Nebraska": 600,
+    "Nevada": 800,
+    "New Hampshire": 600,
+    "New Jersey": 550,
+    "New Mexico": 700,
+    "New York": 600,
+    "North Carolina": 550,
+    "North Dakota": 700,
+    "Ohio": 550,
+    "Oklahoma": 600,
+    "Oregon": 850,
+    "Pennsylvania": 550,
+    "Rhode Island": 600,
+    "South Carolina": 550,
+    "South Dakota": 700,
+    "Tennessee": 550,
+    "Texas": 650,
+    "Utah": 750,
+    "Vermont": 650,
+    "Virginia": 500,
+    "Washington": 900,
+    "West Virginia": 550,
+    "Wisconsin": 600,
+    "Wyoming": 800
 
-        script.onload = () => {
-
-            if (!window.supabase) {
-
-                reject(
-                    new Error(
-                        "Supabase library failed to load."
-                    )
-                );
-
-                return;
-            }
-
-            resolve(window.supabase);
-        };
-
-
-        script.onerror = () => {
-
-            reject(
-                new Error(
-                    "Unable to load Supabase."
-                )
-            );
-        };
-
-
-        document.head.appendChild(script);
-
-    });
-}
+};
 
 
 /* =========================================================
-   INITIALIZE SUPABASE
+   U.S. STATES
+========================================================= */
+
+const STATES = [
+
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming"
+
+];
+
+
+/* =========================================================
+   STARTUP
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        await initializeSupabase();
+
+        initializeMobileMenu();
+
+        initializeTheme();
+
+        initializeHeroSlideshow();
+
+        initializeStates();
+
+        initializeFlightPricing();
+
+        initializeGeneralBooking();
+
+        initializeFlightBooking();
+
+        initializeBookingLinks();
+
+        initializeDates();
+
+        initializeCurrentYear();
+
+    }
+);
+
+
+/* =========================================================
+   SUPABASE INITIALIZATION
 ========================================================= */
 
 async function initializeSupabase() {
 
     try {
 
-        const supabaseLibrary =
-            await loadSupabase();
+        if (
+            !window.supabase
+        ) {
+
+            console.error(
+                "Supabase library is unavailable."
+            );
+
+            return false;
+        }
 
 
         supabaseClient =
-            supabaseLibrary.createClient(
+            window.supabase.createClient(
                 SUPABASE_URL,
                 SUPABASE_ANON_KEY
             );
@@ -114,39 +229,15 @@ async function initializeSupabase() {
 
 
 /* =========================================================
-   PAGE INITIALIZATION
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
-
-        await initializeSupabase();
-
-        initializeMobileMenu();
-
-        initializeHeroSlider();
-
-        initializeBookingButtons();
-
-        initializeBookingForm();
-
-        initializeBookingState();
-
-        initializeCurrentYear();
-
-    }
-);
-
-
-/* =========================================================
    MOBILE MENU
 ========================================================= */
 
 function initializeMobileMenu() {
 
     const menuToggle =
-        document.getElementById("menuToggle");
+        document.getElementById(
+            "menuToggle"
+        );
 
     const navigation =
         document.getElementById(
@@ -154,7 +245,10 @@ function initializeMobileMenu() {
         );
 
 
-    if (!menuToggle || !navigation) return;
+    if (
+        !menuToggle ||
+        !navigation
+    ) return;
 
 
     menuToggle.addEventListener(
@@ -172,14 +266,6 @@ function initializeMobileMenu() {
                 String(isOpen)
             );
 
-
-            menuToggle.setAttribute(
-                "aria-label",
-                isOpen
-                    ? "Close navigation"
-                    : "Open navigation"
-            );
-
         }
     );
 
@@ -192,14 +278,15 @@ function initializeMobileMenu() {
                 "click",
                 () => {
 
-                    navigation.classList.remove(
-                        "active"
-                    );
+                    navigation
+                        .classList
+                        .remove("active");
 
-                    menuToggle.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
+                    menuToggle
+                        .setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
 
                 }
             );
@@ -210,106 +297,519 @@ function initializeMobileMenu() {
 
 
 /* =========================================================
-   HERO SLIDER
+   DARK / LIGHT MODE
 ========================================================= */
 
-function initializeHeroSlider() {
+function initializeTheme() {
 
-    const slides =
-        document.querySelectorAll(
-            ".hero-slide"
-        );
-
-    const dots =
-        document.querySelectorAll(
-            ".slide-dot"
+    const themeToggle =
+        document.getElementById(
+            "themeToggle"
         );
 
 
-    if (!slides.length) return;
+    if (!themeToggle) return;
 
 
-    let currentSlide = 0;
-
-
-    function showSlide(index) {
-
-        slides.forEach(
-            slide =>
-                slide.classList.remove(
-                    "active"
-                )
+    const savedTheme =
+        localStorage.getItem(
+            "natalya-theme"
         );
 
 
-        dots.forEach(
-            dot =>
-                dot.classList.remove(
-                    "active"
-                )
-        );
+    if (
+        savedTheme === "dark"
+    ) {
 
+        document.body
+            .classList
+            .add("dark-mode");
 
-        slides[index].classList.add(
-            "active"
-        );
-
-
-        if (dots[index]) {
-
-            dots[index].classList.add(
-                "active"
-            );
-        }
-
-
-        currentSlide = index;
     }
 
 
-    dots.forEach(
-        (dot, index) => {
+    themeToggle.addEventListener(
+        "click",
+        () => {
 
-            dot.addEventListener(
-                "click",
-                () => {
+            document.body
+                .classList
+                .toggle("dark-mode");
 
-                    showSlide(index);
 
-                }
+            const isDark =
+                document.body
+                    .classList
+                    .contains("dark-mode");
+
+
+            localStorage.setItem(
+                "natalya-theme",
+                isDark
+                    ? "dark"
+                    : "light"
             );
 
         }
-    );
-
-
-    setInterval(
-        () => {
-
-            const next =
-                (currentSlide + 1)
-                % slides.length;
-
-            showSlide(next);
-
-        },
-        6000
     );
 
 }
 
 
 /* =========================================================
-   BOOKING BUTTONS
+   HERO SLIDESHOW
 ========================================================= */
 
-function initializeBookingButtons() {
+function initializeHeroSlideshow() {
 
-    const buttons =
+    const slides =
+        document.querySelectorAll(
+            ".hero-slide"
+        );
+
+
+    if (
+        slides.length <= 1
+    ) return;
+
+
+    let currentSlide = 0;
+
+
+    setInterval(
+        () => {
+
+            slides[currentSlide]
+                .classList
+                .remove("active");
+
+
+            currentSlide =
+                (
+                    currentSlide + 1
+                ) % slides.length;
+
+
+            slides[currentSlide]
+                .classList
+                .add("active");
+
+        },
+        5000
+    );
+
+}
+
+
+/* =========================================================
+   STATES
+========================================================= */
+
+function initializeStates() {
+
+    const fromState =
+        document.getElementById(
+            "fromState"
+        );
+
+    const toState =
+        document.getElementById(
+            "toState"
+        );
+
+
+    if (
+        !fromState ||
+        !toState
+    ) return;
+
+
+    STATES.forEach(
+        state => {
+
+            const optionFrom =
+                document.createElement(
+                    "option"
+                );
+
+            optionFrom.value =
+                state;
+
+            optionFrom.textContent =
+                state;
+
+
+            const optionTo =
+                document.createElement(
+                    "option"
+                );
+
+            optionTo.value =
+                state;
+
+            optionTo.textContent =
+                state;
+
+
+            fromState.appendChild(
+                optionFrom
+            );
+
+            toState.appendChild(
+                optionTo
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FLIGHT PRICING
+========================================================= */
+
+function initializeFlightPricing() {
+
+    const fromState =
+        document.getElementById(
+            "fromState"
+        );
+
+    const toState =
+        document.getElementById(
+            "toState"
+        );
+
+
+    if (
+        !fromState ||
+        !toState
+    ) return;
+
+
+    fromState.addEventListener(
+        "change",
+        updateFlightSummary
+    );
+
+
+    toState.addEventListener(
+        "change",
+        updateFlightSummary
+    );
+
+}
+
+
+function calculateRouteFee(
+    from,
+    to
+) {
+
+    if (
+        !from ||
+        !to
+    ) {
+
+        return 0;
+    }
+
+
+    if (
+        from === to
+    ) {
+
+        return 250;
+    }
+
+
+    const fromFee =
+        STATE_FEES[from] || 0;
+
+    const toFee =
+        STATE_FEES[to] || 0;
+
+
+    /*
+        Average the two state
+        coordination estimates.
+    */
+
+    return Math.round(
+        (fromFee + toFee) / 2
+    );
+
+}
+
+
+function updateFlightSummary() {
+
+    const fromState =
+        document.getElementById(
+            "fromState"
+        );
+
+    const toState =
+        document.getElementById(
+            "toState"
+        );
+
+
+    const summaryFrom =
+        document.getElementById(
+            "summaryFrom"
+        );
+
+    const summaryTo =
+        document.getElementById(
+            "summaryTo"
+        );
+
+    const summaryRouteFee =
+        document.getElementById(
+            "summaryRouteFee"
+        );
+
+    const summaryTotal =
+        document.getElementById(
+            "summaryTotal"
+        );
+
+
+    const from =
+        fromState?.value || "";
+
+    const to =
+        toState?.value || "";
+
+
+    const routeFee =
+        calculateRouteFee(
+            from,
+            to
+        );
+
+
+    const total =
+        RESERVE_PASS_PRICE +
+        routeFee;
+
+
+    if (summaryFrom) {
+
+        summaryFrom.textContent =
+            from || "—";
+
+    }
+
+
+    if (summaryTo) {
+
+        summaryTo.textContent =
+            to || "—";
+
+    }
+
+
+    if (summaryRouteFee) {
+
+        summaryRouteFee.textContent =
+            formatCurrency(
+                routeFee
+            );
+
+    }
+
+
+    if (summaryTotal) {
+
+        summaryTotal.textContent =
+            formatCurrency(
+                total
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   DATE CONTROLS
+========================================================= */
+
+function initializeDates() {
+
+    const departureDate =
+        document.getElementById(
+            "departureDate"
+        );
+
+    const returnDate =
+        document.getElementById(
+            "returnDate"
+        );
+
+
+    if (!departureDate) return;
+
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(2, "0");
+
+
+    const minimumDate =
+        `${year}-${month}-${day}`;
+
+
+    departureDate.min =
+        minimumDate;
+
+
+    if (returnDate) {
+
+        returnDate.min =
+            minimumDate;
+
+
+        departureDate.addEventListener(
+            "change",
+            () => {
+
+                returnDate.min =
+                    departureDate.value;
+
+            }
+        );
+
+    }
+
+
+    departureDate.addEventListener(
+        "change",
+        updateDateSummary
+    );
+
+
+    if (returnDate) {
+
+        returnDate.addEventListener(
+            "change",
+            updateDateSummary
+        );
+
+    }
+
+}
+
+
+function updateDateSummary() {
+
+    const departureDate =
+        document.getElementById(
+            "departureDate"
+        );
+
+    const returnDate =
+        document.getElementById(
+            "returnDate"
+        );
+
+
+    const summaryDeparture =
+        document.getElementById(
+            "summaryDeparture"
+        );
+
+    const summaryReturn =
+        document.getElementById(
+            "summaryReturn"
+        );
+
+
+    if (summaryDeparture) {
+
+        summaryDeparture.textContent =
+            formatDate(
+                departureDate?.value
+            );
+
+    }
+
+
+    if (summaryReturn) {
+
+        summaryReturn.textContent =
+            formatDate(
+                returnDate?.value
+            );
+
+    }
+
+}
+
+
+function formatDate(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+
+    const date =
+        new Date(
+            `${value}T00:00:00`
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return "—";
+    }
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   GENERAL BOOKING LINKS
+========================================================= */
+
+function initializeBookingLinks() {
+
+    const links =
         document.querySelectorAll(
             "[data-booking-type]"
         );
-
 
     const bookingType =
         document.getElementById(
@@ -320,119 +820,36 @@ function initializeBookingButtons() {
     if (!bookingType) return;
 
 
-    buttons.forEach(button => {
+    links.forEach(
+        link => {
 
-        button.addEventListener(
-            "click",
-            () => {
-
-                const type =
-                    button.dataset.bookingType;
-
-
-                if (type) {
+            link.addEventListener(
+                "click",
+                () => {
 
                     bookingType.value =
-                        type;
+                        link.dataset
+                            .bookingType;
 
                 }
-
-
-                const bookingSection =
-                    document.getElementById(
-                        "booking"
-                    );
-
-
-                if (bookingSection) {
-
-                    bookingSection.scrollIntoView({
-                        behavior: "smooth"
-                    });
-
-                }
-
-            }
-        );
-
-    });
-
-}
-
-
-/* =========================================================
-   BOOKING STATE
-========================================================= */
-
-function initializeBookingState() {
-
-    const bookingType =
-        document.getElementById(
-            "bookingType"
-        );
-
-    const stateGroup =
-        document.getElementById(
-            "stateGroup"
-        );
-
-    const state =
-        document.getElementById(
-            "state"
-        );
-
-
-    if (!bookingType ||
-        !stateGroup ||
-        !state) return;
-
-
-    function updateStateField() {
-
-        if (
-            bookingType.value ===
-            "Flight Booking"
-        ) {
-
-            stateGroup.style.display =
-                "block";
-
-            state.required = true;
-
-        } else {
-
-            stateGroup.style.display =
-                "block";
-
-            state.required = false;
+            );
 
         }
-
-    }
-
-
-    bookingType.addEventListener(
-        "change",
-        updateStateField
     );
-
-
-    updateStateField();
 
 }
 
 
 /* =========================================================
-   BOOKING FORM
+   GENERAL BOOKING FORM
 ========================================================= */
 
-function initializeBookingForm() {
+function initializeGeneralBooking() {
 
     const form =
         document.getElementById(
             "bookingForm"
         );
-
 
     const status =
         document.getElementById(
@@ -464,128 +881,331 @@ function initializeBookingForm() {
 
             const submitButton =
                 form.querySelector(
-                    'button[type="submit"]'
+                    "button[type='submit']"
                 );
 
 
-            if (submitButton) {
-
-                submitButton.disabled =
-                    true;
-
-                submitButton.dataset.originalText =
-                    submitButton.textContent;
-
-                submitButton.textContent =
-                    "Submitting...";
-
-            }
-
-
-            const formData =
-                new FormData(form);
+            setButtonLoading(
+                submitButton,
+                true,
+                "Submitting..."
+            );
 
 
             const fullName =
-                String(
-                    formData.get("fullName") || ""
-                ).trim();
+                document.getElementById(
+                    "fullName"
+                ).value.trim();
 
 
             const email =
-                String(
-                    formData.get("email") || ""
-                ).trim();
+                document.getElementById(
+                    "email"
+                ).value.trim();
 
 
             const phone =
-                String(
-                    formData.get("phone") || ""
-                ).trim();
+                document.getElementById(
+                    "phone"
+                ).value.trim();
 
 
             const bookingType =
-                String(
-                    formData.get("bookingType") || ""
-                ).trim();
-
-
-            const state =
-                String(
-                    formData.get("state") || ""
-                ).trim();
+                document.getElementById(
+                    "bookingType"
+                ).value;
 
 
             const bookingDate =
-                String(
-                    formData.get("bookingDate") || ""
-                ).trim();
+                document.getElementById(
+                    "bookingDate"
+                ).value;
 
 
             const guests =
                 Number(
-                    formData.get("guests") || 1
+                    document.getElementById(
+                        "guests"
+                    ).value
                 );
 
 
             const message =
-                String(
-                    formData.get("message") || ""
-                ).trim();
+                document.getElementById(
+                    "message"
+                ).value.trim();
 
 
-            /* ---------------------------
-               VALIDATION
-            --------------------------- */
+            try {
 
-            if (fullName.length < 2) {
+                const bookingData = {
+
+                    full_name:
+                        fullName,
+
+                    email:
+                        email,
+
+                    phone:
+                        phone || null,
+
+                    booking_type:
+                        bookingType,
+
+                    booking_date:
+                        bookingDate || null,
+
+                    guests:
+                        guests,
+
+                    message:
+                        message || null,
+
+                    status:
+                        "pending",
+
+                    payment_status:
+                        "unpaid"
+
+                };
+
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("bookings")
+                        .insert(
+                            bookingData
+                        );
+
+
+                if (error) {
+
+                    console.error(
+                        "Booking error:",
+                        error
+                    );
+
+                    throw error;
+                }
+
 
                 showStatus(
                     status,
-                    "Please enter your full name.",
+                    "Booking request received successfully. Our management team will contact you shortly.",
+                    "success"
+                );
+
+
+                form.reset();
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                showStatus(
+                    status,
+                    friendlyDatabaseError(
+                        error
+                    ),
                     "error"
                 );
 
-                restoreButton(submitButton);
+            } finally {
+
+                setButtonLoading(
+                    submitButton,
+                    false
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FLIGHT BOOKING FORM
+========================================================= */
+
+function initializeFlightBooking() {
+
+    const form =
+        document.getElementById(
+            "flightBookingForm"
+        );
+
+    if (!form) return;
+
+
+    form.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const errorBox =
+                document.getElementById(
+                    "flightError"
+                );
+
+
+            hideFlightError(
+                errorBox
+            );
+
+
+            if (!supabaseClient) {
+
+                showFlightError(
+                    errorBox,
+                    "The booking system is temporarily unavailable. Please try again shortly."
+                );
 
                 return;
             }
 
 
-            if (!isValidEmail(email)) {
+            const fullName =
+                document.getElementById(
+                    "flightFullName"
+                ).value.trim();
 
-                showStatus(
-                    status,
-                    "Please enter a valid email address.",
-                    "error"
+
+            const email =
+                document.getElementById(
+                    "flightEmail"
+                ).value.trim();
+
+
+            const phone =
+                document.getElementById(
+                    "flightPhone"
+                ).value.trim();
+
+
+            const fromState =
+                document.getElementById(
+                    "fromState"
+                ).value;
+
+
+            const toState =
+                document.getElementById(
+                    "toState"
+                ).value;
+
+
+            const departureDate =
+                document.getElementById(
+                    "departureDate"
+                ).value;
+
+
+            const returnDate =
+                document.getElementById(
+                    "returnDate"
+                ).value;
+
+
+            const guests =
+                Number(
+                    document.getElementById(
+                        "flightGuests"
+                    ).value
                 );
 
-                restoreButton(submitButton);
 
-                return;
-            }
-
-
-            const allowedTypes = [
-                "Flight Booking",
-                "Dinner Reservation",
-                "Fan Membership"
-            ];
+            const message =
+                document.getElementById(
+                    "flightMessage"
+                ).value.trim();
 
 
             if (
-                !allowedTypes.includes(
-                    bookingType
-                )
+                fullName.length < 2
             ) {
 
-                showStatus(
-                    status,
-                    "Please select a valid experience.",
-                    "error"
+                showFlightError(
+                    errorBox,
+                    "Please enter your full name."
                 );
 
-                restoreButton(submitButton);
+                return;
+            }
+
+
+            if (
+                !isValidEmail(email)
+            ) {
+
+                showFlightError(
+                    errorBox,
+                    "Please enter a valid email address."
+                );
+
+                return;
+            }
+
+
+            if (
+                !fromState ||
+                !toState
+            ) {
+
+                showFlightError(
+                    errorBox,
+                    "Please select both your departure and destination states."
+                );
+
+                return;
+            }
+
+
+            if (
+                fromState === toState
+            ) {
+
+                showFlightError(
+                    errorBox,
+                    "Please select different departure and destination states."
+                );
+
+                return;
+            }
+
+
+            if (
+                !departureDate ||
+                !returnDate
+            ) {
+
+                showFlightError(
+                    errorBox,
+                    "Please select both departure and return dates."
+                );
+
+                return;
+            }
+
+
+            if (
+                new Date(returnDate) <
+                new Date(departureDate)
+            ) {
+
+                showFlightError(
+                    errorBox,
+                    "Return date cannot be earlier than the departure date."
+                );
 
                 return;
             }
@@ -597,21 +1217,33 @@ function initializeBookingForm() {
                 guests > 20
             ) {
 
-                showStatus(
-                    status,
-                    "Guests must be between 1 and 20.",
-                    "error"
+                showFlightError(
+                    errorBox,
+                    "Guests must be between 1 and 20."
                 );
-
-                restoreButton(submitButton);
 
                 return;
             }
 
 
-            /* ---------------------------
-               BOOKING DATA
-            --------------------------- */
+            const routeFee =
+                calculateRouteFee(
+                    fromState,
+                    toState
+                );
+
+
+            const total =
+                RESERVE_PASS_PRICE +
+                routeFee;
+
+
+            /*
+                Save the booking in Supabase.
+
+                Stripe will be connected in the
+                next stage.
+            */
 
             const bookingData = {
 
@@ -625,13 +1257,10 @@ function initializeBookingForm() {
                     phone || null,
 
                 booking_type:
-                    bookingType,
-
-                state:
-                    state || null,
+                    "Flight Booking",
 
                 booking_date:
-                    bookingDate || null,
+                    departureDate,
 
                 guests:
                     guests,
@@ -639,13 +1268,44 @@ function initializeBookingForm() {
                 message:
                     message || null,
 
+                from_state:
+                    fromState,
+
+                to_state:
+                    toState,
+
+                return_date:
+                    returnDate,
+
+                total_amount:
+                    total,
+
+                currency:
+                    "usd",
+
                 status:
                     "pending",
 
                 payment_status:
+                    "unpaid",
+
+                stripe_payment_status:
                     "unpaid"
 
             };
+
+
+            const submitButton =
+                document.getElementById(
+                    "flightCheckoutButton"
+                );
+
+
+            setButtonLoading(
+                submitButton,
+                true,
+                "Preparing checkout..."
+            );
 
 
             try {
@@ -653,75 +1313,76 @@ function initializeBookingForm() {
                 const {
                     data,
                     error
-                } = await supabaseClient
-
-                    .from("bookings")
-
-                    .insert(
-                        bookingData
-                    )
-
-                    .select("id")
-
-                    .single();
+                } =
+                    await supabaseClient
+                        .from("bookings")
+                        .insert(
+                            bookingData
+                        )
+                        .select("id")
+                        .single();
 
 
                 if (error) {
 
                     console.error(
-                        "Supabase booking error:",
+                        "Flight booking error:",
                         error
                     );
 
-
-                    showStatus(
-                        status,
-                        getFriendlyError(error),
-                        "error"
-                    );
-
-
-                    restoreButton(
-                        submitButton
-                    );
-
-                    return;
+                    throw error;
                 }
 
 
                 console.log(
-                    "Booking created:",
+                    "Flight booking created:",
                     data
                 );
 
 
-                showStatus(
-                    status,
-                    "Booking request received successfully. Our management team will contact you shortly.",
-                    "success"
+                /*
+                    At this point the booking is
+                    successfully saved.
+
+                    Stripe will be attached in the
+                    next stage using the booking ID.
+                */
+
+                showFlightError(
+                    errorBox,
+                    "Your booking request has been saved. Secure Stripe checkout will be connected next."
                 );
 
 
-                form.reset();
+                errorBox.style.display =
+                    "block";
+
+                errorBox.style.background =
+                    "#e8f8ed";
+
+                errorBox.style.color =
+                    "#196b35";
+
 
             } catch (error) {
 
                 console.error(
-                    "Unexpected booking error:",
                     error
                 );
 
 
-                showStatus(
-                    status,
-                    "Something went wrong while submitting your booking. Please try again.",
-                    "error"
+                showFlightError(
+                    errorBox,
+                    friendlyDatabaseError(
+                        error
+                    )
                 );
 
             } finally {
 
-                restoreButton(
-                    submitButton
+                setButtonLoading(
+                    submitButton,
+                    false
                 );
 
             }
@@ -733,8 +1394,22 @@ function initializeBookingForm() {
 
 
 /* =========================================================
-   EMAIL VALIDATION
+   HELPERS
 ========================================================= */
+
+function formatCurrency(amount) {
+
+    return new Intl.NumberFormat(
+        "en-US",
+        {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+        }
+    ).format(amount);
+
+}
+
 
 function isValidEmail(email) {
 
@@ -743,10 +1418,6 @@ function isValidEmail(email) {
 
 }
 
-
-/* =========================================================
-   STATUS
-========================================================= */
 
 function showStatus(
     element,
@@ -761,74 +1432,124 @@ function showStatus(
         message;
 
 
-    element.dataset.status =
-        type;
-
-
-    element.setAttribute(
-        "role",
-        "status"
-    );
+    element.className =
+        `form-status ${type}`;
 
 }
 
 
-/* =========================================================
-   BUTTON RESTORE
-========================================================= */
+function showFlightError(
+    element,
+    message
+) {
 
-function restoreButton(button) {
+    if (!element) return;
+
+
+    element.textContent =
+        message;
+
+
+    element.style.display =
+        "block";
+
+}
+
+
+function hideFlightError(
+    element
+) {
+
+    if (!element) return;
+
+
+    element.textContent =
+        "";
+
+    element.style.display =
+        "none";
+
+}
+
+
+function setButtonLoading(
+    button,
+    loading,
+    text = ""
+) {
 
     if (!button) return;
 
 
-    button.disabled =
-        false;
+    if (loading) {
 
+        button.dataset.originalText =
+            button.textContent;
 
-    button.textContent =
-        button.dataset.originalText ||
-        "Submit Booking Request";
+        button.disabled =
+            true;
+
+        button.textContent =
+            text;
+
+    } else {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            button.dataset.originalText ||
+            "Submit Booking Request";
+
+    }
 
 }
 
 
-/* =========================================================
-   DATABASE ERROR
-========================================================= */
+function friendlyDatabaseError(
+    error
+) {
 
-function getFriendlyError(error) {
+    if (!error) {
+
+        return "Something went wrong. Please try again.";
+
+    }
+
+
+    const message =
+        String(
+            error.message || ""
+        ).toLowerCase();
+
 
     if (
-        error &&
-        (
-            error.code === "42501" ||
-            String(error.message)
-                .toLowerCase()
-                .includes(
-                    "row-level security"
-                )
+        error.code === "42501" ||
+        message.includes(
+            "row-level security"
         )
     ) {
 
-        return "The booking system could not authorize this request. Please contact management.";
+        return "The booking system could not authorize this request. Please check the Supabase booking permissions.";
 
     }
 
 
     if (
-        error &&
-        String(error.message)
-            .toLowerCase()
-            .includes("fetch")
+        message.includes(
+            "relation"
+        ) &&
+        message.includes(
+            "does not exist"
+        )
     ) {
 
-        return "We could not connect to the booking server. Please check your connection and try again.";
+        return "The bookings database table could not be found.";
 
     }
 
 
-    return "We couldn't submit your booking right now. Please try again or contact management.";
+    return "We couldn't submit your booking right now. Please try again.";
 
 }
 
@@ -848,8 +1569,9 @@ function initializeCurrentYear() {
     if (year) {
 
         year.textContent =
-            new Date().getFullYear();
+            new Date()
+                .getFullYear();
 
     }
 
-}
+               }
