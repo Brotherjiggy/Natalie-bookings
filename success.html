@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -8,12 +9,12 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Payment Successful | Natalya Bookings</title>
-
     <meta
         name="description"
-        content="Your Natalya Bookings payment has been successfully received."
+        content="Payment confirmation for Natalya Bookings."
     >
+
+    <title>Payment Successful | Natalya Bookings</title>
 
     <style>
 
@@ -25,6 +26,7 @@
 
         body {
             min-height: 100vh;
+
             font-family:
                 Arial,
                 Helvetica,
@@ -34,7 +36,7 @@
                 linear-gradient(
                     135deg,
                     #ffffff 0%,
-                    #fff7f0 55%,
+                    #fff8f2 55%,
                     #ff7a00 100%
                 );
 
@@ -43,11 +45,14 @@
             justify-content: center;
 
             padding: 24px;
+
+            color: #111;
         }
+
 
         .success-card {
             width: 100%;
-            max-width: 650px;
+            max-width: 680px;
 
             background: #ffffff;
 
@@ -62,11 +67,12 @@
                 rgba(0, 0, 0, 0.15);
         }
 
-        .success-icon {
-            width: 82px;
-            height: 82px;
 
-            margin: 0 auto 25px;
+        .success-icon {
+            width: 84px;
+            height: 84px;
+
+            margin: 0 auto 24px;
 
             border-radius: 50%;
 
@@ -78,9 +84,14 @@
             align-items: center;
             justify-content: center;
 
-            font-size: 42px;
-            font-weight: bold;
+            font-size: 44px;
+            font-weight: 700;
+
+            box-shadow:
+                0 10px 25px
+                rgba(255, 122, 0, 0.25);
         }
+
 
         .label {
             color: #ff7a00;
@@ -96,17 +107,17 @@
             margin-bottom: 12px;
         }
 
+
         h1 {
-            font-size: clamp(
-                30px,
-                6vw,
-                48px
-            );
+            font-size: clamp(32px, 7vw, 50px);
+
+            line-height: 1.1;
 
             color: #111111;
 
             margin-bottom: 18px;
         }
+
 
         .message {
             color: #555555;
@@ -115,50 +126,132 @@
 
             font-size: 16px;
 
-            margin-bottom: 28px;
+            max-width: 540px;
+
+            margin:
+                0 auto 28px;
         }
 
-        .reference-box {
-            background: #fff4e9;
 
-            border: 1px solid #ffd7b5;
+        .confirmation-box {
+            background: #fff6ee;
+
+            border:
+                1px solid
+                #ffd6b2;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            margin-bottom: 24px;
+
+            text-align: left;
+        }
+
+
+        .confirmation-title {
+            color: #ff7a00;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 16px;
+        }
+
+
+        .confirmation-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid
+                #f0dfd0;
+        }
+
+
+        .confirmation-row:last-child {
+            border-bottom: none;
+        }
+
+
+        .confirmation-row span {
+            color: #777777;
+
+            font-size: 14px;
+        }
+
+
+        .confirmation-row strong {
+            color: #111111;
+
+            font-size: 14px;
+
+            text-align: right;
+
+            word-break: break-word;
+        }
+
+
+        .reference-box {
+            background: #111111;
+
+            color: #ffffff;
 
             border-radius: 14px;
 
             padding: 18px;
 
-            margin-bottom: 28px;
+            margin-bottom: 26px;
         }
 
-        .reference-title {
-            font-size: 12px;
 
-            color: #777777;
+        .reference-title {
+            color: #bbbbbb;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
 
             text-transform: uppercase;
 
-            letter-spacing: 1px;
-
-            margin-bottom: 8px;
+            margin-bottom: 9px;
         }
 
+
         #reference {
-            color: #111111;
+            color: #ffffff;
+
+            font-size: 13px;
 
             font-weight: 700;
 
             word-break: break-all;
-
-            font-size: 14px;
         }
+
 
         .next-step {
             color: #555555;
 
-            line-height: 1.6;
+            line-height: 1.65;
+
+            font-size: 14px;
 
             margin-bottom: 28px;
         }
+
 
         .button {
             display: inline-block;
@@ -169,19 +262,29 @@
 
             text-decoration: none;
 
-            padding: 15px 28px;
+            padding:
+                15px 30px;
 
             border-radius: 999px;
 
             font-weight: 700;
 
-            transition: 0.2s ease;
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
+            box-shadow:
+                0 8px 20px
+                rgba(255, 122, 0, 0.20);
         }
+
 
         .button:hover {
             transform: translateY(-2px);
+
             background: #e96800;
         }
+
 
         .management {
             margin-top: 25px;
@@ -190,53 +293,153 @@
 
             color: #777777;
 
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        @media (max-width: 500px) {
+
+        .status {
+            margin-top: 18px;
+
+            font-size: 13px;
+
+            color: #777777;
+        }
+
+
+        @media (max-width: 520px) {
 
             .success-card {
-                padding: 35px 20px;
+                padding:
+                    35px 18px;
+
+                border-radius: 20px;
             }
 
+
             h1 {
-                font-size: 32px;
+                font-size: 34px;
+            }
+
+
+            .confirmation-row {
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+
+            .confirmation-row strong {
+                text-align: left;
+            }
+
+
+            .button {
+                width: 100%;
             }
 
         }
 
     </style>
+
 </head>
+
 
 <body>
 
     <main class="success-card">
 
+
+        <!-- SUCCESS ICON -->
+
         <div class="success-icon">
             ✓
         </div>
+
+
+        <!-- BRAND -->
 
         <div class="label">
             Natalya Bookings
         </div>
 
+
+        <!-- TITLE -->
+
         <h1>
             Payment Successful
         </h1>
 
+
         <p class="message">
-            Thank you. Your booking payment has
-            been successfully received.
-            Your request has been recorded and
-            our management team will review
-            the booking details.
+
+            Your payment has been successfully
+            received through Stripe.
+
+            Your booking request has been recorded
+            and will now be reviewed by the
+            management team.
+
         </p>
+
+
+        <!-- BOOKING CONFIRMATION -->
+
+        <div class="confirmation-box">
+
+            <div class="confirmation-title">
+                Booking Confirmation
+            </div>
+
+
+            <div class="confirmation-row">
+
+                <span>
+                    Payment status
+                </span>
+
+                <strong>
+                    Paid
+                </strong>
+
+            </div>
+
+
+            <div class="confirmation-row">
+
+                <span>
+                    Booking type
+                </span>
+
+                <strong>
+                    Meet &amp; Greet Flight
+                </strong>
+
+            </div>
+
+
+            <div class="confirmation-row">
+
+                <span>
+                    Payment provider
+                </span>
+
+                <strong>
+                    Stripe
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- STRIPE REFERENCE -->
 
         <div class="reference-box">
 
             <div class="reference-title">
-                Payment Reference
+                Stripe Payment Reference
             </div>
+
 
             <div id="reference">
                 Processing...
@@ -244,12 +447,25 @@
 
         </div>
 
+
+        <!-- NEXT STEP -->
+
         <p class="next-step">
-            Please keep this reference for your
-            records. Management will contact you
-            using the information provided during
+
+            Please keep your payment reference
+            for your records.
+
+            Management will contact you using
+            the information provided during
             your booking.
+
+            Final travel arrangements remain
+            subject to management confirmation.
+
         </p>
+
+
+        <!-- RETURN -->
 
         <a
             href="index.html"
@@ -258,48 +474,101 @@
             Return to Natalya Bookings
         </a>
 
+
+        <!-- MANAGEMENT -->
+
         <div class="management">
 
-            Managed by Budget Designs<br>
+            <strong>
+                Managed by Budget Designs
+            </strong>
 
-            +1 938 230 0935<br>
+            <br>
+
+            +1 938 230 0935
+
+            <br>
 
             Budgetdesignbookings@gmail.com
 
         </div>
 
+
+        <div
+            class="status"
+            id="pageStatus"
+        >
+            Payment confirmation received.
+        </div>
+
+
     </main>
 
+
     <script>
+
+        /*
+        =====================================================
+        STRIPE SUCCESS SESSION
+        =====================================================
+
+        Stripe should redirect the customer to:
+
+        success.html?session_id={CHECKOUT_SESSION_ID}
+
+        We only display the session ID here.
+
+        NEVER put the Stripe secret key in this file.
+        */
+
 
         const params =
             new URLSearchParams(
                 window.location.search
             );
 
+
         const sessionId =
             params.get(
                 "session_id"
             );
+
 
         const reference =
             document.getElementById(
                 "reference"
             );
 
+
+        const pageStatus =
+            document.getElementById(
+                "pageStatus"
+            );
+
+
         if (sessionId) {
 
             reference.textContent =
                 sessionId;
+
+
+            pageStatus.textContent =
+                "Your Stripe payment reference has been recorded.";
 
         } else {
 
             reference.textContent =
                 "Payment received";
 
+
+            pageStatus.textContent =
+                "Payment was received. Please keep this page for your records.";
+
         }
 
     </script>
 
+
 </body>
+
 </html>
