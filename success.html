@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Payment Successful | Natalya Bookings</title>
+
+    <meta
+        name="description"
+        content="Your Natalya Bookings payment has been successfully received."
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #fff7f0 55%,
+                    #ff7a00 100%
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px;
+        }
+
+        .success-card {
+            width: 100%;
+            max-width: 650px;
+
+            background: #ffffff;
+
+            border-radius: 24px;
+
+            padding: 45px 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        .success-icon {
+            width: 82px;
+            height: 82px;
+
+            margin: 0 auto 25px;
+
+            border-radius: 50%;
+
+            background: #ff7a00;
+
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 42px;
+            font-weight: bold;
+        }
+
+        .label {
+            color: #ff7a00;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: clamp(
+                30px,
+                6vw,
+                48px
+            );
+
+            color: #111111;
+
+            margin-bottom: 18px;
+        }
+
+        .message {
+            color: #555555;
+
+            line-height: 1.7;
+
+            font-size: 16px;
+
+            margin-bottom: 28px;
+        }
+
+        .reference-box {
+            background: #fff4e9;
+
+            border: 1px solid #ffd7b5;
+
+            border-radius: 14px;
+
+            padding: 18px;
+
+            margin-bottom: 28px;
+        }
+
+        .reference-title {
+            font-size: 12px;
+
+            color: #777777;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 8px;
+        }
+
+        #reference {
+            color: #111111;
+
+            font-weight: 700;
+
+            word-break: break-all;
+
+            font-size: 14px;
+        }
+
+        .next-step {
+            color: #555555;
+
+            line-height: 1.6;
+
+            margin-bottom: 28px;
+        }
+
+        .button {
+            display: inline-block;
+
+            background: #ff7a00;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            padding: 15px 28px;
+
+            border-radius: 999px;
+
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            background: #e96800;
+        }
+
+        .management {
+            margin-top: 25px;
+
+            font-size: 13px;
+
+            color: #777777;
+
+            line-height: 1.6;
+        }
+
+        @media (max-width: 500px) {
+
+            .success-card {
+                padding: 35px 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <div class="label">
+            Natalya Bookings
+        </div>
+
+        <h1>
+            Payment Successful
+        </h1>
+
+        <p class="message">
+            Thank you. Your booking payment has
+            been successfully received.
+            Your request has been recorded and
+            our management team will review
+            the booking details.
+        </p>
+
+        <div class="reference-box">
+
+            <div class="reference-title">
+                Payment Reference
+            </div>
+
+            <div id="reference">
+                Processing...
+            </div>
+
+        </div>
+
+        <p class="next-step">
+            Please keep this reference for your
+            records. Management will contact you
+            using the information provided during
+            your booking.
+        </p>
+
+        <a
+            href="index.html"
+            class="button"
+        >
+            Return to Natalya Bookings
+        </a>
+
+        <div class="management">
+
+            Managed by Budget Designs<br>
+
+            +1 938 230 0935<br>
+
+            Budgetdesignbookings@gmail.com
+
+        </div>
+
+    </main>
+
+    <script>
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const sessionId =
+            params.get(
+                "session_id"
+            );
+
+        const reference =
+            document.getElementById(
+                "reference"
+            );
+
+        if (sessionId) {
+
+            reference.textContent =
+                sessionId;
+
+        } else {
+
+            reference.textContent =
+                "Payment received";
+
+        }
+
+    </script>
+
+</body>
+</html>
