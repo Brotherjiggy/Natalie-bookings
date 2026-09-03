@@ -379,6 +379,25 @@ function initializeTheme() {
     );
 
 }
+/* ==========================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+========================================== */
+
+document.addEventListener("click", function (event) {
+
+    const clickedInsideMenu =
+        elements.mainNav.contains(event.target);
+
+    const clickedMenuButton =
+        elements.menuButton.contains(event.target);
+
+    if (!clickedInsideMenu && !clickedMenuButton) {
+
+        elements.mainNav.classList.remove("open");
+
+    }
+
+});
 
 
 /* =========================================================
