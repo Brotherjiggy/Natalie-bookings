@@ -1,3 +1,4 @@
+"use strict";
 /* =========================================================
    NATALYA BOOKINGS
    COMPLETE VANILLA JAVASCRIPT
