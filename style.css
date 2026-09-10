@@ -70,86 +70,37 @@ button {
     margin: auto;
 }
 
-.text-center { text-align: center; }
+.text-center { text-align: center; })
 
 /* =========================================================
-   AUTO-HIDING NAVBAR
+   AUTO-HIDING NAVBAR (SCROLL REVEAL)
 ========================================================= */
 .site-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 15px 5%;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    will-change: transform;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
 }
 
+/* Class applied via JS to hide navbar on scroll down */
 .site-header.nav-hidden {
-    transform: translateY(-100%);
+    transform: translateY(-100%) !important;
 }
 
 .dark-mode .site-header {
-    background: rgba(17, 17, 17, 0.92);
+    background: rgba(17, 17, 17, 0.95);
     border-color: #292929;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    font-size: 17px;
-}
-
-.brand strong {
-    color: var(--orange);
-}
-
-.brand-mark {
-    width: 34px;
-    height: 34px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--orange);
-    color: white;
-    font-weight: 900;
-}
-
-.primary-navigation {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.primary-navigation a:hover {
-    color: var(--orange);
-}
-
-.menu-toggle {
-    display: none;
-    border: none;
-    background: transparent;
-    font-size: 27px;
-    color: inherit;
-}
-
-.theme-toggle {
-    width: 38px;
-    height: 38px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    background: transparent;
-    color: inherit;
 }
 
 /* =========================================================
