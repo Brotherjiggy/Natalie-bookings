@@ -70,7 +70,7 @@ button {
     margin: auto;
 }
 
-.text-center { text-align: center; })
+.text-center { text-align: center; }
 
 /* =========================================================
    AUTO-HIDING NAVBAR (SCROLL REVEAL)
@@ -102,6 +102,7 @@ button {
     background: rgba(17, 17, 17, 0.95);
     border-color: #292929;
 }
+
 
 /* =========================================================
    HERO
