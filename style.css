@@ -2237,3 +2237,106 @@ footer a:hover {
     font-size: 9px;
   }
 }
+/* =========================================================
+   NATALYA BOOKINGS — EXPERIENCE CARD LAYOUT FIX
+   ========================================================= */
+
+.experience-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 520px;
+}
+
+/* Image layer */
+.experience-card .experience-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Dark readability layer */
+.experience-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.62) 42%,
+    rgba(0, 0, 0, 0.08) 75%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
+/* Text layer */
+.experience-card .experience-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 30px;
+  color: #ffffff;
+}
+
+/* Prevent paragraphs/headings from overlapping */
+.experience-card .experience-content h3 {
+  margin: 0 0 10px;
+  line-height: 1.15;
+}
+
+.experience-card .experience-content p {
+  margin: 0 0 18px;
+  line-height: 1.6;
+}
+
+.experience-card .experience-content .price {
+  margin-bottom: 18px;
+}
+
+/* Keep buttons properly separated */
+.experience-card .experience-content .button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* Selected state */
+.experience-card.selected {
+  border-color: #ff7a00;
+}
+
+/* Selected badge */
+.experience-card.selected::after {
+  z-index: 5;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .experience-card {
+    min-height: 500px;
+  }
+
+  .experience-card .experience-content {
+    padding: 24px;
+  }
+
+  .experience-card .experience-content h3 {
+    font-size: 1.35rem;
+  }
+
+  .experience-card .experience-content p {
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+}
