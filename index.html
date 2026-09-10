@@ -12,33 +12,50 @@
 <body>
 
     <!-- =====================================================
-         HEADER / NAVBAR (Auto-Hides on Scroll)
-    ====================================================== -->
-    <header class="site-header" id="siteHeader">
+     HEADER / NAVBAR (Elevated Luxury Design + Floating Pill Menu)
+====================================================== -->
+<header class="site-header" id="siteHeader">
+    <div class="header-container">
+        
+        <!-- Luxury Brand Logo -->
         <a href="#home" class="brand">
-            <span class="brand-mark">N</span>
-            <span>Natalya <strong>Bookings</strong></span>
+            <div class="brand-logo-wrapper">
+                <span class="brand-mark">N</span>
+            </div>
+            <div class="brand-text">
+                <span class="brand-title">NATALYA</span>
+                <span class="brand-sub">BOOKINGS & HAUTE PARFUMERIE</span>
+            </div>
         </a>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">
-            ☰
-        </button>
-
+        <!-- Desktop Navigation -->
         <nav class="primary-navigation" id="primaryNavigation">
-            <a href="#home">Home</a>
-            <a href="#experiences">Experiences</a>
-            <a href="#perfumes">Perfume Boutique</a>
-            <a href="#community">Community</a>
-            <a href="#membership">Membership</a>
-            <a href="#book">Book & Shop</a>
-            <a href="#contact">Contact</a>
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark and light mode">
-                ◐
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#experiences" class="nav-link">Experiences</a>
+            <a href="#perfumes" class="nav-link">Perfume Boutique</a>
+            <a href="#community" class="nav-link">Community</a>
+            <a href="#membership" class="nav-link">Membership</a>
+            <a href="#book" class="nav-btn-highlight">Book & Shop</a>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+                <span class="theme-icon">◐</span>
             </button>
         </nav>
-    </header>
 
-    <main>
+        <!-- Unique Custom Mobile Menu Button -->
+        <div class="mobile-controls">
+            <button id="themeToggleMobile" class="theme-toggle mobile-only" type="button" aria-label="Toggle theme">
+                ◐
+            </button>
+            <button class="menu-toggle-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+        </div>
+
+    </div>
+</header>
+
 
         <!-- =================================================
              HERO SECTION
