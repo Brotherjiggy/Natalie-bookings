@@ -3,48 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natalie Bookings & Haute Parfumerie</title>
+    <title>N Natalya Bookings</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
 
     <!-- =====================================================
-         HEADER / NAVBAR (Elevated Luxury Design)
+         STYLISH AUTO-HIDING HEADER
     ====================================================== -->
     <header class="site-header" id="siteHeader">
         <div class="header-container">
             
-            <!-- Luxury Brand Logo -->
+            <!-- Exact Brand Text with Monogram Styling -->
             <a href="#home" class="brand">
-                <div class="brand-logo-wrapper">
-                    <span class="brand-mark">N</span>
-                </div>
-                <div class="brand-text">
-                    <span class="brand-title">NATALYA</span>
+                <span class="brand-monogram">N</span>
+                <div class="brand-text-group">
+                    <span class="brand-main">NATALYA</span>
                     <span class="brand-sub">BOOKINGS & HAUTE PARFUMERIE</span>
                 </div>
             </a>
 
-            <!-- Desktop Navigation -->
+            <!-- Stylish Desktop Navigation -->
             <nav class="primary-navigation" id="primaryNavigation">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#experiences" class="nav-link">Experiences</a>
-                <a href="#perfumes" class="nav-link">Perfume Boutique</a>
+                <a href="#perfumes" class="nav-link">Perfumes</a>
                 <a href="#community" class="nav-link">Community</a>
-                <a href="#membership" class="nav-link">Membership</a>
                 <a href="#book" class="nav-btn-highlight">Book & Shop</a>
-                
-                <!-- Cart Icon Button -->
-                <button id="cartBtn" class="cart-toggle-btn" aria-label="Open Shopping Cart">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-badge" id="cartCount">0</span>
-                </button>
-
-                <!-- Dark Mode Toggle -->
                 <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
                     <span class="theme-icon">◐</span>
                 </button>
@@ -52,9 +41,6 @@
 
             <!-- Mobile Controls -->
             <div class="mobile-controls">
-                <button id="cartBtnMobile" class="cart-toggle-btn mobile-only" aria-label="Open Shopping Cart">
-                    🛒 <span class="cart-badge" id="cartCountMobile">0</span>
-                </button>
                 <button id="themeToggleMobile" class="theme-toggle mobile-only" type="button" aria-label="Toggle theme">
                     ◐
                 </button>
@@ -69,7 +55,7 @@
     </header>
 
     <!-- =====================================================
-         HERO SECTION
+         EXACT HERO SECTION FROM YOUR SCREENSHOT
     ====================================================== -->
     <section id="home" class="hero-section">
         <div class="hero-overlay"></div>
@@ -91,286 +77,36 @@
         </div>
     </section>
 
-    <!-- =====================================================
-         CURATED EXPERIENCES SECTION
-    ====================================================== -->
+    <!-- CONTENT SECTIONS -->
     <section id="experiences" class="content-section">
         <div class="section-container">
-            <div class="section-header">
-                <span class="sub-heading">EXCLUSIVE RESERVATIONS</span>
-                <h2 class="section-title">Curated Experiences</h2>
-                <p class="section-desc">Handcrafted itineraries tailored for memorable moments, elite dining, and high-tier travel.</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="card experience-card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80');">
-                        <span class="badge">Bespoke Travel</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>VIP Private Island & Resort Stay</h3>
-                        <p>Complete luxury transfer, private villa reservation, and dedicated personal concierge service.</p>
-                        <div class="card-footer">
-                            <span class="price">From $2,500</span>
-                            <a href="#book" class="btn-text">Reserve Now &rarr;</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card experience-card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80');">
-                        <span class="badge">Fine Dining</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>Private Chef Tasting & Sommelier</h3>
-                        <p>An exclusive multi-course culinary experience paired with world-class rare vintage wines.</p>
-                        <div class="card-footer">
-                            <span class="price">From $850</span>
-                            <a href="#book" class="btn-text">Reserve Now &rarr;</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card experience-card">
-                    <div class="card-image" style="background-image: url('https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80');">
-                        <span class="badge">Fan Access</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>Backstage & VIP Fan Meet</h3>
-                        <p>Front-row access, behind-the-scenes guided tour, and private photo session with Natalya.</p>
-                        <div class="card-footer">
-                            <span class="price">From $1,200</span>
-                            <a href="#book" class="btn-text">Reserve Now &rarr;</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h2 class="section-title">Curated Experiences</h2>
+            <p class="section-desc">Handcrafted packages tailored for memorable moments and elite dining.</p>
         </div>
     </section>
 
-    <!-- =====================================================
-         HAUTE PARFUMERIE (10 LUXURY PERFUMES)
-    ====================================================== -->
     <section id="perfumes" class="content-section dark-alt">
         <div class="section-container">
-            <div class="section-header">
-                <span class="sub-heading">THE SIGNATURE COLLECTION</span>
-                <h2 class="section-title">Haute Parfumerie</h2>
-                <p class="section-desc">Explore our signature lineup of 10 handcrafted, long-lasting luxury fragrances (100ml Extrait de Parfum).</p>
-            </div>
-
-            <div class="grid grid-4" id="perfumeGrid">
-                <!-- Perfumes populated dynamically via JavaScript -->
-            </div>
+            <h2 class="section-title">Haute Parfumerie</h2>
+            <p class="section-desc">Explore our signature collection of 10 handcrafted luxury fragrances.</p>
         </div>
     </section>
 
-    <!-- =====================================================
-         COMMUNITY INITIATIVES SECTION
-    ====================================================== -->
     <section id="community" class="content-section">
         <div class="section-container">
-            <div class="section-header">
-                <span class="sub-heading">GIVING BACK</span>
-                <h2 class="section-title">Community Initiatives</h2>
-                <p class="section-desc">Empowering creative talent, supporting local artistry, and fostering fan-led global projects.</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="info-box">
-                    <div class="info-icon">🎨</div>
-                    <h3>Youth Creative Grants</h3>
-                    <p>10% of every perfume sale goes directly toward funding micro-grants for emerging fashion designers and artists.</p>
-                </div>
-                <div class="info-box">
-                    <div class="info-icon">🌿</div>
-                    <h3>Ethical Sourcing</h3>
-                    <p>All rare botanical ingredients in our fragrance line are sustainably sourced, supporting fair wages for local farmers.</p>
-                </div>
-                <div class="info-box">
-                    <div class="info-icon">🤝</div>
-                    <h3>Fan Mentorships</h3>
-                    <p>Quarterly exclusive masterclasses hosted by Natalya for active community members and fashion enthusiasts.</p>
-                </div>
-            </div>
+            <h2 class="section-title">Community Initiatives</h2>
+            <p class="section-desc">Empowering fan experiences and collaborative projects.</p>
         </div>
     </section>
 
-    <!-- =====================================================
-         MEMBERSHIP TIERS SECTION
-    ====================================================== -->
-    <section id="membership" class="content-section dark-alt">
+    <section id="book" class="content-section dark-alt">
         <div class="section-container">
-            <div class="section-header">
-                <span class="sub-heading">JOIN THE CLUB</span>
-                <h2 class="section-title">Exclusive Membership</h2>
-                <p class="section-desc">Unlock priority booking access, complimentary fragrance samples, and invite-only gala access.</p>
-            </div>
-
-            <div class="grid grid-3">
-                <div class="card pricing-card">
-                    <h3 class="tier-name">Silver Pass</h3>
-                    <div class="tier-price">$199 <span>/ year</span></div>
-                    <ul class="tier-features">
-                        <li>✓ Early booking notifications</li>
-                        <li>✓ 1x Complimentary 10ml Fragrance</li>
-                        <li>✓ 5% discount on all purchases</li>
-                        <li>✗ VIP Access to galas</li>
-                    </ul>
-                    <a href="#book" class="btn btn-secondary btn-full">Join Silver</a>
-                </div>
-
-                <div class="card pricing-card featured">
-                    <span class="badge">Most Popular</span>
-                    <h3 class="tier-name">Gold VIP Pass</h3>
-                    <div class="tier-price">$499 <span>/ year</span></div>
-                    <ul class="tier-features">
-                        <li>✓ Priority booking reservation</li>
-                        <li>✓ 3x Full 100ml Fragrances of choice</li>
-                        <li>✓ 15% discount on all purchases</li>
-                        <li>✓ VIP Invite to annual brand gala</li>
-                    </ul>
-                    <a href="#book" class="btn btn-primary btn-full">Join Gold VIP</a>
-                </div>
-
-                <div class="card pricing-card">
-                    <h3 class="tier-name">Black Diamond</h3>
-                    <div class="tier-price">$1,200 <span>/ year</span></div>
-                    <ul class="tier-features">
-                        <li>✓ Unlimited 24/7 dedicated concierge</li>
-                        <li>✓ Full 10 Perfume Collection Box</li>
-                        <li>✓ 25% discount on all purchases</li>
-                        <li>✓ All-access pass to all private events</li>
-                    </ul>
-                    <a href="#book" class="btn btn-secondary btn-full">Join Diamond</a>
-                </div>
-            </div>
+            <h2 class="section-title">Reserve & Shop</h2>
+            <p class="section-desc">Select your experience or purchase iconic perfumes directly.</p>
         </div>
     </section>
-
-    <!-- =====================================================
-         BOOKING & COMBINED CHECKOUT FORM SECTION
-    ====================================================== -->
-    <section id="book" class="content-section">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="sub-heading">CUSTOM RESERVATION</span>
-                <h2 class="section-title">Book Experience or Order Custom</h2>
-                <p class="section-desc">Fill in your reservation parameters below to receive an instant estimate and lock in your schedule.</p>
-            </div>
-
-            <div class="booking-wrapper">
-                <form id="bookingForm" class="booking-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input type="text" id="fullName" placeholder="e.g., Alexandra Wright" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="emailAddr">Email Address</label>
-                            <input type="email" id="emailAddr" placeholder="alexandra@example.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="serviceType">Select Experience / Service</label>
-                            <select id="serviceType" required>
-                                <option value="travel" data-price="2500">VIP Private Resort Stay ($2,500)</option>
-                                <option value="dining" data-price="850">Private Chef Tasting ($850)</option>
-                                <option value="meetup" data-price="1200">Backstage VIP Fan Meet ($1,200)</option>
-                                <option value="custom" data-price="1500">Custom Experience Package ($1,500+)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="bookingDate">Preferred Date</label>
-                            <input type="date" id="bookingDate" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="guests">Number of Guests</label>
-                            <input type="number" id="guests" min="1" max="20" value="1" required>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="notes">Special Requests / Preferences</label>
-                            <textarea id="notes" rows="4" placeholder="Mention any dietary requirements, specific fragrance preferences, or special arrangements..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-summary">
-                        <div class="summary-details">
-                            <span>Estimated Total:</span>
-                            <span class="summary-price" id="calcTotal">$2,500</span>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-large">Confirm & Proceed to Checkout</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- =====================================================
-         CART MODAL (COMBINED CHECKOUT DRAWER)
-    ====================================================== -->
-    <div class="cart-modal-overlay" id="cartOverlay">
-        <div class="cart-drawer">
-            <div class="cart-header">
-                <h3>Your Luxury Shopping Cart</h3>
-                <button class="cart-close-btn" id="closeCartBtn">&times;</button>
-            </div>
-            <div class="cart-body" id="cartItemsContainer">
-                <!-- Dynamic Cart Items -->
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total-line">
-                    <span>Subtotal:</span>
-                    <strong id="cartSubtotal">$0.00</strong>
-                </div>
-                <button id="checkoutBtn" class="btn btn-primary btn-full">Proceed to Combined Checkout</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="brand">
-                    <div class="brand-logo-wrapper">
-                        <span class="brand-mark">N</span>
-                    </div>
-                    <div class="brand-text">
-                        <span class="brand-title">NATALYA</span>
-                        <span class="brand-sub">BOOKINGS & HAUTE PARFUMERIE</span>
-                    </div>
-                </div>
-                <p class="footer-desc">Curating unforgettable high-end lifestyle experiences and iconic fragrances worldwide.</p>
-            </div>
-
-            <div class="footer-links">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#experiences">Experiences</a></li>
-                    <li><a href="#perfumes">Perfume Boutique</a></li>
-                    <li><a href="#community">Community</a></li>
-                    <li><a href="#membership">Membership</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-newsletter">
-                <h4>Exclusive Updates</h4>
-                <p>Subscribe to receive limited batch perfume release announcements and VIP booking windows.</p>
-                <form id="newsletterForm" class="newsletter-form">
-                    <input type="email" placeholder="Enter your email" required>
-                    <button type="submit" class="btn btn-primary">Subscribe</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 N Natalya Bookings & Haute Parfumerie. All rights reserved. Managed by <strong>Budget Designs</strong>.</p>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
+
