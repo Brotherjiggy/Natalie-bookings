@@ -45,9 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeFlightBooking();
     initializeDates();
     initializeCurrentYear();
-    checkPaymentStatus();
 });
-
 /* =========================================================
    AUTO-HIDING NAVBAR ON SCROLL
 ========================================================= */
@@ -55,28 +53,34 @@ function initializeAutoHideHeader() {
     const header = document.getElementById("siteHeader");
     if (!header) return;
 
-    let lastScrollY = window.scrollY;
+    let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollThreshold = 10; // Minimum scroll delta before toggling
 
     window.addEventListener("scroll", () => {
-        const currentScrollY = window.scrollY;
+        const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-        // Don't hide at top of page
+        // Keep header visible at the very top of the page
         if (currentScrollY <= 80) {
             header.classList.remove("nav-hidden");
             lastScrollY = currentScrollY;
             return;
         }
 
-        if (currentScrollY > lastScrollY) {
-            // Scrolling Down -> Hide Header
+        // Check if scrolled past threshold
+        if (Math.abs(currentScrollY - lastScrollY) <= scrollThreshold) {
+            return;
+        }
+
+        if (currentScrollY > lastScrollY && !header.classList.contains("nav-hidden")) {
+            // Scrolling DOWN -> Hide Header
             header.classList.add("nav-hidden");
-        } else {
-            // Scrolling Up -> Show Header
+        } else if (currentScrollY < lastScrollY && header.classList.contains("nav-hidden")) {
+            // Scrolling UP -> Reveal Header
             header.classList.remove("nav-hidden");
         }
 
         lastScrollY = currentScrollY;
-    });
+    }, { passive: true });
 }
 
 /* =========================================================
