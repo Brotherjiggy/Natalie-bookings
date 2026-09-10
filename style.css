@@ -1,6 +1,6 @@
 /* =========================================================
-   NATALYA BOOKINGS & LUXURY ATELIER
-   MODERN SAAS & HIGH-END LUXURY STYLESHEET
+   NATALYA BOOKINGS & HAUTE PARFUMERIE
+   SAAS & LUXURY STYLESHEET WITH AUTO-HIDE NAVBAR
 ========================================================= */
 
 :root {
@@ -19,7 +19,7 @@
     --muted: #6c6c6c;
 
     --border: #e5e1dd;
-    --container: 1180px;
+    --container: 1200px;
     --radius: 18px;
     --shadow-saas: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -70,8 +70,10 @@ button {
     margin: auto;
 }
 
+.text-center { text-align: center; }
+
 /* =========================================================
-   HEADER
+   AUTO-HIDING NAVBAR
 ========================================================= */
 .site-header {
     position: fixed;
@@ -86,6 +88,11 @@ button {
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header.nav-hidden {
+    transform: translateY(-100%);
 }
 
 .dark-mode .site-header {
@@ -203,9 +210,9 @@ button {
 .hero h1 {
     max-width: 900px;
     margin: 15px 0 25px;
-    font-size: clamp(48px, 8vw, 92px);
-    line-height: .95;
-    letter-spacing: -3px;
+    font-size: clamp(44px, 7vw, 84px);
+    line-height: .98;
+    letter-spacing: -2.5px;
 }
 
 .hero h1 span {
@@ -296,9 +303,14 @@ button {
     margin-bottom: 55px;
 }
 
+.section-heading.text-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .section-heading h2, .about-section h2, .membership-section h2, .contact-section h2 {
     margin: 10px 0 18px;
-    font-size: clamp(40px, 6vw, 68px);
+    font-size: clamp(38px, 5.5vw, 64px);
     line-height: 1;
     letter-spacing: -2px;
 }
@@ -361,7 +373,7 @@ button {
 }
 
 .experience-content h3 {
-    font-size: 25px;
+    font-size: 24px;
     margin-bottom: 10px;
 }
 
@@ -374,9 +386,10 @@ button {
 
 .experience-price {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 20px;
     color: var(--orange);
+    font-weight: 800;
 }
 
 .text-link {
@@ -386,371 +399,282 @@ button {
 }
 
 /* =========================================================
-   LUXURY PERFUME ATELIER SECTION
+   PERFUME BOUTIQUE (10 LUXURY FRAGRANCES)
 ========================================================= */
 .perfume-section {
     background: var(--cream);
-    position: relative;
 }
 
 .dark-mode .perfume-section {
     background: #15100c;
 }
 
-.perfume-grid {
+.perfumes-boutique-grid {
     display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 40px;
-    align-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    margin-bottom: 45px;
 }
 
-.perfume-card-preview {
-    position: relative;
-    border-radius: var(--radius);
+.perfume-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--white);
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.perfume-image-holder {
+.perfume-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-saas);
+}
+
+.perfume-card.highlight-card {
+    border: 2px solid var(--gold);
+    background: linear-gradient(180deg, var(--white), rgba(212, 175, 55, 0.05));
+}
+
+.perfume-img-wrapper {
     position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 480px;
+    height: 240px;
     background: #0d0d0d;
+    overflow: hidden;
 }
 
-.perfume-img {
+.perfume-img-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
+    transition: transform 0.4s ease;
 }
 
-.perfume-card-preview:hover .perfume-img {
-    transform: scale(1.03);
+.perfume-card:hover .perfume-img-wrapper img {
+    transform: scale(1.05);
 }
 
 .badge-lux {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.75);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 6px 14px;
-    border-radius: 30px;
-    font-size: 11px;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
     font-weight: 800;
     letter-spacing: 1px;
-    text-transform: uppercase;
     z-index: 2;
 }
 
-.perfume-details {
-    padding: 10px 0;
-}
-
-.perfume-sub {
-    display: block;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 2px;
+.badge-lux.gold-badge {
+    border-color: var(--gold);
     color: var(--gold);
-    margin-bottom: 8px;
 }
 
-.perfume-details h3 {
-    font-size: 38px;
-    margin-bottom: 15px;
-    letter-spacing: -1px;
+.perfume-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
-.perfume-description {
+.perfume-info h3 {
+    font-size: 17px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.perfume-notes {
     color: var(--muted);
-    font-size: 16px;
-    line-height: 1.8;
-    margin-bottom: 25px;
+    font-size: 12px;
+    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
-.notes-grid {
+.perfume-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+}
+
+.perfume-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--orange);
+}
+
+.select-checkbox-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    background: var(--cream);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.dark-mode .select-checkbox-btn {
+    background: #222;
+}
+
+.select-checkbox-btn input {
+    accent-color: var(--orange);
+    width: 15px;
+    height: 15px;
+}
+
+.select-checkbox-btn:has(input:checked) {
+    background: var(--orange);
+    color: white;
+    border-color: var(--orange);
+}
+
+/* =========================================================
+   COMBINED & MULTI-SELECTION FORM
+========================================================= */
+.form-section-title {
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    color: var(--orange);
+    margin: 25px 0 15px;
+    text-transform: uppercase;
+}
+
+.multi-select-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
-.note-item {
-    background: var(--white);
+.multi-select-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
     border: 1px solid var(--border);
-    padding: 14px;
     border-radius: 12px;
-    text-align: center;
-}
-
-.note-item small {
-    display: block;
-    color: var(--muted);
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-}
-
-.note-item strong {
-    font-size: 12px;
-    display: block;
-}
-
-.perfume-purchase-box {
     background: var(--white);
-    border: 1px solid var(--border);
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: var(--shadow-saas);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
 }
 
-.perfume-price-tag {
+.multi-select-card input {
+    accent-color: var(--orange);
+    width: 18px;
+    height: 18px;
+}
+
+.multi-select-card:has(input:checked) {
+    border-color: var(--orange);
+    background: rgba(232, 93, 15, 0.04);
+}
+
+.multi-select-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.multi-select-info strong { font-size: 13px; }
+.multi-select-info span { font-size: 12px; color: var(--orange); font-weight: 800; }
+
+.selected-perfumes-summary {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 25px;
+}
+
+.dark-mode .selected-perfumes-summary { background: #1a1512; }
+
+.empty-perfume-note {
+    color: var(--muted);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.selected-perfume-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-.perfume-price-tag span {
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
     font-size: 13px;
-    color: var(--muted);
-    font-weight: 700;
 }
 
-.perfume-price-tag strong {
-    font-size: 28px;
-    color: var(--orange);
-}
+.selected-perfume-row:last-child { border-bottom: none; }
 
-.qty-selector {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.qty-selector label {
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.qty-selector input {
-    width: 80px;
-    min-height: 42px;
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.perfume-total {
+.order-total-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    border-top: 1px dashed var(--border);
-    margin-bottom: 20px;
-}
-
-.perfume-total span {
-    font-weight: 800;
-}
-
-.perfume-total strong {
-    font-size: 22px;
-    color: var(--black);
-}
-
-.dark-mode .perfume-total strong {
-    color: var(--white);
-}
-
-/* =========================================================
-   ABOUT
-========================================================= */
-.about-section {
-    background: #f8f8f8;
-}
-
-.dark-mode .about-section {
-    background: #181818;
-}
-
-.about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-}
-
-.about-copy p {
-    color: var(--muted);
-    font-size: 17px;
-    line-height: 1.8;
-    margin-bottom: 22px;
-}
-
-.management-line {
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-}
-
-.management-line strong {
-    color: var(--text);
-    margin-left: 5px;
-}
-
-/* =========================================================
-   COMMUNITY
-========================================================= */
-.community-section {
-    padding: 110px 0;
-    background: #111111;
+    background: var(--black);
     color: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
 }
 
-.community-copy {
-    max-width: 850px;
-}
+.order-total-summary span { font-weight: 800; font-size: 15px; }
+.order-total-summary strong { color: var(--orange); font-size: 26px; }
 
-.community-copy h2 {
-    margin: 12px 0 22px;
-    font-size: clamp(42px, 6vw, 70px);
-    line-height: .98;
-    letter-spacing: -2px;
-}
+/* =========================================================
+   ABOUT & COMMUNITY
+========================================================= */
+.about-section { background: #f8f8f8; }
+.dark-mode .about-section { background: #181818; }
 
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.about-copy p { color: var(--muted); font-size: 17px; line-height: 1.8; margin-bottom: 22px; }
+.management-line { padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); }
+.management-line strong { color: var(--text); margin-left: 5px; }
+
+.community-section { padding: 110px 0; background: #111111; color: white; }
+.community-copy { max-width: 850px; }
+.community-copy h2 { margin: 12px 0 22px; font-size: clamp(40px, 6vw, 68px); line-height: .98; letter-spacing: -2px; }
 .community-copy h2 span { color: var(--orange); }
+.community-copy p { max-width: 760px; color: #c2c2c2; font-size: 17px; }
+.community-copy small { display: block; margin-top: 25px; color: #777; }
 
-.community-copy p {
-    max-width: 760px;
-    color: #c2c2c2;
-    font-size: 17px;
-}
+.community-card { margin-top: 55px; padding: 35px; border: 1px solid #333; border-radius: 20px; background: #1c1c1c; }
+.community-card-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.community-card-top span { color: #ff6b1a; font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+.community-card-top strong { color: var(--orange); font-size: 31px; }
 
-.community-copy small {
-    display: block;
-    margin-top: 25px;
-    color: #777;
-}
+.progress-track { height: 12px; margin: 28px 0 12px; border-radius: 100px; background: #363636; overflow: hidden; }
+.progress-bar { height: 100%; border-radius: inherit; background: var(--orange); }
 
-.community-card {
-    margin-top: 55px;
-    padding: 35px;
-    border: 1px solid #333;
-    border-radius: 20px;
-    background: #1c1c1c;
-}
-
-.community-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-.community-card-top span {
-    color: #ff6b1a;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
-.community-card-top strong {
-    color: var(--orange);
-    font-size: 31px;
-}
-
-.progress-track {
-    height: 12px;
-    margin: 28px 0 12px;
-    border-radius: 100px;
-    background: #363636;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    border-radius: inherit;
-    background: var(--orange);
-}
-
-.progress-labels {
-    display: flex;
-    justify-content: space-between;
-    color: #ff6b1a;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-}
-
-.community-amount {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #333;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    color: #888;
-    font-size: 12px;
-}
-
+.progress-labels { display: flex; justify-content: space-between; color: #ff6b1a; font-size: 10px; font-weight: 900; letter-spacing: 1.5px; }
+.community-amount { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; display: flex; justify-content: space-between; gap: 20px; color: #888; font-size: 12px; }
 .community-amount strong { color: white; }
 .community-action { margin-top: 30px; }
 
 /* =========================================================
    MEMBERSHIP
 ========================================================= */
-.membership-section {
-    padding: 110px 0;
-    background: var(--cream);
-    text-align: center;
-}
-
-.membership-heading {
-    max-width: 800px;
-    margin: auto;
-}
-
-.membership-heading p {
-    color: var(--muted);
-    font-size: 17px;
-}
-
-.benefits-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    max-width: 900px;
-    margin: 45px auto 0;
-}
-
-.benefit {
-    padding: 20px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    text-align: left;
-    font-size: 14px;
-    font-weight: 700;
-}
+.membership-section { padding: 110px 0; background: var(--cream); text-align: center; }
+.membership-heading { max-width: 800px; margin: auto; }
+.membership-heading p { color: var(--muted); font-size: 17px; }
+.benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 900px; margin: 45px auto 0; }
+.benefit { padding: 20px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; text-align: left; font-size: 14px; font-weight: 700; }
 
 /* =========================================================
    GENERAL BOOKING & FORMS
 ========================================================= */
-.booking-section {
-    background: #f8f8f8;
-}
-
-.dark-mode .booking-section {
-    background: #151515;
-}
+.booking-section { background: #f8f8f8; }
+.dark-mode .booking-section { background: #151515; }
 
 .general-booking-form {
     max-width: 950px;
@@ -761,22 +685,9 @@ button {
     box-shadow: var(--shadow-saas);
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 13px;
-    font-weight: 800;
-}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
 
 .form-group input, .form-group select, .form-group textarea {
     width: 100%;
@@ -789,292 +700,75 @@ button {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-group input, .form-group select {
-    min-height: 54px;
-}
-
-.form-group textarea {
-    resize: vertical;
-}
+.form-group input, .form-group select { min-height: 54px; }
+.form-group textarea { resize: vertical; }
 
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     border-color: var(--orange);
     box-shadow: 0 0 0 3px rgba(232,93,15,.1);
 }
 
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0 25px;
-    color: var(--muted);
-    font-size: 13px;
-}
+.checkbox-label { display: flex; align-items: center; gap: 10px; margin: 10px 0 25px; color: var(--muted); font-size: 13px; }
+.checkbox-label input { width: 17px; height: 17px; }
+.submit-button { width: 100%; }
 
-.checkbox-label input {
-    width: 17px;
-    height: 17px;
-}
-
-.submit-button {
-    width: 100%;
-}
-
-.form-status {
-    margin-top: 15px;
-    padding: 14px;
-    border-radius: 10px;
-    display: none;
-    font-size: 14px;
-}
-
-.form-status.success {
-    display: block;
-    background: #e8f8ed;
-    color: #196b35;
-}
-
-.form-status.error {
-    display: block;
-    background: #fff0ed;
-    color: #a52d1c;
-}
+.form-status { margin-top: 15px; padding: 14px; border-radius: 10px; display: none; font-size: 14px; }
+.form-status.success { display: block; background: #e8f8ed; color: #196b35; }
+.form-status.error { display: block; background: #fff0ed; color: #a52d1c; }
 
 /* =========================================================
    FLIGHT BOOKING
 ========================================================= */
-.flight-section {
-    padding: 110px 0;
-    background: var(--cream);
-}
+.flight-section { padding: 110px 0; background: var(--cream); }
+.flight-layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 25px; align-items: start; }
+.flight-form { padding: 38px; background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-saas); }
 
-.flight-layout {
-    display: grid;
-    grid-template-columns: 1.15fr .85fr;
-    gap: 25px;
-    align-items: start;
-}
+.booking-step { display: flex; align-items: center; gap: 14px; margin: 10px 0 28px; }
+.booking-step > span { width: 42px; height: 42px; min-width: 42px; display: grid; place-items: center; border-radius: 50%; background: var(--orange); color: white; font-size: 12px; font-weight: 900; }
+.booking-step small { display: block; color: var(--orange); font-size: 9px; font-weight: 900; letter-spacing: 1.5px; }
+.booking-step h3 { font-size: 22px; margin-top: 2px; }
 
-.flight-form {
-    padding: 38px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: var(--shadow-saas);
-}
+.flight-summary { position: sticky; top: 95px; padding: 35px; border-radius: 20px; background: #111111; color: white; }
+.flight-summary h3 { margin: 10px 0 28px; font-size: 30px; line-height: 1.1; }
 
-.booking-step {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 10px 0 28px;
-}
-
-.booking-step > span {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--orange);
-    color: white;
-    font-size: 12px;
-    font-weight: 900;
-}
-
-.booking-step small {
-    display: block;
-    color: var(--orange);
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-}
-
-.booking-step h3 {
-    font-size: 22px;
-    margin-top: 2px;
-}
-
-.flight-summary {
-    position: sticky;
-    top: 95px;
-    padding: 35px;
-    border-radius: 20px;
-    background: #111111;
-    color: white;
-}
-
-.flight-summary h3 {
-    margin: 10px 0 28px;
-    font-size: 30px;
-    line-height: 1.1;
-}
-
-.route-summary {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 15px;
-    align-items: center;
-    padding: 22px 0;
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
-}
-
-.route-summary small, .date-summary small {
-    display: block;
-    margin-bottom: 5px;
-    color: #777;
-    font-size: 9px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-}
-
+.route-summary { display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; align-items: center; padding: 22px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; }
+.route-summary small, .date-summary small { display: block; margin-bottom: 5px; color: #777; font-size: 9px; font-weight: 900; letter-spacing: 1.5px; }
 .route-summary strong { font-size: 14px; }
 .route-summary > span { color: var(--orange); font-size: 22px; }
 
-.date-summary {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 22px 0;
-    border-bottom: 1px solid #333;
-}
-
+.date-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 22px 0; border-bottom: 1px solid #333; }
 .date-summary strong { font-size: 13px; }
 
-.price-breakdown { margin-top: 5px; }
-
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 17px 0;
-    border-bottom: 1px solid #333;
-    color: #aaa;
-    font-size: 14px;
-}
-
+.price-row { display: flex; justify-content: space-between; gap: 20px; padding: 17px 0; border-bottom: 1px solid #333; color: #aaa; font-size: 14px; }
 .price-row strong { color: white; }
 
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 25px;
-}
-
+.total-row { display: flex; justify-content: space-between; align-items: center; padding-top: 25px; }
 .total-row span { font-weight: 800; }
 .total-row strong { color: var(--orange); font-size: 30px; }
 
-.summary-note {
-    margin-top: 25px;
-    color: #777;
-    font-size: 11px;
-    line-height: 1.6;
-}
-
-.checkout-note {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 11px;
-    text-align: center;
-}
-
-.flight-error {
-    display: none;
-    margin-bottom: 18px;
-    padding: 14px;
-    border-radius: 10px;
-    background: #fff0ed;
-    color: #a52d1c;
-    font-size: 13px;
-}
+.summary-note { margin-top: 25px; color: #777; font-size: 11px; line-height: 1.6; }
+.checkout-note { margin-top: 14px; color: var(--muted); font-size: 11px; text-align: center; }
+.flight-error { display: none; margin-bottom: 18px; padding: 14px; border-radius: 10px; background: #fff0ed; color: #a52d1c; font-size: 13px; }
 
 /* =========================================================
-   CONTACT
+   CONTACT & FOOTER
 ========================================================= */
-.contact-section {
-    padding: 110px 0;
-    text-align: center;
-}
-
-.contact-section > p { margin-bottom: 50px; }
-
-.contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.contact-card {
-    padding: 35px;
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    background: var(--white);
-    transition: transform .2s ease;
-}
-
+.contact-section { padding: 110px 0; text-align: center; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.contact-card { padding: 35px; border: 1px solid var(--border); border-radius: 18px; background: var(--white); transition: transform .2s ease; }
 .contact-card:hover { transform: translateY(-4px); }
-
-.contact-card span {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--orange);
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
+.contact-card span { display: block; margin-bottom: 8px; color: var(--orange); font-size: 10px; font-weight: 900; letter-spacing: 2px; }
 .contact-card strong { font-size: 18px; }
 
-/* =========================================================
-   FOOTER
-========================================================= */
-.site-footer {
-    padding-top: 70px;
-    background: #111111;
-    color: white;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 50px;
-}
-
+.site-footer { padding-top: 70px; background: #111111; color: white; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; }
 .footer-brand { margin-bottom: 18px; }
-
-.footer-grid p {
-    max-width: 350px;
-    color: #888;
-    font-size: 14px;
-}
-
-.footer-grid h4 {
-    margin-bottom: 15px;
-    color: var(--orange);
-    font-size: 12px;
-    letter-spacing: 1px;
-}
-
-.footer-grid > div:not(:first-child) a {
-    display: block;
-    margin-bottom: 9px;
-    color: #aaa;
-    font-size: 13px;
-}
-
+.footer-grid p { max-width: 350px; color: #888; font-size: 14px; }
+.footer-grid h4 { margin-bottom: 15px; color: var(--orange); font-size: 12px; letter-spacing: 1px; }
+.footer-grid > div:not(:first-child) a { display: block; margin-bottom: 9px; color: #aaa; font-size: 13px; }
 .footer-grid > div:not(:first-child) a:hover { color: white; }
 
-.footer-bottom {
-    margin-top: 60px;
-    padding: 25px 20px;
-    border-top: 1px solid #292929;
-    text-align: center;
-    color: #666;
-    font-size: 12px;
-}
+.footer-bottom { margin-top: 60px; padding: 25px 20px; border-top: 1px solid #292929; text-align: center; color: #666; font-size: 12px; }
 
 /* =========================================================
    RESPONSIVE DESIGN
@@ -1098,33 +792,19 @@ button {
 
     .primary-navigation.active { display: flex; }
     .primary-navigation a { padding: 12px; }
-    .theme-toggle { margin: 8px auto; }
     .menu-toggle { display: block; }
 
-    .experience-grid, .flight-layout, .perfume-grid {
-        grid-template-columns: 1fr;
-    }
-
+    .experience-grid, .flight-layout, .multi-select-grid { grid-template-columns: 1fr; }
     .flight-summary { position: static; }
     .about-grid { grid-template-columns: 1fr; gap: 30px; }
 }
 
 @media (max-width: 600px) {
-    .container {
-        width: min(var(--container), calc(100% - 28px));
-    }
-
-    .section, .community-section, .membership-section, .flight-section, .contact-section, .perfume-section {
-        padding: 75px 0;
-    }
-
+    .container { width: min(var(--container), calc(100% - 28px)); }
+    .section, .community-section, .membership-section, .flight-section, .contact-section, .perfume-section { padding: 75px 0; }
     .hero-content { margin-left: 0; }
-    .hero h1 { letter-spacing: -1.5px; }
-
-    .notes-grid { grid-template-columns: 1fr; }
     .form-row, .benefits-grid, .contact-grid { grid-template-columns: 1fr; }
-    .general-booking-form, .flight-form, .perfume-purchase-box { padding: 23px 18px; }
-    .community-card { padding: 24px 20px; }
+    .general-booking-form, .flight-form { padding: 23px 18px; }
     .community-card-top, .community-amount, .footer-grid { flex-direction: column; grid-template-columns: 1fr; }
 }
 
