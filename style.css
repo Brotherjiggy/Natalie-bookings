@@ -2146,3 +2146,36 @@ footer a:hover {
     transition-duration: .01ms !important;
   }
    }
+/* =========================================================
+   SMART AUTO-HIDING NAVBAR
+   ========================================================= */
+
+.site-header {
+  transition:
+    transform 0.38s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.site-header.nav-hidden {
+  transform: translate(-50%, calc(-100% - 30px));
+}
+
+/* Keep navigation visible while mobile menu is open */
+.site-header.menu-open {
+  transform: translateX(-50%) !important;
+}
+
+/* Better image rendering for experience cards */
+.experience-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.experience-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
