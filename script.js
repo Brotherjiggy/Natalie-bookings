@@ -279,88 +279,156 @@ function initializeSupabase() {
 /* =========================================================
    MOBILE NAVIGATION
    ========================================================= */
-
 function setupMobileNavigation() {
+  const menuToggle = $("#menuToggle");
+  const navigation = $("#primaryNavigation");
+  const header = $("#siteHeader");
 
-    const menuToggle =
-        $("#menuToggle");
+  if (!menuToggle || !navigation) return;
 
-    const navigation =
-        $("#primaryNavigation");
+  /*
+   * ---------------------------------------------------------
+   * MOBILE NAVIGATION
+   * Natalya Bookings
+   * ---------------------------------------------------------
+   */
 
-    if (!menuToggle || !navigation) {
-        return;
+  // Create hamburger bars if they don't already exist
+  if (!menuToggle.querySelector(".menu-icon")) {
+    menuToggle.innerHTML = `
+      <span class="menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+      <span class="menu-label">Menu</span>
+    `;
+  }
+
+  const menuIcon = menuToggle.querySelector(".menu-icon");
+
+  function openMenu() {
+    navigation.classList.add("open");
+    menuToggle.classList.add("active");
+
+    if (header) {
+      header.classList.add("menu-open");
+      header.classList.remove("nav-hidden");
     }
 
-    /* Add middle hamburger line */
-    if (!menuToggle.querySelector("span")) {
+    menuToggle.setAttribute("aria-expanded", "true");
+    menuToggle.setAttribute("aria-label", "Close navigation menu");
 
-        const middle =
-            document.createElement("span");
+    document.body.classList.add("menu-open");
+  }
 
-        menuToggle.appendChild(middle);
+  function closeMenu() {
+    navigation.classList.remove("open");
+    menuToggle.classList.remove("active");
+
+    if (header) {
+      header.classList.remove("menu-open");
+      header.classList.remove("nav-hidden");
     }
 
-    menuToggle.addEventListener(
-        "click",
-        () => {
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open navigation menu");
 
-            const isOpen =
-                navigation.classList.toggle("open");
+    document.body.classList.remove("menu-open");
+  }
 
-            menuToggle.classList.toggle(
-                "active",
-                isOpen
-            );
+  function toggleMenu(event) {
+    if (event) event.stopPropagation();
 
-            menuToggle.setAttribute(
-                "aria-expanded",
-                String(isOpen)
-            );
+    const isOpen = navigation.classList.contains("open");
 
-            document.body.classList.toggle(
-                "menu-open",
-                isOpen
-            );
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
 
-        }
-    );
+  // Hamburger button
+  menuToggle.addEventListener("click", toggleMenu);
 
-    header.classList.toggle("menu-open", isOpen);
-header.classList.remove("nav-hidden");
+  // Close menu when a navigation link is clicked
+  navigation.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      closeMenu();
+    });
+  });
 
-    $$("#primaryNavigation a").forEach(
-        link => {
+  /*
+   * ---------------------------------------------------------
+   * IMPORTANT:
+   * Do NOT close the mobile menu when clicking inside it.
+   * This allows the theme button to work properly.
+   * ---------------------------------------------------------
+   */
 
-            link.addEventListener(
-                "click",
-                () => {
+  navigation.addEventListener("click", (event) => {
+    const themeButton = event.target.closest("#themeToggle");
 
-                    navigation.classList.remove(
-                        "open"
-                    );
+    if (themeButton) {
+      /*
+       * Let the existing theme system handle the theme.
+       * We intentionally DO NOT close the navigation here.
+       */
+      event.stopPropagation();
+      return;
+    }
 
-                    menuToggle.classList.remove(
-                        "active"
-                    );
+    // Clicking empty navigation space does nothing
+    if (!event.target.closest("a")) {
+      event.stopPropagation();
+    }
+  });
 
-                    menuToggle.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
+  /*
+   * ---------------------------------------------------------
+   * CLOSE WHEN CLICKING OUTSIDE
+   * ---------------------------------------------------------
+   */
 
-                    document.body.classList.remove(
-                        "menu-open"
-                    );
+  document.addEventListener("click", (event) => {
+    if (!navigation.classList.contains("open")) return;
 
-                }
-            );
+    const clickedInsideNavigation = navigation.contains(event.target);
+    const clickedMenuButton = menuToggle.contains(event.target);
 
-        }
-    );
+    if (!clickedInsideNavigation && !clickedMenuButton) {
+      closeMenu();
+    }
+  });
 
+  /*
+   * ---------------------------------------------------------
+   * ESCAPE KEY
+   * ---------------------------------------------------------
+   */
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  /*
+   * ---------------------------------------------------------
+   * SCREEN SIZE PROTECTION
+   * ---------------------------------------------------------
+   *
+   * If the user rotates the phone or moves to desktop width,
+   * reset the mobile menu cleanly.
+   */
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      closeMenu();
+    }
+  });
 }
-
 
 /* =========================================================
    STICKY HEADER
