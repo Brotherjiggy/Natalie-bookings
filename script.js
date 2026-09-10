@@ -3,1494 +3,2397 @@
 /* =========================================================
    NATALYA BOOKINGS
    PREMIUM FRONTEND ENGINE
+   VERSION 2.0
 
    FEATURES
-   - Premium auto-hiding navbar
-   - Mobile navigation
+   - Premium mobile navigation
+   - Sticky header
    - Active navigation tracking
-   - Dark/light mode
+   - Light / dark mode
    - Hero slideshow
-   - Supabase
-   - Multi-product selection
-   - Combined pricing
-   - Flight pricing
-   - Dinner reservations
-   - Fan membership
-   - Meet & Greet
-   - Donation system
-   - Cart / booking state
-   - Checkout preparation
+   - Scroll reveal
+   - Smooth scrolling
+   - Experience selection
+   - Perfume selection
+   - Automatic booking totals
+   - Flight state selector
+   - State route fee calculator
+   - Flight summary
+   - Supabase booking storage
+   - Local fallback
+   - Form validation
    - Toast notifications
-   - Scroll animations
-   - Product detail modal
-   - Professional UX
-========================================================= */
+   - Image fallback handling
+   - Escape-key controls
+   - Current year
+   ========================================================= */
 
 
 /* =========================================================
-   1. GLOBAL CONFIGURATION
-========================================================= */
+   CONFIGURATION
+   ========================================================= */
 
 const CONFIG = {
-    SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
-    SUPABASE_ANON_KEY: "YOUR-SUPABASE-ANON-KEY",
 
-    CURRENCY: "USD",
+    /* -----------------------------------------------------
+       SUPABASE
+       -----------------------------------------------------
 
-    DONATION_GOAL: 1000000,
-    DONATION_RAISED: 432000,
+       IMPORTANT:
+       If your existing Supabase project is already working,
+       put your REAL values here.
 
-    FLIGHT_BASE_PRICE: 2500,
+       DO NOT use these placeholder values for production.
+       ----------------------------------------------------- */
 
-    HERO_INTERVAL: 5000,
+    SUPABASE_URL:
+        "https://YOUR-PROJECT.supabase.co",
 
-    TOAST_DURATION: 3500
+    SUPABASE_ANON_KEY:
+        "YOUR-SUPABASE-ANON-KEY",
+
+    /* -----------------------------------------------------
+       EXPERIENCE PRICES
+       ----------------------------------------------------- */
+
+    EXPERIENCE_PRICES: {
+        flight: 2500,
+        dinner: 850,
+        membership: 500
+    },
+
+    /* -----------------------------------------------------
+       FLIGHT ROUTE FEES
+       ----------------------------------------------------- */
+
+    STATE_FEES: {
+
+        Alabama: 500,
+        Alaska: 850,
+        Arizona: 600,
+        Arkansas: 500,
+        California: 850,
+        Colorado: 650,
+        Connecticut: 750,
+        Delaware: 650,
+        Florida: 600,
+        Georgia: 550,
+        Hawaii: 950,
+        Idaho: 750,
+        Illinois: 700,
+        Indiana: 650,
+        Iowa: 650,
+        Kansas: 600,
+        Kentucky: 600,
+        Louisiana: 600,
+        Maine: 800,
+        Maryland: 650,
+        Massachusetts: 750,
+        Michigan: 700,
+        Minnesota: 700,
+        Mississippi: 550,
+        Missouri: 600,
+        Montana: 800,
+        Nebraska: 650,
+        Nevada: 750,
+        "New Hampshire": 800,
+        "New Jersey": 750,
+        "New Mexico": 700,
+        "New York": 800,
+        "North Carolina": 550,
+        "North Dakota": 800,
+        Ohio: 650,
+        Oklahoma: 600,
+        Oregon: 800,
+        Pennsylvania: 700,
+        "Rhode Island": 800,
+        "South Carolina": 550,
+        "South Dakota": 750,
+        Tennessee: 550,
+        Texas: 650,
+        Utah: 750,
+        Vermont: 800,
+        Virginia: 600,
+        Washington: 850,
+        "West Virginia": 650,
+        Wisconsin: 700,
+        Wyoming: 800
+    },
+
+    /* -----------------------------------------------------
+       DONATION / COMMUNITY
+       ----------------------------------------------------- */
+
+    COMMUNITY_RAISED: 432000,
+    COMMUNITY_TARGET: 1000000,
+
+    /* -----------------------------------------------------
+       STORAGE
+       ----------------------------------------------------- */
+
+    THEME_KEY: "natalya-theme",
+    BOOKING_KEY: "natalya-booking-draft"
+
 };
 
 
 /* =========================================================
-   2. DOM HELPERS
-========================================================= */
+   GLOBAL STATE
+   ========================================================= */
 
-const $ = (selector, parent = document) => {
-    return parent.querySelector(selector);
-};
+let supabaseClient = null;
 
-const $$ = (selector, parent = document) => {
-    return [...parent.querySelectorAll(selector)];
-};
+let selectedPerfumes = [];
 
+let currentHeroSlide = 0;
 
-/* =========================================================
-   3. APPLICATION STATE
-========================================================= */
+let heroTimer = null;
 
-const state = {
-    cart: [],
-    currentProduct: null,
-
-    selectedState: "",
-    flightFee: 0,
-
-    darkMode: false,
-
-    heroIndex: 0,
-
-    navOpen: false,
-
-    bookingSubmitting: false
-};
+let toastTimer = null;
 
 
 /* =========================================================
-   4. STORAGE
-========================================================= */
+   DOM HELPERS
+   ========================================================= */
 
-const STORAGE_KEY = "natalyaBookingsState";
+function $(selector) {
+    return document.querySelector(selector);
+}
+
+function $$(selector) {
+    return Array.from(document.querySelectorAll(selector));
+}
 
 
-function saveState() {
-    try {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({
-                cart: state.cart,
-                selectedState: state.selectedState,
-                flightFee: state.flightFee,
-                darkMode: state.darkMode
-            })
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    initializeSupabase();
+
+    setupMobileNavigation();
+
+    setupStickyHeader();
+
+    setupActiveNavigation();
+
+    setupSmoothScrolling();
+
+    setupTheme();
+
+    setupHeroSlideshow();
+
+    setupScrollReveal();
+
+    setupExperienceSelection();
+
+    setupPerfumeSelection();
+
+    setupFlightBooking();
+
+    setupBookingForm();
+
+    setupImageFallbacks();
+
+    setupEscapeKey();
+
+    updateCurrentYear();
+
+    restoreBookingDraft();
+
+    calculateBookingTotal();
+
+    calculateFlightSummary();
+
+    console.log(
+        "%cNATALYA BOOKINGS",
+        "font-size:20px;font-weight:900;color:#f36b21;"
+    );
+
+    console.log(
+        "%cPremium frontend engine initialized.",
+        "font-size:12px;color:#777;"
+    );
+
+});
+
+
+/* =========================================================
+   SUPABASE INITIALIZATION
+   ========================================================= */
+
+function initializeSupabase() {
+
+    if (
+        typeof window.supabase === "undefined"
+    ) {
+        console.warn(
+            "Supabase CDN not detected."
         );
-    } catch (error) {
-        console.warn("Could not save application state.", error);
+
+        return;
     }
-}
 
+    const validURL =
+        CONFIG.SUPABASE_URL &&
+        !CONFIG.SUPABASE_URL.includes("YOUR-PROJECT");
 
-function loadState() {
+    const validKey =
+        CONFIG.SUPABASE_ANON_KEY &&
+        !CONFIG.SUPABASE_ANON_KEY.includes("YOUR-SUPABASE");
+
+    if (!validURL || !validKey) {
+
+        console.warn(
+            "Supabase credentials are still placeholders."
+        );
+
+        return;
+    }
+
     try {
-        const saved = localStorage.getItem(STORAGE_KEY);
 
-        if (!saved) return;
+        supabaseClient =
+            window.supabase.createClient(
+                CONFIG.SUPABASE_URL,
+                CONFIG.SUPABASE_ANON_KEY
+            );
 
-        const data = JSON.parse(saved);
+        console.log(
+            "Supabase initialized."
+        );
 
-        if (Array.isArray(data.cart)) {
-            state.cart = data.cart;
-        }
-
-        if (data.selectedState) {
-            state.selectedState = data.selectedState;
-        }
-
-        if (typeof data.flightFee === "number") {
-            state.flightFee = data.flightFee;
-        }
-
-        if (typeof data.darkMode === "boolean") {
-            state.darkMode = data.darkMode;
-        }
     } catch (error) {
-        console.warn("Could not load saved state.", error);
+
+        console.error(
+            "Supabase initialization failed:",
+            error
+        );
+
     }
 }
 
 
 /* =========================================================
-   5. MONEY FORMATTER
-========================================================= */
-
-function formatMoney(amount) {
-    const number = Number(amount) || 0;
-
-    return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: CONFIG.CURRENCY,
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-    }).format(number);
-}
-
-
-/* =========================================================
-   6. TOAST NOTIFICATIONS
-========================================================= */
-
-function showToast(message, type = "info") {
-
-    let container = $(".toast-container");
-
-    if (!container) {
-        container = document.createElement("div");
-        container.className = "toast-container";
-
-        document.body.appendChild(container);
-    }
-
-    const toast = document.createElement("div");
-
-    toast.className = `toast toast-${type}`;
-
-    toast.innerHTML = `
-        <div class="toast-message">${escapeHTML(message)}</div>
-        <button class="toast-close" aria-label="Close notification">
-            ×
-        </button>
-    `;
-
-    container.appendChild(toast);
-
-    const closeButton = $(".toast-close", toast);
-
-    closeButton?.addEventListener("click", () => {
-        toast.remove();
-    });
-
-    setTimeout(() => {
-        toast.classList.add("toast-hide");
-
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
-    }, CONFIG.TOAST_DURATION);
-}
-
-
-/* =========================================================
-   7. HTML SECURITY HELPER
-========================================================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================================================
-   8. MOBILE NAVIGATION
-========================================================= */
+   MOBILE NAVIGATION
+   ========================================================= */
 
 function setupMobileNavigation() {
 
     const menuToggle =
-        $("#menu-toggle") ||
-        $(".menu-toggle") ||
-        $("[data-menu-toggle]");
+        $("#menuToggle");
 
-    const navLinks =
-        $("#nav-links") ||
-        $(".nav-links") ||
-        $("[data-nav-links]");
+    const navigation =
+        $("#primaryNavigation");
 
-    if (!menuToggle || !navLinks) return;
+    if (!menuToggle || !navigation) {
+        return;
+    }
 
-    menuToggle.addEventListener("click", () => {
+    /* Add middle hamburger line */
+    if (!menuToggle.querySelector("span")) {
 
-        state.navOpen = !state.navOpen;
+        const middle =
+            document.createElement("span");
 
-        navLinks.classList.toggle("active", state.navOpen);
+        menuToggle.appendChild(middle);
+    }
 
-        menuToggle.classList.toggle("active", state.navOpen);
+    menuToggle.addEventListener(
+        "click",
+        () => {
 
-        menuToggle.setAttribute(
-            "aria-expanded",
-            String(state.navOpen)
-        );
-    });
+            const isOpen =
+                navigation.classList.toggle("open");
 
-    $$(".nav-link, #nav-links a", navLinks).forEach(link => {
-
-        link.addEventListener("click", () => {
-
-            state.navOpen = false;
-
-            navLinks.classList.remove("active");
-
-            menuToggle.classList.remove("active");
+            menuToggle.classList.toggle(
+                "active",
+                isOpen
+            );
 
             menuToggle.setAttribute(
                 "aria-expanded",
-                "false"
+                String(isOpen)
             );
-        });
-    });
-}
 
+            document.body.classList.toggle(
+                "menu-open",
+                isOpen
+            );
 
-/* =========================================================
-   9. NAVBAR SCROLL EFFECT
-========================================================= */
-
-function setupNavbar() {
-
-    const navbar =
-        $("header") ||
-        $(".navbar") ||
-        $("nav");
-
-    if (!navbar) return;
-
-    let previousScroll = window.scrollY;
-
-    window.addEventListener(
-        "scroll",
-        () => {
-
-            const currentScroll = window.scrollY;
-
-            if (currentScroll > 50) {
-                navbar.classList.add("scrolled");
-            } else {
-                navbar.classList.remove("scrolled");
-            }
-
-            if (
-                currentScroll > previousScroll &&
-                currentScroll > 250
-            ) {
-                navbar.classList.add("nav-hidden");
-            } else {
-                navbar.classList.remove("nav-hidden");
-            }
-
-            previousScroll = currentScroll;
-        },
-        { passive: true }
-    );
-}
-
-
-/* =========================================================
-   10. ACTIVE NAVIGATION TRACKING
-========================================================= */
-
-function setupActiveNavigation() {
-
-    const sections = $$("section[id]");
-
-    const links = $$(".nav-link, nav a[href^='#']");
-
-    if (!sections.length || !links.length) return;
-
-    const observer = new IntersectionObserver(
-        entries => {
-
-            entries.forEach(entry => {
-
-                if (!entry.isIntersecting) return;
-
-                const id = entry.target.id;
-
-                links.forEach(link => {
-
-                    const target =
-                        link.getAttribute("href");
-
-                    link.classList.toggle(
-                        "active",
-                        target === `#${id}`
-                    );
-                });
-            });
-        },
-        {
-            rootMargin: "-30% 0px -60% 0px"
         }
     );
 
-    sections.forEach(section => {
-        observer.observe(section);
-    });
+    /* Close after selecting a navigation link */
+
+    $$("#primaryNavigation a").forEach(
+        link => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    navigation.classList.remove(
+                        "open"
+                    );
+
+                    menuToggle.classList.remove(
+                        "active"
+                    );
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                    document.body.classList.remove(
+                        "menu-open"
+                    );
+
+                }
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   11. SMOOTH SCROLL
-========================================================= */
+   STICKY HEADER
+   ========================================================= */
 
-function setupSmoothScroll() {
+function setupStickyHeader() {
 
-    $$("a[href^='#']").forEach(link => {
+    const header =
+        $("#siteHeader");
 
-        link.addEventListener("click", event => {
+    if (!header) {
+        return;
+    }
 
-            const href =
-                link.getAttribute("href");
+    function updateHeader() {
+
+        if (window.scrollY > 30) {
+
+            header.classList.add(
+                "scrolled"
+            );
+
+        } else {
+
+            header.classList.remove(
+                "scrolled"
+            );
+
+        }
+
+    }
+
+    updateHeader();
+
+    window.addEventListener(
+        "scroll",
+        updateHeader,
+        { passive: true }
+    );
+
+}
+
+
+/* =========================================================
+   ACTIVE NAVIGATION
+   ========================================================= */
+
+function setupActiveNavigation() {
+
+    const links =
+        $$("#primaryNavigation a");
+
+    if (!links.length) {
+        return;
+    }
+
+    const sections =
+        links
+            .map(link => {
+
+                const href =
+                    link.getAttribute("href");
+
+                if (
+                    !href ||
+                    !href.startsWith("#")
+                ) {
+                    return null;
+                }
+
+                const section =
+                    document.querySelector(
+                        href
+                    );
+
+                return section
+                    ? {
+                        section,
+                        link
+                    }
+                    : null;
+
+            })
+            .filter(Boolean);
+
+    function updateActiveLink() {
+
+        const scrollPosition =
+            window.scrollY + 150;
+
+        let current =
+            sections[0];
+
+        sections.forEach(item => {
 
             if (
-                !href ||
-                href === "#" ||
-                href.length < 2
+                item.section.offsetTop <=
+                scrollPosition
             ) {
-                return;
+
+                current = item;
+
             }
 
-            const target = $(href);
-
-            if (!target) return;
-
-            event.preventDefault();
-
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
         });
-    });
+
+        links.forEach(link => {
+
+            link.classList.remove(
+                "active"
+            );
+
+        });
+
+        if (current) {
+
+            current.link.classList.add(
+                "active"
+            );
+
+        }
+
+    }
+
+    updateActiveLink();
+
+    window.addEventListener(
+        "scroll",
+        updateActiveLink,
+        { passive: true }
+    );
+
 }
 
 
 /* =========================================================
-   12. DARK / LIGHT MODE
-========================================================= */
+   SMOOTH SCROLLING
+   ========================================================= */
+
+function setupSmoothScrolling() {
+
+    $$('a[href^="#"]').forEach(
+        link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    const targetID =
+                        link.getAttribute("href");
+
+                    if (
+                        !targetID ||
+                        targetID === "#"
+                    ) {
+                        return;
+                    }
+
+                    const target =
+                        document.querySelector(
+                            targetID
+                        );
+
+                    if (!target) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   THEME SYSTEM
+   ========================================================= */
 
 function setupTheme() {
 
-    const themeToggle =
-        $("#theme-toggle") ||
-        $("[data-theme-toggle]");
+    const button =
+        $("#themeToggle");
 
-    applyTheme();
-
-    if (!themeToggle) return;
-
-    themeToggle.addEventListener("click", () => {
-
-        state.darkMode = !state.darkMode;
-
-        applyTheme();
-
-        saveState();
-    });
-}
-
-
-function applyTheme() {
-
-    document.documentElement.classList.toggle(
-        "dark-mode",
-        state.darkMode
-    );
-
-    document.body.classList.toggle(
-        "dark-mode",
-        state.darkMode
-    );
-
-    const themeToggle =
-        $("#theme-toggle") ||
-        $("[data-theme-toggle]");
-
-    if (themeToggle) {
-
-        themeToggle.setAttribute(
-            "aria-label",
-            state.darkMode
-                ? "Switch to light mode"
-                : "Switch to dark mode"
-        );
+    if (!button) {
+        return;
     }
+
+    const savedTheme =
+        localStorage.getItem(
+            CONFIG.THEME_KEY
+        );
+
+    if (savedTheme === "dark") {
+
+        document.documentElement.classList.add(
+            "dark"
+        );
+
+        button.textContent = "☀";
+
+    } else {
+
+        button.textContent = "◐";
+
+    }
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const dark =
+                document.documentElement.classList.toggle(
+                    "dark"
+                );
+
+            localStorage.setItem(
+                CONFIG.THEME_KEY,
+                dark ? "dark" : "light"
+            );
+
+            button.textContent =
+                dark ? "☀" : "◐";
+
+            showToast(
+                dark
+                    ? "Dark luxury mode activated."
+                    : "Light luxury mode activated."
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   13. HERO SLIDESHOW
-========================================================= */
+   HERO SLIDESHOW
+   ========================================================= */
 
-function setupHeroSlider() {
+function setupHeroSlideshow() {
 
     const slides =
-        $$(".hero-slide") ||
-        $$(".hero img[data-hero]");
+        $$(".hero-slide");
 
-    if (!slides.length) return;
+    if (slides.length <= 1) {
+        return;
+    }
 
-    slides.forEach((slide, index) => {
+    slides.forEach(
+        (slide, index) => {
 
-        slide.classList.toggle(
-            "active",
-            index === 0
+            slide.classList.toggle(
+                "active",
+                index === 0
+            );
+
+        }
+    );
+
+    function showSlide(index) {
+
+        slides.forEach(
+            slide => {
+
+                slide.classList.remove(
+                    "active"
+                );
+
+            }
         );
-    });
 
-    setInterval(() => {
+        slides[index].classList.add(
+            "active"
+        );
 
-        slides[state.heroIndex]
-            ?.classList.remove("active");
+        currentHeroSlide = index;
 
-        state.heroIndex =
-            (state.heroIndex + 1) %
+    }
+
+    function nextSlide() {
+
+        const next =
+            (currentHeroSlide + 1) %
             slides.length;
 
-        slides[state.heroIndex]
-            ?.classList.add("active");
+        showSlide(next);
 
-    }, CONFIG.HERO_INTERVAL);
+    }
+
+    heroTimer =
+        setInterval(
+            nextSlide,
+            6000
+        );
+
 }
 
 
 /* =========================================================
-   14. SCROLL REVEAL ANIMATIONS
-========================================================= */
+   SCROLL REVEAL
+   ========================================================= */
 
-function setupRevealAnimations() {
+function setupScrollReveal() {
 
     const elements =
-        $$(".hidden, [data-reveal]");
+        $$(".hidden");
 
-    if (!elements.length) return;
+    if (!elements.length) {
+        return;
+    }
+
+    if (
+        !("IntersectionObserver" in window)
+    ) {
+
+        elements.forEach(
+            element => {
+
+                element.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+        return;
+    }
 
     const observer =
         new IntersectionObserver(
             entries => {
 
-                entries.forEach(entry => {
+                entries.forEach(
+                    entry => {
 
-                    if (!entry.isIntersecting) return;
+                        if (
+                            entry.isIntersecting
+                        ) {
 
-                    entry.target.classList.add("active");
+                            entry.target.classList.add(
+                                "active"
+                            );
 
-                    observer.unobserve(
-                        entry.target
-                    );
-                });
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    }
+                );
+
             },
             {
                 threshold: 0.12
             }
         );
 
-    elements.forEach(element => {
-        observer.observe(element);
-    });
+    elements.forEach(
+        element => {
+
+            observer.observe(
+                element
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   15. PRODUCT DATABASE
-========================================================= */
+   EXPERIENCE SELECTION
+   ========================================================= */
 
-const PRODUCTS = {
+function setupExperienceSelection() {
 
-    flight: {
-        id: "flight",
-        name: "Flight Booking",
-        category: "Travel",
-        description:
-            "Premium flight booking and travel coordination.",
-        price: CONFIG.FLIGHT_BASE_PRICE,
-        image: "images/flight.jpg"
-    },
-
-    dinner: {
-        id: "dinner",
-        name: "Dinner Reservation",
-        category: "Experience",
-        description:
-            "Curated dinner reservation experience.",
-        price: 750,
-        image: "images/dinner.jpg"
-    },
-
-    membership: {
-        id: "membership",
-        name: "Fan Membership",
-        category: "Membership",
-        description:
-            "Exclusive fan membership access.",
-        price: 500,
-        image: "images/membership.jpg"
-    },
-
-    meetGreet: {
-        id: "meet-greet",
-        name: "Meet & Greet",
-        category: "Premium Experience",
-        description:
-            "Premium meet-and-greet experience.",
-        price: 2500,
-        image: "images/meet-greet.jpg"
-    }
-};
-
-
-/* =========================================================
-   16. US STATE FLIGHT FEES
-========================================================= */
-
-const STATE_FEES = {
-
-    AL: 550,
-    AK: 750,
-    AZ: 700,
-    AR: 550,
-    CA: 850,
-    CO: 700,
-    CT: 650,
-    DE: 600,
-    FL: 650,
-    GA: 600,
-    HI: 950,
-    ID: 750,
-    IL: 600,
-    IN: 600,
-    IA: 550,
-    KS: 550,
-    KY: 550,
-    LA: 600,
-    ME: 700,
-    MD: 600,
-    MA: 650,
-    MI: 600,
-    MN: 650,
-    MS: 550,
-    MO: 550,
-    MT: 750,
-    NE: 550,
-    NV: 750,
-    NH: 700,
-    NJ: 600,
-    NM: 700,
-    NY: 650,
-    NC: 550,
-    ND: 700,
-    OH: 600,
-    OK: 600,
-    OR: 800,
-    PA: 600,
-    RI: 650,
-    SC: 550,
-    SD: 650,
-    TN: 550,
-    TX: 650,
-    UT: 750,
-    VT: 700,
-    VA: 600,
-    WA: 850,
-    WV: 600,
-    WI: 600,
-    WY: 750
-};
-
-
-/* =========================================================
-   17. GET FLIGHT STATE FEE
-========================================================= */
-
-function getStateFee(stateCode) {
-
-    if (!stateCode) {
-        return 0;
-    }
-
-    return STATE_FEES[stateCode] || 0;
-}
-
-
-/* =========================================================
-   18. PRODUCT PRICE
-========================================================= */
-
-function getProductPrice(product) {
-
-    if (!product) return 0;
-
-    if (product.id === "flight") {
-
-        return (
-            Number(product.price) +
-            Number(state.flightFee || 0)
+    const checkboxes =
+        $$(
+            '#bookingForm input[type="checkbox"]'
         );
+
+    if (!checkboxes.length) {
+        return;
     }
 
-    return Number(product.price) || 0;
+    checkboxes.forEach(
+        checkbox => {
+
+            checkbox.addEventListener(
+                "change",
+                () => {
+
+                    calculateBookingTotal();
+
+                    saveBookingDraft();
+
+                }
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   19. ADD PRODUCT TO CART
-========================================================= */
+   PERFUME SYSTEM
+   ========================================================= */
 
-function addToCart(productId) {
+function setupPerfumeSelection() {
 
-    const product = PRODUCTS[productId];
+    const perfumeInputs =
+        $$(".perfume-select-checkbox");
 
-    if (!product) {
-        showToast(
-            "This booking option is currently unavailable.",
-            "error"
-        );
+    if (!perfumeInputs.length) {
+        return;
+    }
+
+    perfumeInputs.forEach(
+        input => {
+
+            input.addEventListener(
+                "change",
+                () => {
+
+                    updateSelectedPerfumes();
+
+                    calculateBookingTotal();
+
+                    saveBookingDraft();
+
+                }
+            );
+
+        }
+    );
+
+    updateSelectedPerfumes();
+
+}
+
+
+/* =========================================================
+   READ PERFUME DATA
+   ========================================================= */
+
+function updateSelectedPerfumes() {
+
+    selectedPerfumes = [];
+
+    const inputs =
+        $$(".perfume-select-checkbox");
+
+    inputs.forEach(
+        input => {
+
+            if (!input.checked) {
+                return;
+            }
+
+            const card =
+                input.closest(
+                    ".perfume-card"
+                );
+
+            if (!card) {
+                return;
+            }
+
+            const nameElement =
+                card.querySelector(
+                    "h3"
+                );
+
+            const priceElement =
+                card.querySelector(
+                    ".perfume-price"
+                );
+
+            const name =
+                nameElement
+                    ? nameElement.textContent.trim()
+                    : "Luxury Perfume";
+
+            const price =
+                parseMoney(
+                    priceElement
+                        ? priceElement.textContent
+                        : "0"
+                );
+
+            selectedPerfumes.push({
+                name,
+                price
+            });
+
+        }
+    );
+
+    renderSelectedPerfumes();
+
+}
+
+
+/* =========================================================
+   RENDER PERFUME SUMMARY
+   ========================================================= */
+
+function renderSelectedPerfumes() {
+
+    const summary =
+        $("#selectedPerfumesSummary");
+
+    if (!summary) {
+        return;
+    }
+
+    if (!selectedPerfumes.length) {
+
+        summary.innerHTML =
+            '<span style="color:var(--muted);font-size:13px;">No perfume selected</span>';
 
         return;
     }
 
-    const existing =
-        state.cart.find(
-            item => item.id === productId
-        );
+    summary.innerHTML =
+        selectedPerfumes
+            .map(
+                perfume => `
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        gap:12px;
+                        padding:8px 0;
+                        border-bottom:1px solid var(--border);
+                    ">
+                        <span>${escapeHTML(perfume.name)}</span>
+                        <strong>$${formatMoney(perfume.price)}</strong>
+                    </div>
+                `
+            )
+            .join("");
 
-    if (existing) {
+}
 
-        existing.quantity += 1;
 
-    } else {
+/* =========================================================
+   BOOKING TOTAL
+   ========================================================= */
 
-        state.cart.push({
-            id: product.id,
-            name: product.name,
-            category: product.category,
-            price: product.price,
-            quantity: 1
-        });
+function calculateBookingTotal() {
+
+    const form =
+        $("#bookingForm");
+
+    if (!form) {
+        return 0;
     }
 
-    saveState();
+    let total = 0;
 
-    updateCartUI();
+    /* Experience checkboxes */
 
-    showToast(
-        `${product.name} added to your booking.`,
-        "success"
-    );
-}
-
-
-/* =========================================================
-   20. REMOVE PRODUCT
-========================================================= */
-
-function removeFromCart(productId) {
-
-    state.cart =
-        state.cart.filter(
-            item => item.id !== productId
+    const checked =
+        form.querySelectorAll(
+            'input[type="checkbox"]:checked'
         );
 
-    saveState();
+    checked.forEach(
+        checkbox => {
 
-    updateCartUI();
-}
+            /*
+             Only experience checkboxes have
+             data-price or recognizable values.
+            */
 
-
-/* =========================================================
-   21. CLEAR CART
-========================================================= */
-
-function clearCart() {
-
-    state.cart = [];
-
-    saveState();
-
-    updateCartUI();
-}
-
-
-/* =========================================================
-   22. CART TOTAL
-========================================================= */
-
-function getCartTotal() {
-
-    return state.cart.reduce(
-        (total, item) => {
-
-            let price = Number(item.price) || 0;
-
-            if (item.id === "flight") {
-                price += Number(state.flightFee || 0);
+            if (
+                checkbox.classList.contains(
+                    "perfume-select-checkbox"
+                )
+            ) {
+                return;
             }
 
-            return total +
-                price *
-                (Number(item.quantity) || 1);
+            const price =
+                getCheckboxPrice(
+                    checkbox
+                );
 
-        },
-        0
+            total += price;
+
+        }
     );
+
+    /* Perfumes */
+
+    selectedPerfumes.forEach(
+        perfume => {
+
+            total += perfume.price;
+
+        }
+    );
+
+    /* Update visible totals */
+
+    updateElementText(
+        "#combinedTotalDisplay",
+        `$${formatMoney(total)}`
+    );
+
+    updateElementText(
+        "#bookingTotalDisplay",
+        `$${formatMoney(total)}`
+    );
+
+    updateElementText(
+        "#combinedTotal",
+        `$${formatMoney(total)}`
+    );
+
+    updateElementText(
+        "#bookingTotal",
+        `$${formatMoney(total)}`
+    );
+
+    return total;
+
 }
 
 
 /* =========================================================
-   23. CART COUNT
-========================================================= */
+   GET EXPERIENCE PRICE
+   ========================================================= */
 
-function getCartCount() {
+function getCheckboxPrice(
+    checkbox
+) {
 
-    return state.cart.reduce(
-        (total, item) =>
-            total +
-            (Number(item.quantity) || 1),
-        0
-    );
+    const directPrice =
+        checkbox.dataset.price;
+
+    if (directPrice) {
+
+        return parseMoney(
+            directPrice
+        );
+
+    }
+
+    const value =
+        String(
+            checkbox.value || ""
+        ).toLowerCase();
+
+    if (
+        value.includes("flight")
+    ) {
+
+        return CONFIG.EXPERIENCE_PRICES.flight;
+
+    }
+
+    if (
+        value.includes("dinner")
+    ) {
+
+        return CONFIG.EXPERIENCE_PRICES.dinner;
+
+    }
+
+    if (
+        value.includes("membership") ||
+        value.includes("vip") ||
+        value.includes("fan")
+    ) {
+
+        return CONFIG.EXPERIENCE_PRICES.membership;
+
+    }
+
+    return 0;
+
 }
 
 
 /* =========================================================
-   24. CART UI
-========================================================= */
+   FLIGHT BOOKING
+   ========================================================= */
 
-function updateCartUI() {
+function setupFlightBooking() {
 
-    const countElements = $$(
-        "#cart-count, .cart-count, [data-cart-count]"
+    const form =
+        $("#flightBookingForm");
+
+    if (!form) {
+        return;
+    }
+
+    const from =
+        $("#fromState");
+
+    const to =
+        $("#toState");
+
+    const departure =
+        $("#departureDate");
+
+    const returnDate =
+        $("#returnDate");
+
+    const guests =
+        $("#guests");
+
+    [from, to, departure, returnDate, guests]
+        .filter(Boolean)
+        .forEach(
+            element => {
+
+                element.addEventListener(
+                    "change",
+                    calculateFlightSummary
+                );
+
+                element.addEventListener(
+                    "input",
+                    calculateFlightSummary
+                );
+
+            }
+        );
+
+    populateStateSelectors();
+
+    form.addEventListener(
+        "submit",
+        handleFlightSubmit
     );
 
-    const totalElements = $$(
-        "#cart-total, .cart-total, [data-cart-total]"
-    );
-
-    const count = getCartCount();
-
-    const total = getCartTotal();
-
-    countElements.forEach(element => {
-        element.textContent = count;
-    });
-
-    totalElements.forEach(element => {
-        element.textContent =
-            formatMoney(total);
-    });
-
-    renderCartItems();
 }
 
 
 /* =========================================================
-   25. RENDER CART ITEMS
-========================================================= */
+   POPULATE STATES
+   ========================================================= */
 
-function renderCartItems() {
+function populateStateSelectors() {
 
-    const containers = $$(
-        "#cart-items, .cart-items, [data-cart-items]"
-    );
+    const from =
+        $("#fromState");
 
-    if (!containers.length) return;
+    const to =
+        $("#toState");
 
-    containers.forEach(container => {
+    if (!from || !to) {
+        return;
+    }
 
-        container.innerHTML = "";
+    const states =
+        Object.keys(
+            CONFIG.STATE_FEES
+        );
 
-        if (!state.cart.length) {
+    const currentFrom =
+        from.value;
 
-            container.innerHTML = `
-                <div class="empty-cart">
-                    <p>Your booking list is empty.</p>
-                </div>
-            `;
+    const currentTo =
+        to.value;
 
+    function populate(select) {
+
+        const existing =
+            select.innerHTML.trim();
+
+        /*
+         If HTML already has real options,
+         keep them.
+        */
+
+        if (
+            existing &&
+            select.options.length > 1
+        ) {
             return;
         }
 
-        state.cart.forEach(item => {
-
-            let price =
-                Number(item.price) || 0;
-
-            if (item.id === "flight") {
-                price += Number(state.flightFee || 0);
-            }
-
-            const row =
-                document.createElement("div");
-
-            row.className = "cart-item";
-
-            row.innerHTML = `
-                <div class="cart-item-info">
-                    <strong>
-                        ${escapeHTML(item.name)}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(item.category)}
-                    </span>
-                </div>
-
-                <div class="cart-item-price">
-                    ${formatMoney(
-                        price *
-                        (Number(item.quantity) || 1)
-                    )}
-                </div>
-
-                <button
-                    type="button"
-                    class="remove-cart-item"
-                    data-remove-cart="${escapeHTML(item.id)}"
-                    aria-label="Remove ${escapeHTML(item.name)}"
-                >
-                    ×
-                </button>
-            `;
-
-            container.appendChild(row);
-        });
-    });
-
-    $$("[data-remove-cart]").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            removeFromCart(
-                button.dataset.removeCart
-            );
-        });
-    });
-}
-
-
-/* =========================================================
-   26. PRODUCT BUTTONS
-========================================================= */
-
-function setupProductButtons() {
-
-    $$("[data-product]").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            const productId =
-                button.dataset.product;
-
-            openProduct(productId);
-        });
-    });
-
-
-    $$("[data-add-product]").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            const productId =
-                button.dataset.addProduct;
-
-            addToCart(productId);
-        });
-    });
-}
-
-
-/* =========================================================
-   27. PRODUCT DETAIL MODAL
-========================================================= */
-
-function openProduct(productId) {
-
-    const product =
-        PRODUCTS[productId];
-
-    if (!product) return;
-
-    state.currentProduct = product;
-
-    let modal = $("#product-modal");
-
-    if (!modal) {
-
-        modal =
-            document.createElement("div");
-
-        modal.id = "product-modal";
-
-        modal.className = "product-modal";
-
-        document.body.appendChild(modal);
-    }
-
-    modal.innerHTML = `
-        <div class="product-modal-overlay"></div>
-
-        <div class="product-modal-content">
-
-            <button
-                class="product-modal-close"
-                type="button"
-                aria-label="Close"
-            >
-                ×
-            </button>
-
-            <div class="product-modal-image">
-                <img
-                    src="${escapeHTML(product.image)}"
-                    alt="${escapeHTML(product.name)}"
-                    onerror="this.style.display='none'"
-                >
-            </div>
-
-            <div class="product-modal-info">
-
-                <span class="product-category">
-                    ${escapeHTML(product.category)}
-                </span>
-
-                <h2>
-                    ${escapeHTML(product.name)}
-                </h2>
-
-                <p>
-                    ${escapeHTML(product.description)}
-                </p>
-
-                <strong class="product-modal-price">
-                    ${formatMoney(product.price)}
-                </strong>
-
-                <button
-                    type="button"
-                    class="primary-btn"
-                    id="modal-add-product"
-                >
-                    Add to Booking
-                </button>
-
-            </div>
-        </div>
-    `;
-
-    modal.classList.add("active");
-
-    $(".product-modal-close", modal)
-        ?.addEventListener(
-            "click",
-            closeProductModal
-        );
-
-    $(".product-modal-overlay", modal)
-        ?.addEventListener(
-            "click",
-            closeProductModal
-        );
-
-    $("#modal-add-product")
-        ?.addEventListener(
-            "click",
-            () => {
-
-                addToCart(productId);
-
-                closeProductModal();
-            }
-        );
-}
-
-
-function closeProductModal() {
-
-    const modal = $("#product-modal");
-
-    if (!modal) return;
-
-    modal.classList.remove("active");
-}
-
-
-/* =========================================================
-   28. FLIGHT STATE SELECTOR
-========================================================= */
-
-function setupFlightStateSelector() {
-
-    const selector =
-        $("#state-select") ||
-        $("#state") ||
-        $("[data-state-select]");
-
-    if (!selector) return;
-
-    selector.addEventListener("change", () => {
-
-        state.selectedState =
-            selector.value;
-
-        state.flightFee =
-            getStateFee(selector.value);
-
-        saveState();
-
-        updateCartUI();
-
-        const feeElements = $$(
-            "#state-fee, .state-fee, [data-state-fee]"
-        );
-
-        feeElements.forEach(element => {
-
-            element.textContent =
-                formatMoney(state.flightFee);
-        });
-
-        if (state.flightFee > 0) {
-
-            showToast(
-                `Route fee updated to ${formatMoney(state.flightFee)}.`,
-                "info"
-            );
-        }
-    });
-
-    if (state.selectedState) {
-        selector.value =
-            state.selectedState;
-    }
-}
-
-
-/* =========================================================
-   29. DONATION PROGRESS
-========================================================= */
-
-function setupDonation() {
-
-    const progressElements =
-        $$(
-            "#donation-progress, [data-donation-progress]"
-        );
-
-    const raisedElements =
-        $$(
-            "#donation-raised, [data-donation-raised]"
-        );
-
-    const goalElements =
-        $$(
-            "#donation-goal, [data-donation-goal]"
-        );
-
-    const percentage =
-        Math.min(
-            100,
-            (
-                CONFIG.DONATION_RAISED /
-                CONFIG.DONATION_GOAL
-            ) * 100
-        );
-
-    progressElements.forEach(element => {
-
-        if (
-            element.tagName === "PROGRESS"
-        ) {
-
-            element.value =
-                percentage;
-
-        } else {
-
-            element.style.width =
-                `${percentage}%`;
-        }
-    });
-
-    raisedElements.forEach(element => {
-
-        element.textContent =
-            formatMoney(
-                CONFIG.DONATION_RAISED
-            );
-    });
-
-    goalElements.forEach(element => {
-
-        element.textContent =
-            formatMoney(
-                CONFIG.DONATION_GOAL
-            );
-    });
-}
-
-
-/* =========================================================
-   30. BOOKING FORM
-========================================================= */
-
-function setupBookingForm() {
-
-    const forms = $$(
-        "#booking-form, [data-booking-form]"
-    );
-
-    forms.forEach(form => {
-
-        form.addEventListener(
-            "submit",
-            async event => {
-
-                event.preventDefault();
-
-                if (state.bookingSubmitting) {
-                    return;
-                }
-
-                state.bookingSubmitting = true;
-
-                const submitButton =
-                    $("button[type='submit']", form);
-
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.dataset.originalText =
-                        submitButton.textContent;
-
-                    submitButton.textContent =
-                        "Processing...";
-                }
-
-                try {
-
-                    const formData =
-                        new FormData(form);
-
-                    const booking = {
-
-                        full_name:
-                            formData.get("full_name") ||
-                            formData.get("name") ||
-                            "",
-
-                        email:
-                            formData.get("email") ||
-                            "",
-
-                        phone:
-                            formData.get("phone") ||
-                            "",
-
-                        state:
-                            formData.get("state") ||
-                            state.selectedState ||
-                            "",
-
-                        service:
-                            formData.get("service") ||
-                            "",
-
-                        notes:
-                            formData.get("notes") ||
-                            "",
-
-                        total:
-                            getCartTotal(),
-
-                        cart:
-                            state.cart,
-
-                        created_at:
-                            new Date().toISOString()
-                    };
-
-                    if (!booking.full_name) {
-                        throw new Error(
-                            "Please enter your full name."
-                        );
-                    }
-
-                    if (!booking.email) {
-                        throw new Error(
-                            "Please enter your email address."
-                        );
-                    }
-
-                    await submitBooking(
-                        booking
+        select.innerHTML =
+            '<option value="">Select state</option>';
+
+        states.forEach(
+            state => {
+
+                const option =
+                    document.createElement(
+                        "option"
                     );
 
-                    showToast(
-                        "Booking request received successfully.",
-                        "success"
-                    );
+                option.value = state;
 
-                    form.reset();
+                option.textContent = state;
 
-                    clearCart();
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    showToast(
-                        error.message ||
-                        "Something went wrong while submitting your booking.",
-                        "error"
-                    );
-
-                } finally {
-
-                    state.bookingSubmitting =
-                        false;
-
-                    if (submitButton) {
-
-                        submitButton.disabled =
-                            false;
-
-                        submitButton.textContent =
-                            submitButton.dataset.originalText ||
-                            "Submit";
-                    }
-                }
-            }
-        );
-    });
-}
-
-
-/* =========================================================
-   31. SUPABASE BOOKING SUBMISSION
-========================================================= */
-
-async function submitBooking(booking) {
-
-    if (
-        !CONFIG.SUPABASE_URL ||
-        CONFIG.SUPABASE_URL.includes("YOUR-PROJECT")
-    ) {
-
-        console.warn(
-            "Supabase is not configured."
-        );
-
-        console.log(
-            "Booking data:",
-            booking
-        );
-
-        return booking;
-    }
-
-    const response =
-        await fetch(
-            `${CONFIG.SUPABASE_URL}/rest/v1/bookings`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                        "application/json",
-
-                    "apikey":
-                        CONFIG.SUPABASE_ANON_KEY,
-
-                    "Authorization":
-                        `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
-
-                    "Prefer":
-                        "return=minimal"
-                },
-
-                body:
-                    JSON.stringify(booking)
-            }
-        );
-
-    if (!response.ok) {
-
-        const text =
-            await response.text();
-
-        throw new Error(
-            text ||
-            "Unable to save booking."
-        );
-    }
-
-    return true;
-}
-
-
-/* =========================================================
-   32. CHECKOUT BUTTON
-========================================================= */
-
-function setupCheckout() {
-
-    $$(
-        "#checkout-btn, [data-checkout]"
-    ).forEach(button => {
-
-        button.addEventListener(
-            "click",
-            async () => {
-
-                if (!state.cart.length) {
-
-                    showToast(
-                        "Please select a booking first.",
-                        "error"
-                    );
-
-                    return;
-                }
-
-                const total =
-                    getCartTotal();
-
-                showToast(
-                    `Checkout total: ${formatMoney(total)}.`,
-                    "info"
+                select.appendChild(
+                    option
                 );
 
-                await startCheckout();
             }
         );
-    });
+
+    }
+
+    populate(from);
+    populate(to);
+
+    if (currentFrom) {
+        from.value = currentFrom;
+    }
+
+    if (currentTo) {
+        to.value = currentTo;
+    }
+
 }
 
 
 /* =========================================================
-   33. CHECKOUT PREPARATION
-========================================================= */
+   FLIGHT SUMMARY
+   ========================================================= */
 
-async function startCheckout() {
+function calculateFlightSummary() {
 
-    const checkoutData = {
+    const from =
+        $("#fromState");
 
-        items: state.cart,
+    const to =
+        $("#toState");
 
-        state:
-            state.selectedState,
+    const departure =
+        $("#departureDate");
 
-        flight_fee:
-            state.flightFee,
+    const returnDate =
+        $("#returnDate");
 
-        total:
-            getCartTotal(),
+    const guests =
+        $("#guests");
 
-        currency:
-            CONFIG.CURRENCY
-    };
+    const summary =
+        $("#flightSummary");
 
-    console.log(
-        "Checkout payload:",
-        checkoutData
+    if (!from || !to) {
+        return;
+    }
+
+    const fromValue =
+        from.value;
+
+    const toValue =
+        to.value;
+
+    const departureValue =
+        departure
+            ? departure.value
+            : "";
+
+    const returnValue =
+        returnDate
+            ? returnDate.value
+            : "";
+
+    let guestCount =
+        guests
+            ? parseInt(
+                guests.value,
+                10
+            )
+            : 1;
+
+    if (
+        !Number.isFinite(
+            guestCount
+        ) ||
+        guestCount < 1
+    ) {
+
+        guestCount = 1;
+
+    }
+
+    let routeFee = 0;
+
+    if (
+        fromValue &&
+        CONFIG.STATE_FEES[fromValue]
+    ) {
+
+        routeFee +=
+            CONFIG.STATE_FEES[fromValue];
+
+    }
+
+    if (
+        toValue &&
+        CONFIG.STATE_FEES[toValue]
+    ) {
+
+        routeFee +=
+            CONFIG.STATE_FEES[toValue];
+
+    }
+
+    /*
+     Prevent identical-state nonsense.
+    */
+
+    if (
+        fromValue &&
+        toValue &&
+        fromValue === toValue
+    ) {
+
+        routeFee =
+            CONFIG.STATE_FEES[fromValue];
+
+    }
+
+    const basePrice =
+        CONFIG.EXPERIENCE_PRICES.flight;
+
+    const total =
+        (basePrice + routeFee) *
+        guestCount;
+
+    updateElementText(
+        "#summaryFrom",
+        fromValue || "—"
+    );
+
+    updateElementText(
+        "#summaryTo",
+        toValue || "—"
+    );
+
+    updateElementText(
+        "#summaryDeparture",
+        formatDate(departureValue)
+    );
+
+    updateElementText(
+        "#summaryReturn",
+        formatDate(returnValue)
+    );
+
+    updateElementText(
+        "#summaryRouteFee",
+        `$${formatMoney(routeFee)}`
+    );
+
+    updateElementText(
+        "#summaryTotal",
+        `$${formatMoney(total)}`
     );
 
     /*
-       Your Stripe / payment backend
-       can be connected here.
-
-       Example:
-
-       const response = await fetch(
-           "/api/create-checkout",
-           {
-               method: "POST",
-               headers: {
-                   "Content-Type": "application/json"
-               },
-               body: JSON.stringify(checkoutData)
-           }
-       );
-
-       const result = await response.json();
-
-       window.location.href =
-           result.checkout_url;
+     If the HTML contains a dedicated
+     route-fee display, update it too.
     */
 
+    updateElementText(
+        "#routeFeeDisplay",
+        `$${formatMoney(routeFee)}`
+    );
+
+    if (summary) {
+
+        const hasData =
+            fromValue ||
+            toValue ||
+            departureValue ||
+            returnValue;
+
+        summary.style.display =
+            hasData
+                ? ""
+                : "";
+
+    }
+
+    return {
+        from: fromValue,
+        to: toValue,
+        departure: departureValue,
+        returnDate: returnValue,
+        guests: guestCount,
+        routeFee,
+        basePrice,
+        total
+    };
+
+}
+
+
+/* =========================================================
+   FLIGHT SUBMISSION
+   ========================================================= */
+
+async function handleFlightSubmit(
+    event
+) {
+
+    event.preventDefault();
+
+    const form =
+        event.currentTarget;
+
+    if (!form.checkValidity()) {
+
+        form.reportValidity();
+
+        return;
+
+    }
+
+    const flight =
+        calculateFlightSummary();
+
+    if (!flight) {
+        return;
+    }
+
+    if (
+        !flight.from ||
+        !flight.to
+    ) {
+
+        showFormStatus(
+            form,
+            "Please select your departure and destination states.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if (
+        flight.from === flight.to
+    ) {
+
+        showFormStatus(
+            form,
+            "Departure and destination cannot be the same state.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+    setButtonLoading(
+        submitButton,
+        true,
+        "Preparing..."
+    );
+
+    const data =
+        collectFormData(form);
+
+    data.booking_type =
+        "flight";
+
+    data.flight =
+        flight;
+
+    try {
+
+        const saved =
+            await saveBooking(
+                data
+            );
+
+        if (saved) {
+
+            showFormStatus(
+                form,
+                "Your flight booking request has been received successfully.",
+                "success"
+            );
+
+            showToast(
+                "Flight booking request received."
+            );
+
+            form.reset();
+
+            calculateFlightSummary();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Flight submission error:",
+            error
+        );
+
+        showFormStatus(
+            form,
+            "Something went wrong. Please try again.",
+            "error"
+        );
+
+    } finally {
+
+        setButtonLoading(
+            submitButton,
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MAIN BOOKING FORM
+   ========================================================= */
+
+function setupBookingForm() {
+
+    const form =
+        $("#bookingForm");
+
+    if (!form) {
+        return;
+    }
+
+    const fields =
+        form.querySelectorAll(
+            "input, select, textarea"
+        );
+
+    fields.forEach(
+        field => {
+
+            field.addEventListener(
+                "input",
+                saveBookingDraft
+            );
+
+            field.addEventListener(
+                "change",
+                saveBookingDraft
+            );
+
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        handleBookingSubmit
+    );
+
+}
+
+
+/* =========================================================
+   MAIN BOOKING SUBMISSION
+   ========================================================= */
+
+async function handleBookingSubmit(
+    event
+) {
+
+    event.preventDefault();
+
+    const form =
+        event.currentTarget;
+
+    if (!form.checkValidity()) {
+
+        form.reportValidity();
+
+        return;
+
+    }
+
+    const total =
+        calculateBookingTotal();
+
+    if (total <= 0) {
+
+        showFormStatus(
+            form,
+            "Please select at least one experience or perfume.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    const submitButton =
+        form.querySelector(
+            'button[type="submit"]'
+        );
+
+    setButtonLoading(
+        submitButton,
+        true,
+        "Submitting..."
+    );
+
+    const data =
+        collectFormData(form);
+
+    data.booking_type =
+        "experience";
+
+    data.selected_experiences =
+        getSelectedExperiences(form);
+
+    data.selected_perfumes =
+        selectedPerfumes;
+
+    data.total =
+        total;
+
+    try {
+
+        const saved =
+            await saveBooking(
+                data
+            );
+
+        if (saved) {
+
+            showFormStatus(
+                form,
+                "Your request has been received. Natalya Bookings will be in touch shortly.",
+                "success"
+            );
+
+            showToast(
+                "Booking request submitted successfully."
+            );
+
+            localStorage.removeItem(
+                CONFIG.BOOKING_KEY
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Booking submission error:",
+            error
+        );
+
+        showFormStatus(
+            form,
+            "We couldn't submit your request right now. Please try again.",
+            "error"
+        );
+
+    } finally {
+
+        setButtonLoading(
+            submitButton,
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   GET SELECTED EXPERIENCES
+   ========================================================= */
+
+function getSelectedExperiences(
+    form
+) {
+
+    const results = [];
+
+    const checkboxes =
+        form.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+
+    checkboxes.forEach(
+        checkbox => {
+
+            if (
+                checkbox.classList.contains(
+                    "perfume-select-checkbox"
+                )
+            ) {
+                return;
+            }
+
+            results.push({
+                value:
+                    checkbox.value || "",
+                label:
+                    getCheckboxLabel(
+                        checkbox
+                    ),
+                price:
+                    getCheckboxPrice(
+                        checkbox
+                    )
+            });
+
+        }
+    );
+
+    return results;
+
+}
+
+
+/* =========================================================
+   CHECKBOX LABEL
+   ========================================================= */
+
+function getCheckboxLabel(
+    checkbox
+) {
+
+    const label =
+        document.querySelector(
+            `label[for="${CSS.escape(checkbox.id)}"]`
+        );
+
+    if (label) {
+
+        return label.textContent
+            .replace(/\s+/g, " ")
+            .trim();
+
+    }
+
+    if (checkbox.parentElement) {
+
+        return checkbox.parentElement.textContent
+            .replace(/\s+/g, " ")
+            .trim();
+
+    }
+
+    return checkbox.value || "Experience";
+
+}
+
+
+/* =========================================================
+   SAVE BOOKING
+   ========================================================= */
+
+async function saveBooking(
+    data
+) {
+
+    /*
+     If Supabase is available,
+     save there.
+    */
+
+    if (supabaseClient) {
+
+        try {
+
+            const result =
+                await supabaseClient
+                    .from("bookings")
+                    .insert([
+                        normalizeBookingForSupabase(
+                            data
+                        )
+                    ])
+                    .select();
+
+            if (result.error) {
+
+                console.error(
+                    "Supabase insert error:",
+                    result.error
+                );
+
+                /*
+                 Do not silently pretend the
+                 booking was stored remotely.
+                */
+
+                throw result.error;
+
+            }
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "Remote booking failed:",
+                error
+            );
+
+            /*
+             Keep a local copy as a backup.
+            */
+
+            saveLocalBooking(
+                data
+            );
+
+            /*
+             Tell the user the request has
+             been saved locally rather than
+             falsely claiming Supabase worked.
+            */
+
+            showFormStatus(
+                document.activeElement?.form ||
+                null,
+                "Your request has been saved on this device, but the online booking service could not be reached.",
+                "error"
+            );
+
+            return false;
+
+        }
+
+    }
+
+    /*
+     Supabase is not configured.
+     Save locally so the frontend remains
+     usable during development.
+    */
+
+    saveLocalBooking(
+        data
+    );
+
     showToast(
-        "Checkout is ready for payment processing.",
-        "success"
+        "Booking saved locally. Connect Supabase to receive it online."
     );
+
+    return true;
+
 }
 
 
 /* =========================================================
-   34. CART DRAWER
-========================================================= */
+   SUPABASE DATA NORMALIZATION
+   ========================================================= */
 
-function setupCartDrawer() {
+function normalizeBookingForSupabase(
+    data
+) {
 
-    const openButtons = $$(
-        "#cart-button, .cart-button, [data-open-cart]"
-    );
+    /*
+     This object deliberately uses common
+     column names.
 
-    const closeButtons = $$(
-        "#cart-close, .cart-close, [data-close-cart]"
-    );
+     If your Supabase bookings table uses
+     different column names, we can adapt
+     this in the backend step.
+    */
 
-    const drawer =
-        $("#cart-drawer") ||
-        $(".cart-drawer");
+    return {
+        full_name:
+            data.full_name ||
+            data.fullName ||
+            "",
 
-    if (!drawer) return;
+        email:
+            data.email ||
+            "",
 
-    openButtons.forEach(button => {
+        phone:
+            data.phone ||
+            "",
 
-        button.addEventListener("click", () => {
+        booking_type:
+            data.booking_type ||
+            "",
 
-            drawer.classList.add("active");
+        service:
+            data.service ||
+            "",
 
-            document.body.classList.add(
-                "cart-open"
-            );
-        });
-    });
+        state:
+            data.state ||
+            data.from_state ||
+            "",
 
-    closeButtons.forEach(button => {
+        message:
+            data.message ||
+            data.notes ||
+            "",
 
-        button.addEventListener("click", () => {
+        total:
+            Number(
+                data.total || 0
+            ),
 
-            drawer.classList.remove("active");
+        details:
+            JSON.stringify(
+                data
+            )
+    };
 
-            document.body.classList.remove(
-                "cart-open"
-            );
-        });
-    });
 }
 
 
 /* =========================================================
-   35. ESCAPE KEY
-========================================================= */
+   LOCAL BOOKING BACKUP
+   ========================================================= */
+
+function saveLocalBooking(
+    data
+) {
+
+    try {
+
+        const existing =
+            JSON.parse(
+                localStorage.getItem(
+                    "natalya-bookings-local"
+                ) || "[]"
+            );
+
+        existing.push({
+            ...data,
+            created_at:
+                new Date().toISOString()
+        });
+
+        localStorage.setItem(
+            "natalya-bookings-local",
+            JSON.stringify(
+                existing
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not save local booking:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COLLECT FORM DATA
+   ========================================================= */
+
+function collectFormData(
+    form
+) {
+
+    const formData =
+        new FormData(form);
+
+    const data = {};
+
+    formData.forEach(
+        (value, key) => {
+
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    data,
+                    key
+                )
+            ) {
+
+                if (
+                    !Array.isArray(
+                        data[key]
+                    )
+                ) {
+
+                    data[key] = [
+                        data[key]
+                    ];
+
+                }
+
+                data[key].push(
+                    value
+                );
+
+            } else {
+
+                data[key] = value;
+
+            }
+
+        }
+    );
+
+    return data;
+
+}
+
+
+/* =========================================================
+   BOOKING DRAFT
+   ========================================================= */
+
+function saveBookingDraft() {
+
+    const form =
+        $("#bookingForm");
+
+    if (!form) {
+        return;
+    }
+
+    try {
+
+        const data =
+            collectFormData(form);
+
+        localStorage.setItem(
+            CONFIG.BOOKING_KEY,
+            JSON.stringify(
+                data
+            )
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Could not save booking draft.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RESTORE BOOKING DRAFT
+   ========================================================= */
+
+function restoreBookingDraft() {
+
+    const form =
+        $("#bookingForm");
+
+    if (!form) {
+        return;
+    }
+
+    try {
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(
+                    CONFIG.BOOKING_KEY
+                )
+            );
+
+        if (!saved) {
+            return;
+        }
+
+        Object.entries(
+            saved
+        ).forEach(
+            ([key, value]) => {
+
+                const field =
+                    form.elements[key];
+
+                if (!field) {
+                    return;
+                }
+
+                if (
+                    field.type === "checkbox"
+                ) {
+
+                    if (
+                        Array.isArray(
+                            value
+                        )
+                    ) {
+
+                        field.checked =
+                            value.includes(
+                                field.value
+                            );
+
+                    } else {
+
+                        field.checked =
+                            Boolean(
+                                value
+                            );
+
+                    }
+
+                } else {
+
+                    field.value =
+                        value;
+
+                }
+
+            }
+        );
+
+        /*
+         Rebuild perfume selection
+         after restoring form data.
+        */
+
+        updateSelectedPerfumes();
+
+        calculateBookingTotal();
+
+    } catch (error) {
+
+        console.warn(
+            "Could not restore booking draft.",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FORM STATUS
+   ========================================================= */
+
+function showFormStatus(
+    form,
+    message,
+    type
+) {
+
+    if (!form) {
+        return;
+    }
+
+    let status =
+        form.querySelector(
+            ".status-message"
+        );
+
+    if (!status) {
+
+        status =
+            form.querySelector(
+                ".confirmation-message"
+            );
+
+    }
+
+    if (!status) {
+
+        status =
+            document.createElement(
+                "div"
+            );
+
+        status.className =
+            "status-message";
+
+        form.appendChild(
+            status
+        );
+
+    }
+
+    status.textContent =
+        message;
+
+    status.classList.remove(
+        "show",
+        "success",
+        "error"
+    );
+
+    status.classList.add(
+        "show",
+        type
+    );
+
+    status.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+
+/* =========================================================
+   BUTTON LOADING STATE
+   ========================================================= */
+
+function setButtonLoading(
+    button,
+    loading,
+    text = "Submit"
+) {
+
+    if (!button) {
+        return;
+    }
+
+    if (loading) {
+
+        button.dataset.originalText =
+            button.innerHTML;
+
+        button.disabled = true;
+
+        button.innerHTML =
+            `
+            <span style="
+                display:inline-flex;
+                align-items:center;
+                gap:8px;
+            ">
+                <span style="
+                    width:14px;
+                    height:14px;
+                    border:2px solid currentColor;
+                    border-right-color:transparent;
+                    border-radius:50%;
+                    display:inline-block;
+                    animation:natalyaSpin .7s linear infinite;
+                "></span>
+                ${escapeHTML(text)}
+            </span>
+            `;
+
+        injectSpinnerAnimation();
+
+    } else {
+
+        button.disabled = false;
+
+        if (
+            button.dataset.originalText
+        ) {
+
+            button.innerHTML =
+                button.dataset.originalText;
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   SPINNER CSS
+   ========================================================= */
+
+function injectSpinnerAnimation() {
+
+    if (
+        document.getElementById(
+            "natalya-spinner-style"
+        )
+    ) {
+        return;
+    }
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+    style.id =
+        "natalya-spinner-style";
+
+    style.textContent = `
+        @keyframes natalyaSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    `;
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(
+    message
+) {
+
+    let toast =
+        $("#natalyaToast");
+
+    if (!toast) {
+
+        toast =
+            document.createElement(
+                "div"
+            );
+
+        toast.id =
+            "natalyaToast";
+
+        toast.className =
+            "toast";
+
+        document.body.appendChild(
+            toast
+        );
+
+    }
+
+    toast.innerHTML =
+        `
+        <strong>Natalya Bookings</strong><br>
+        ${escapeHTML(message)}
+        `;
+
+    requestAnimationFrame(
+        () => {
+
+            toast.classList.add(
+                "show"
+            );
+
+        }
+    );
+
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            4000
+        );
+
+}
+
+
+/* =========================================================
+   IMAGE FALLBACKS
+   ========================================================= */
+
+function setupImageFallbacks() {
+
+    $$("img").forEach(
+        image => {
+
+            image.addEventListener(
+                "error",
+                () => {
+
+                    if (
+                        image.dataset.fallbackUsed
+                    ) {
+                        return;
+                    }
+
+                    const fallback =
+                        image.dataset.fallback ||
+                        image.getAttribute(
+                            "data-fallback"
+                        );
+
+                    if (fallback) {
+
+                        image.dataset.fallbackUsed =
+                            "true";
+
+                        image.src =
+                            fallback;
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
 
 function setupEscapeKey() {
 
@@ -1498,204 +2401,375 @@ function setupEscapeKey() {
         "keydown",
         event => {
 
-            if (event.key !== "Escape") {
+            if (
+                event.key !== "Escape"
+            ) {
                 return;
             }
 
-            closeProductModal();
+            const navigation =
+                $("#primaryNavigation");
 
-            const drawer =
-                $("#cart-drawer") ||
-                $(".cart-drawer");
+            const menuToggle =
+                $("#menuToggle");
 
-            drawer?.classList.remove(
-                "active"
+            if (navigation) {
+
+                navigation.classList.remove(
+                    "open"
+                );
+
+            }
+
+            if (menuToggle) {
+
+                menuToggle.classList.remove(
+                    "active"
+                );
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+            document.body.classList.remove(
+                "menu-open"
             );
 
-            const nav =
-                $("#nav-links") ||
-                $(".nav-links");
+            $$(".modal.active").forEach(
+                modal => {
 
-            nav?.classList.remove(
-                "active"
+                    modal.classList.remove(
+                        "active"
+                    );
+
+                }
             );
+
         }
     );
+
 }
 
 
 /* =========================================================
-   36. IMAGE ERROR HANDLING
-========================================================= */
+   CURRENT YEAR
+   ========================================================= */
 
-function setupImageFallbacks() {
+function updateCurrentYear() {
 
-    $$("img").forEach(image => {
+    const year =
+        new Date().getFullYear();
 
-        image.addEventListener(
-            "error",
-            () => {
+    const elements =
+        $$("#currentYear");
 
-                image.classList.add(
-                    "image-error"
-                );
+    elements.forEach(
+        element => {
 
-                image.setAttribute(
-                    "aria-hidden",
-                    "true"
-                );
-            }
-        );
-    });
-}
+            element.textContent =
+                year;
 
-
-/* =========================================================
-   37. BUTTON RIPPLE EFFECT
-========================================================= */
-
-function setupButtonEffects() {
-
-    $$(
-        "button, .primary-btn, .secondary-btn, .cta-btn"
-    ).forEach(button => {
-
-        button.addEventListener(
-            "click",
-            event => {
-
-                const ripple =
-                    document.createElement("span");
-
-                ripple.className =
-                    "button-ripple";
-
-                const rect =
-                    button.getBoundingClientRect();
-
-                ripple.style.left =
-                    `${event.clientX - rect.left}px`;
-
-                ripple.style.top =
-                    `${event.clientY - rect.top}px`;
-
-                button.appendChild(ripple);
-
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            }
-        );
-    });
-}
-
-
-/* =========================================================
-   38. CURRENT YEAR
-========================================================= */
-
-function setupCurrentYear() {
-
-    const yearElements =
-        $$(
-            "#current-year, .current-year, [data-current-year]"
-        );
-
-    yearElements.forEach(element => {
-
-        element.textContent =
-            new Date().getFullYear();
-    });
-}
-
-
-/* =========================================================
-   39. PREVENT DOUBLE FORM SUBMISSION
-========================================================= */
-
-function preventDoubleSubmission() {
-
-    $$("form").forEach(form => {
-
-        form.addEventListener(
-            "submit",
-            () => {
-
-                form.classList.add(
-                    "submitting"
-                );
-            }
-        );
-    });
-}
-
-
-/* =========================================================
-   40. INITIALIZE APPLICATION
-========================================================= */
-
-function initializeApp() {
-
-    loadState();
-
-    setupMobileNavigation();
-
-    setupNavbar();
-
-    setupActiveNavigation();
-
-    setupSmoothScroll();
-
-    setupTheme();
-
-    setupHeroSlider();
-
-    setupRevealAnimations();
-
-    setupProductButtons();
-
-    setupFlightStateSelector();
-
-    setupDonation();
-
-    setupBookingForm();
-
-    setupCheckout();
-
-    setupCartDrawer();
-
-    setupEscapeKey();
-
-    setupImageFallbacks();
-
-    setupButtonEffects();
-
-    setupCurrentYear();
-
-    preventDoubleSubmission();
-
-    updateCartUI();
-
-    console.log(
-        "Natalya Bookings frontend initialized successfully."
+        }
     );
+
 }
 
 
 /* =========================================================
-   41. START APPLICATION
-========================================================= */
+   MONEY FORMAT
+   ========================================================= */
 
-if (
-    document.readyState === "loading"
+function parseMoney(
+    value
 ) {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeApp
+    if (
+        typeof value === "number"
+    ) {
+
+        return Number.isFinite(value)
+            ? value
+            : 0;
+
+    }
+
+    const cleaned =
+        String(value || "")
+            .replace(
+                /[^0-9.-]/g,
+                ""
+            );
+
+    const number =
+        parseFloat(
+            cleaned
+        );
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+
+}
+
+
+function formatMoney(
+    value
+) {
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "en-US",
+        {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }
     );
 
-} else {
+}
 
-    initializeApp();
-       }
+
+/* =========================================================
+   DATE FORMAT
+   ========================================================= */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
+        return "—";
+    }
+
+    const date =
+        new Date(
+            `${value}T00:00:00`
+        );
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return value;
+    }
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE ELEMENT TEXT
+   ========================================================= */
+
+function updateElementText(
+    selector,
+    text
+) {
+
+    const element =
+        $(selector);
+
+    if (element) {
+
+        element.textContent =
+            text;
+
+    }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   GLOBAL DATE VALIDATION
+   ========================================================= */
+
+document.addEventListener(
+    "change",
+    event => {
+
+        if (
+            event.target.matches(
+                "#returnDate"
+            )
+        ) {
+
+            const departure =
+                $("#departureDate");
+
+            const returnDate =
+                $("#returnDate");
+
+            if (
+                departure &&
+                returnDate &&
+                departure.value &&
+                returnDate.value &&
+                returnDate.value <
+                departure.value
+            ) {
+
+                returnDate.setCustomValidity(
+                    "Return date cannot be before departure date."
+                );
+
+            } else if (returnDate) {
+
+                returnDate.setCustomValidity(
+                    ""
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PREVENT DOUBLE SUBMISSION
+   ========================================================= */
+
+document.addEventListener(
+    "submit",
+    event => {
+
+        const form =
+            event.target;
+
+        if (
+            !form.dataset.submitting
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+    },
+    true
+);
+
+
+/* =========================================================
+   COMMUNITY PROGRESS
+   ========================================================= */
+
+function updateCommunityProgress() {
+
+    const percentage =
+        Math.min(
+            100,
+            (
+                CONFIG.COMMUNITY_RAISED /
+                CONFIG.COMMUNITY_TARGET
+            ) * 100
+        );
+
+    const fills =
+        $$(".progress-fill");
+
+    fills.forEach(
+        fill => {
+
+            fill.style.width =
+                `${percentage}%`;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RUN COMMUNITY PROGRESS
+   ========================================================= */
+
+updateCommunityProgress();
+
+
+/* =========================================================
+   OPTIONAL GLOBAL API
+   =========================================================
+
+   Useful for debugging from browser console.
+   ========================================================= */
+
+window.NatalyaBookings = {
+
+    calculateBookingTotal,
+
+    calculateFlightSummary,
+
+    updateSelectedPerfumes,
+
+    showToast,
+
+    getSelectedPerfumes: () =>
+        [...selectedPerfumes],
+
+    getLocalBookings: () => {
+
+        try {
+
+            return JSON.parse(
+                localStorage.getItem(
+                    "natalya-bookings-local"
+                ) || "[]"
+            );
+
+        } catch {
+
+            return [];
+
+        }
+
+    }
+
+};
