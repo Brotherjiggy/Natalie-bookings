@@ -326,7 +326,8 @@ function setupMobileNavigation() {
         }
     );
 
-    /* Close after selecting a navigation link */
+    header.classList.toggle("menu-open", isOpen);
+header.classList.remove("nav-hidden");
 
     $$("#primaryNavigation a").forEach(
         link => {
@@ -364,42 +365,49 @@ function setupMobileNavigation() {
 /* =========================================================
    STICKY HEADER
    ========================================================= */
-
 function setupStickyHeader() {
+  const header = $("#siteHeader");
+  if (!header) return;
 
-    const header =
-        $("#siteHeader");
+  let lastScrollY = window.scrollY;
+  let ticking = false;
 
-    if (!header) {
-        return;
+  function updateHeader() {
+    const currentScrollY = window.scrollY;
+
+    /* Always show at the very top */
+    if (currentScrollY <= 20) {
+      header.classList.remove("nav-hidden");
     }
 
-    function updateHeader() {
-
-        if (window.scrollY > 30) {
-
-            header.classList.add(
-                "scrolled"
-            );
-
-        } else {
-
-            header.classList.remove(
-                "scrolled"
-            );
-
-        }
-
+    /* Scrolling down */
+    else if (
+      currentScrollY > lastScrollY &&
+      currentScrollY > 100 &&
+      !header.classList.contains("menu-open")
+    ) {
+      header.classList.add("nav-hidden");
     }
 
-    updateHeader();
+    /* Scrolling up */
+    else if (currentScrollY < lastScrollY) {
+      header.classList.remove("nav-hidden");
+    }
 
-    window.addEventListener(
-        "scroll",
-        updateHeader,
-        { passive: true }
-    );
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
 
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 }
 
 
