@@ -83,6 +83,7 @@ function initializeAutoHideHeader() {
     }, { passive: true });
 }
 
+
 /* =========================================================
    SUPABASE INITIALIZATION
 ========================================================= */
