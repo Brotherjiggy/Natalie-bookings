@@ -821,33 +821,59 @@ function setupScrollReveal() {
    ========================================================= */
 
 function setupExperienceSelection() {
+  const cards = $$(".experience-card");
 
-    const checkboxes =
-        $$(
-            '#bookingForm input[type="checkbox"]'
-        );
+  if (!cards.length) return;
 
-    if (!checkboxes.length) {
-        return;
-    }
-
-    checkboxes.forEach(
-        checkbox => {
-
-            checkbox.addEventListener(
-                "change",
-                () => {
-
-                    calculateBookingTotal();
-
-                    saveBookingDraft();
-
-                }
-            );
-
-        }
+  cards.forEach((card) => {
+    const checkbox = card.querySelector(
+      'input[type="checkbox"]'
     );
 
+    if (!checkbox) return;
+
+    function updateCard() {
+      card.classList.toggle("selected", checkbox.checked);
+    }
+
+    // Initial state
+    updateCard();
+
+    // Clicking anywhere on the card
+    card.addEventListener("click", (event) => {
+      /*
+       * If the user clicked the actual checkbox,
+       * let its normal behaviour happen.
+       */
+      if (event.target === checkbox) {
+        updateCard();
+        calculateBookingTotal();
+        return;
+      }
+
+      /*
+       * Don't interfere with buttons or links inside
+       * the experience card.
+       */
+      if (
+        event.target.closest("a") ||
+        event.target.closest("button")
+      ) {
+        return;
+      }
+
+      checkbox.checked = !checkbox.checked;
+
+      updateCard();
+      calculateBookingTotal();
+    });
+
+    // Keyboard accessibility
+    checkbox.addEventListener("change", () => {
+      updateCard();
+      calculateBookingTotal();
+    });
+  });
 }
 
 
