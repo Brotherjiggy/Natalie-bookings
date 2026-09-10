@@ -1,758 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Natalya Bookings & Haute Parfumerie Boutique — Curated luxury experiences, designer fragrances, and community initiatives managed by Budget Designs.">
-    <title>Natalya Bookings & Luxury Perfume Boutique | Budget Designs</title>
+    <title>Natalie Bookings & Haute Parfumerie</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
+<body class="dark-mode">
 
     <!-- =====================================================
-     HEADER / NAVBAR (Elevated Luxury Design + Floating Pill Menu)
-====================================================== -->
-<header class="site-header" id="siteHeader">
-    <div class="header-container">
-        
-        <!-- Luxury Brand Logo -->
-        <a href="#home" class="brand">
-            <div class="brand-logo-wrapper">
-                <span class="brand-mark">N</span>
-            </div>
-            <div class="brand-text">
-                <span class="brand-title">NATALYA</span>
-                <span class="brand-sub">BOOKINGS & HAUTE PARFUMERIE</span>
-            </div>
-        </a>
-
-        <!-- Desktop Navigation -->
-        <nav class="primary-navigation" id="primaryNavigation">
-            <a href="#home" class="nav-link">Home</a>
-            <a href="#experiences" class="nav-link">Experiences</a>
-            <a href="#perfumes" class="nav-link">Perfume Boutique</a>
-            <a href="#community" class="nav-link">Community</a>
-            <a href="#membership" class="nav-link">Membership</a>
-            <a href="#book" class="nav-btn-highlight">Book & Shop</a>
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
-                <span class="theme-icon">◐</span>
-            </button>
-        </nav>
-
-        <!-- Unique Custom Mobile Menu Button -->
-        <div class="mobile-controls">
-            <button id="themeToggleMobile" class="theme-toggle mobile-only" type="button" aria-label="Toggle theme">
-                ◐
-            </button>
-            <button class="menu-toggle-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">
-                <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
-                </span>
-            </button>
-        </div>
-
-    </div>
-</header>
-
-
-        <!-- =================================================
-             HERO SECTION
-        ================================================== -->
-        <section class="hero" id="home">
-            <div class="hero-slideshow">
-                <div class="hero-slide active" style="background-image: url('images/hero-1.jpg');"></div>
-                <div class="hero-slide" style="background-image: url('images/hero-2.jpg');"></div>
-                <div class="hero-slide" style="background-image: url('images/hero-3.jpg');"></div>
-            </div>
-
-            <div class="hero-overlay"></div>
-
-            <div class="hero-content">
-                <span class="eyebrow light">CURATED • PERSONAL • MEMORABLE</span>
-                <h1>Your next luxury <span>experience & fragrance</span> awaits.</h1>
-                <p>Discover a streamlined destination for selected travel, elite dining, fan experiences, iconic luxury perfume collections, and community initiatives.</p>
-
-                <div class="hero-actions">
-                    <a href="#book" class="button button-orange">Start Custom Booking</a>
-                    <a href="#perfumes" class="button button-outline">Shop 10 Luxury Perfumes</a>
-                </div>
-
-                <div class="hero-trust">
-                    <span>✓ Multi-item combined checkout</span>
-                    <span>✓ Insured express delivery</span>
-                    <span>✓ Managed by Budget Designs</span>
-                </div>
-            </div>
-
-            <div class="hero-scroll">Scroll to explore ↓</div>
-        </section>
-
-
-        <!-- =================================================
-             EXPERIENCES SECTION
-        ================================================== -->
-        <section class="section experiences" id="experiences">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="eyebrow">BOOKING EXPERIENCES</span>
-                    <h2>Choose your experiences.</h2>
-                    <p>Select one or multiple experiences below to bundle with your booking request or direct checkout.</p>
-                </div>
-
-                <div class="experience-grid">
-
-                    <!-- FLIGHT -->
-                    <article class="experience-card">
-                        <div class="experience-image flight-image">
-                            <span>01</span>
-                        </div>
-                        <div class="experience-content">
-                            <h3>Flight Booking</h3>
-                            <p>Arrange travel for a selected experience with departure and destination options across the United States.</p>
-                            <strong class="experience-price">Reserve Pass — $2,500</strong>
-                            <a href="#flightBooking" class="text-link">Request flight details →</a>
-                        </div>
-                    </article>
-
-                    <!-- DINNER -->
-                    <article class="experience-card">
-                        <div class="experience-image dinner-image">
-                            <span>02</span>
-                        </div>
-                        <div class="experience-content">
-                            <h3>Dinner Reservation</h3>
-                            <p>Request a premium dining experience coordinated around your selected date and private preferences.</p>
-                            <strong class="experience-price">Private Reserve — $850</strong>
-                            <a href="#book" class="text-link">Reserve dining →</a>
-                        </div>
-                    </article>
-
-                    <!-- MEMBERSHIP -->
-                    <article class="experience-card">
-                        <div class="experience-image fan-image">
-                            <span>03</span>
-                        </div>
-                        <div class="experience-content">
-                            <h3>Fan VIP Access Pass</h3>
-                            <p>Join the membership experience and access available fan-focused benefits, private events, and direct priority access.</p>
-                            <strong class="experience-price">Annual VIP Pass — $500</strong>
-                            <a href="#membership" class="text-link">View membership →</a>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             LUXURY PERFUME BOUTIQUE (10 PREMIER FRAGRANCES)
-        ================================================== -->
-        <section class="section perfume-section" id="perfumes">
-            <div class="container">
-                <div class="section-heading text-center">
-                    <span class="eyebrow">HAUTE PARFUMERIE</span>
-                    <h2>Luxury Perfume Boutique</h2>
-                    <p>Explore 10 world-renowned haute fragrances. Select multiple bottles to add directly into your combined reservation order.</p>
-                </div>
-
-                <div class="perfumes-boutique-grid">
-
-                    <!-- PERFUME 1 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Gucci</span>
-                            <img src="images/perfume-gucci.jpg" alt="Gucci The Alchemist's Garden" onerror="this.src='https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Gucci A Reason To Love</h3>
-                            <p class="perfume-notes">Damask Rose • Oud • Tolu Balsam</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$380.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Gucci A Reason To Love" data-price="380">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 2 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Prada</span>
-                            <img src="images/perfume-prada.jpg" alt="Prada Olfactories" onerror="this.src='https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Prada Olfactories Babylon</h3>
-                            <p class="perfume-notes">Sandalwood • Amber • Pink Pepper</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$300.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Prada Olfactories Babylon" data-price="300">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 3 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Tom Ford</span>
-                            <img src="images/perfume-tomford.jpg" alt="Tom Ford Lost Cherry" onerror="this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Tom Ford Lost Cherry</h3>
-                            <p class="perfume-notes">Black Cherry • Tonka Bean • Almond</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$395.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Tom Ford Lost Cherry" data-price="395">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 4 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">MFK</span>
-                            <img src="images/perfume-mfk.jpg" alt="Maison Francis Kurkdjian Baccarat Rouge 540" onerror="this.src='https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>MFK Baccarat Rouge 540</h3>
-                            <p class="perfume-notes">Jasmine • Saffron • Cedarwood</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$465.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="MFK Baccarat Rouge 540" data-price="465">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 5 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Creed</span>
-                            <img src="images/perfume-creed.jpg" alt="Creed Aventus" onerror="this.src='https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Creed Aventus Private Blend</h3>
-                            <p class="perfume-notes">Pineapple • Birch • Musk Ambergris</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$495.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Creed Aventus Private Blend" data-price="495">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 6 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Chanel</span>
-                            <img src="images/perfume-chanel.jpg" alt="Chanel Les Exclusifs" onerror="this.src='https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Chanel Sycomore Les Exclusifs</h3>
-                            <p class="perfume-notes">Vetiver • Pink Pepper • Cypress</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$400.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Chanel Sycomore Les Exclusifs" data-price="400">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 7 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Dior</span>
-                            <img src="images/perfume-dior.jpg" alt="Dior Vanilla Diorama" onerror="this.src='https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Dior Vanilla Diorama</h3>
-                            <p class="perfume-notes">Bourbon Vanilla • Orange • Rum</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$350.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Dior Vanilla Diorama" data-price="350">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 8 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Le Labo</span>
-                            <img src="images/perfume-lelabo.jpg" alt="Le Labo Santal 33" onerror="this.src='https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Le Labo Santal 33 Custom</h3>
-                            <p class="perfume-notes">Cardamom • Iris • Violet • Cedar</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$320.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Le Labo Santal 33 Custom" data-price="320">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 9 -->
-                    <div class="perfume-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux">Parfums de Marly</span>
-                            <img src="images/perfume-pdm.jpg" alt="Parfums de Marly Delina Exclusif" onerror="this.src='https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Parfums de Marly Delina</h3>
-                            <p class="perfume-notes">Lychee • Turkish Rose • Vanilla</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$375.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Parfums de Marly Delina" data-price="375">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PERFUME 10 -->
-                    <div class="perfume-card highlight-card">
-                        <div class="perfume-img-wrapper">
-                            <span class="badge-lux gold-badge">Exclusive Reserve</span>
-                            <img src="images/perfume-natalya.jpg" alt="Natalya L'Élixir Private Reserve" onerror="this.src='https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80'">
-                        </div>
-                        <div class="perfume-info">
-                            <h3>Natalya L'Élixir Private Reserve</h3>
-                            <p class="perfume-notes">Black Saffron • Velvet Oud • Amber</p>
-                            <div class="perfume-card-footer">
-                                <span class="perfume-price">$450.00</span>
-                                <label class="select-checkbox-btn">
-                                    <input type="checkbox" class="perfume-select-checkbox" data-name="Natalya L'Élixir Private Reserve" data-price="450">
-                                    <span>Select</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="boutique-actions text-center">
-                    <a href="#book" class="button button-orange">Proceed with Selected Perfumes & Experiences →</a>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             ABOUT SECTION
-        ================================================== -->
-        <section class="section about-section" id="about">
-            <div class="container about-grid">
-                <div>
-                    <span class="eyebrow">ABOUT THE PLATFORM</span>
-                    <h2>Designed around the experience.</h2>
-                </div>
-
-                <div class="about-copy">
-                    <p>Natalya Bookings is a centralized platform designed to simplify selected booking, luxury retail, and multi-experience requests.</p>
-                    <p>From travel coordination to private dining requests, luxury fragrance acquisition, and fan membership, every interaction is engineered to be modern, seamless, and secure.</p>
-                    <div class="management-line">
-                        Management: <strong>Budget Designs</strong>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             COMMUNITY INITIATIVE
-        ================================================== -->
-        <section class="community-section" id="community">
-            <div class="container">
-                <div class="community-copy">
-                    <span class="eyebrow light">COMMUNITY INITIATIVE</span>
-                    <h2>Working toward a <span>$1,000,000</span> community goal.</h2>
-                    <p>The community initiative brings supporters together around a large-scale goal designed to support selected community activities.</p>
-                    <small>Campaign progress represents verified figures only.</small>
-                </div>
-
-                <div class="community-card">
-                    <div class="community-card-top">
-                        <span>COMMUNITY GOAL</span>
-                        <strong>$1,000,000</strong>
-                    </div>
-
-                    <div class="progress-track">
-                        <div class="progress-bar" style="width: 43.2%;"></div>
-                    </div>
-
-                    <div class="progress-labels">
-                        <span>$432,000 RAISED</span>
-                        <span>$1M TARGET</span>
-                    </div>
-
-                    <div class="community-amount">
-                        <span>Current verified campaign amount</span>
-                        <strong>$432,000</strong>
-                    </div>
-                </div>
-
-                <div class="community-action">
-                    <a href="#contact" class="button button-orange">Ask About the Initiative</a>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             MEMBERSHIP SECTION
-        ================================================== -->
-        <section class="membership-section" id="membership">
-            <div class="container">
-                <div class="membership-heading">
-                    <span class="eyebrow">FAN EXPERIENCE</span>
-                    <h2>Become part of the experience.</h2>
-                    <p>Explore available membership benefits and select the option that best suits you.</p>
-                </div>
-
-                <div class="benefits-grid">
-                    <div class="benefit">✓ Member-only updates</div>
-                    <div class="benefit">✓ Exclusive fragrance drop access</div>
-                    <div class="benefit">✓ Priority booking opportunities</div>
-                    <div class="benefit">✓ Dedicated member support</div>
-                </div>
-
-                <a href="#book" class="button button-dark">
-                    Join the Experience
-                </a>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             GENERAL & COMBINED MULTI-SELECTION BOOKING FORM
-        ================================================== -->
-        <section class="section booking-section" id="book">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="eyebrow">COMBINED CHECKOUT & BOOKING</span>
-                    <h2>Customize your selection.</h2>
-                    <p>Select multiple experiences and fragrances below to submit a unified reservation and payment order.</p>
-                </div>
-
-                <form id="bookingForm" class="general-booking-form">
-                    
-                    <div class="form-section-title">1. Personal Information</div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="fullName">Full name</label>
-                            <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" id="email" name="email" required placeholder="john@example.com">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">Phone number</label>
-                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="bookingDate">Preferred date</label>
-                            <input type="date" id="bookingDate" name="bookingDate">
-                        </div>
-                    </div>
-
-                    <div class="form-section-title">2. Select Experiences (Multiple allowed)</div>
-                    <div class="multi-select-grid">
-                        <label class="multi-select-card">
-                            <input type="checkbox" name="selectedExperiences" value="Flight Booking" data-price="2500" class="exp-checkbox">
-                            <div class="multi-select-info">
-                                <strong>Flight Booking Pass</strong>
-                                <span>$2,500</span>
-                            </div>
-                        </label>
-
-                        <label class="multi-select-card">
-                            <input type="checkbox" name="selectedExperiences" value="Dinner Reservation" data-price="850" class="exp-checkbox">
-                            <div class="multi-select-info">
-                                <strong>Dinner Reservation</strong>
-                                <span>$850</span>
-                            </div>
-                        </label>
-
-                        <label class="multi-select-card">
-                            <input type="checkbox" name="selectedExperiences" value="Fan VIP Access Pass" data-price="500" class="exp-checkbox">
-                            <div class="multi-select-info">
-                                <strong>Fan VIP Pass</strong>
-                                <span>$500</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="form-section-title">3. Selected Fragrances</div>
-                    <div id="selectedPerfumesSummary" class="selected-perfumes-summary">
-                        <p class="empty-perfume-note">No perfumes selected yet. Scroll up to the Boutique or check boxes to add.</p>
-                    </div>
-
-                    <div class="order-total-summary">
-                        <span>Combined Order Total:</span>
-                        <strong id="combinedTotalDisplay">$0.00</strong>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Delivery Address / Special Instructions</label>
-                        <textarea id="message" name="message" rows="4" placeholder="Enter delivery address for perfumes or special requests..."></textarea>
-                    </div>
-
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="confirmation" required>
-                        <span>I confirm that the selected items and information provided are accurate.</span>
-                    </label>
-
-                    <button type="submit" class="button button-orange submit-button">
-                        Submit Order & Booking Request
-                    </button>
-
-                    <div id="formStatus" class="form-status"></div>
-                </form>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             FLIGHT BOOKING SECTION
-        ================================================== -->
-        <section class="flight-section" id="flightBooking">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="eyebrow">FLIGHT EXPERIENCE</span>
-                    <h2>Arrange your flight experience.</h2>
-                    <p>Select your departure state, destination, travel dates and guests.</p>
-                </div>
-
-                <div class="flight-layout">
-
-                    <!-- FORM -->
-                    <form id="flightBookingForm" class="flight-form">
-                        <div class="booking-step">
-                            <span>01</span>
-                            <div>
-                                <small>CUSTOMER INFORMATION</small>
-                                <h3>Your details</h3>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="flightFullName">Full name</label>
-                            <input type="text" id="flightFullName" required>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="flightEmail">Email address</label>
-                                <input type="email" id="flightEmail" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="flightPhone">Phone number</label>
-                                <input type="tel" id="flightPhone" required>
-                            </div>
-                        </div>
-
-                        <div class="booking-step">
-                            <span>02</span>
-                            <div>
-                                <small>TRAVEL ROUTE</small>
-                                <h3>Select your route</h3>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="fromState">Departing from</label>
-                                <select id="fromState" required>
-                                    <option value="">Select departure state</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="toState">Traveling to</label>
-                                <select id="toState" required>
-                                    <option value="">Select destination state</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="departureDate">Departure date</label>
-                                <input type="date" id="departureDate" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="returnDate">Return date</label>
-                                <input type="date" id="returnDate" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="flightGuests">Number of guests</label>
-                            <input type="number" id="flightGuests" min="1" max="20" value="1" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="flightMessage">Additional details</label>
-                            <textarea id="flightMessage" rows="4" placeholder="Tell management about your travel request..."></textarea>
-                        </div>
-
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="flightConfirmation" required>
-                            <span>I confirm that the information provided is accurate.</span>
-                        </label>
-
-                        <div id="flightError" class="flight-error"></div>
-
-                        <button type="submit" id="flightCheckoutButton" class="button button-orange submit-button">
-                            Continue to Secure Checkout →
-                        </button>
-
-                        <p class="checkout-note">Payment checkout will be securely handled through Stripe once connected.</p>
-                    </form>
-
-                    <!-- SUMMARY -->
-                    <aside class="flight-summary">
-                        <span class="eyebrow light">RESERVE PASS</span>
-                        <h3>Flight Pass</h3>
-
-                        <div class="route-summary">
-                            <div>
-                                <small>FROM</small>
-                                <strong id="summaryFrom">—</strong>
-                            </div>
-                            <span>→</span>
-                            <div>
-                                <small>TO</small>
-                                <strong id="summaryTo">—</strong>
-                            </div>
-                        </div>
-
-                        <div class="date-summary">
-                            <div>
-                                <small>DEPARTURE</small>
-                                <strong id="summaryDeparture">—</strong>
-                            </div>
-                            <div>
-                                <small>RETURN</small>
-                                <strong id="summaryReturn">—</strong>
-                            </div>
-                        </div>
-
-                        <div class="price-breakdown">
-                            <div class="price-row">
-                                <span>Reserve Pass</span>
-                                <strong>$2,500</strong>
-                            </div>
-                            <div class="price-row">
-                                <span>Route coordination</span>
-                                <strong id="summaryRouteFee">$0</strong>
-                            </div>
-                        </div>
-
-                        <div class="total-row">
-                            <span>Total</span>
-                            <strong id="summaryTotal">$2,500</strong>
-                        </div>
-
-                        <p class="summary-note">The displayed total is an estimate based on the selected route. Final travel arrangements are subject to management confirmation.</p>
-                    </aside>
-
-                </div>
-            </div>
-        </section>
-
-
-        <!-- =================================================
-             CONTACT SECTION
-        ================================================== -->
-        <section class="contact-section" id="contact">
-            <div class="container">
-                <span class="eyebrow">CONTACT</span>
-                <h2>Let's plan your experience.</h2>
-                <p>Have a question before booking? Contact Budget Designs.</p>
-
-                <div class="contact-grid">
-                    <a href="tel:+19382300935" class="contact-card">
-                        <span>CALL</span>
-                        <strong>+1 938 230 0935</strong>
-                    </a>
-
-                    <a href="mailto:Budgetdesignbookings@gmail.com" class="contact-card">
-                        <span>EMAIL MANAGEMENT</span>
-                        <strong>Budgetdesignbookings@gmail.com</strong>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-
-    <!-- =====================================================
-         FOOTER
+         HEADER / NAVBAR
     ====================================================== -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div>
-                <a href="#home" class="brand footer-brand">
+    <header class="site-header" id="siteHeader">
+        <div class="header-container">
+            
+            <!-- Luxury Brand Logo -->
+            <a href="#home" class="brand">
+                <div class="brand-logo-wrapper">
                     <span class="brand-mark">N</span>
-                    <span>Natalya <strong>Bookings</strong></span>
-                </a>
-                <p>A curated luxury experience & haute parfumerie platform managed by Budget Designs.</p>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">NATALYA</span>
+                    <span class="brand-sub">BOOKINGS & HAUTE PARFUMERIE</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="primary-navigation" id="primaryNavigation">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#experiences" class="nav-link">Experiences</a>
+                <a href="#perfumes" class="nav-link">Perfume Boutique</a>
+                <a href="#community" class="nav-link">Community</a>
+                <a href="#membership" class="nav-link">Membership</a>
+                <a href="#book" class="nav-btn-highlight">Book & Shop</a>
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+                    <span class="theme-icon">◐</span>
+                </button>
+            </nav>
+
+            <!-- Mobile Menu Trigger & Dark Mode Toggle -->
+            <div class="mobile-controls">
+                <button id="themeToggleMobile" class="theme-toggle mobile-only" type="button" aria-label="Toggle theme">
+                    ◐
+                </button>
+                <button class="menu-toggle-btn" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
             </div>
 
-            <div>
-                <h4>Explore</h4>
-                <a href="#experiences">Experiences</a>
-                <a href="#perfumes">Perfume Boutique</a>
-                <a href="#membership">Membership</a>
-                <a href="#book">Book & Shop</a>
-            </div>
+        </div>
+    </header>
 
-            <div>
-                <h4>Contact</h4>
-                <a href="tel:+19382300935">+1 938 230 0935</a>
-                <a href="mailto:Budgetdesignbookings@gmail.com">Budgetdesignbookings@gmail.com</a>
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-tagline">CURATED • PERSONAL • MEMORABLE</span>
+            <h1 class="hero-title">Your next <span class="highlight-text">luxury experience & fragrance</span> awaits.</h1>
+            <p class="hero-subtitle">
+                Discover a streamlined destination for selected travel, elite dining, fan experiences, iconic luxury perfume collections, and community initiatives.
+            </p>
+            <div class="hero-cta-group">
+                <a href="#book" class="btn btn-primary">Start Custom Booking</a>
+                <a href="#perfumes" class="btn btn-secondary">Shop 10 Luxury Perfumes</a>
+            </div>
+            <div class="hero-features-list">
+                <span>✓ Multi-item combined checkout</span>
+                <span>✓ Insured express delivery</span>
+                <span>✓ Managed by Budget Designs</span>
             </div>
         </div>
+    </section>
 
-        <div class="footer-bottom">
-            © <span id="currentYear"></span> Natalya Bookings. All rights reserved.<br>
-            Managed by Budget Designs.
+    <!-- EXPERIENCES SECTION -->
+    <section id="experiences" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">Curated Experiences</h2>
+            <p class="section-desc">Handcrafted packages tailored for memorable moments and exclusive dining.</p>
         </div>
-    </footer>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- PERFUME BOUTIQUE SECTION -->
+    <section id="perfumes" class="content-section dark-alt">
+        <div class="section-container">
+            <h2 class="section-title">Haute Parfumerie</h2>
+            <p class="section-desc">Explore our signature collection of 10 handcrafted, long-lasting luxury fragrances.</p>
+        </div>
+    </section>
+
+    <!-- COMMUNITY SECTION -->
+    <section id="community" class="content-section">
+        <div class="section-container">
+            <h2 class="section-title">Community Initiatives</h2>
+            <p class="section-desc">Empowering fan experiences, collaborative projects, and shared passions.</p>
+        </div>
+    </section>
+
+    <!-- BOOK / SHOP SECTION -->
+    <section id="book" class="content-section dark-alt">
+        <div class="section-container">
+            <h2 class="section-title">Reserve & Shop</h2>
+            <p class="section-desc">Select your experience or purchase iconic perfumes directly.</p>
+        </div>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>
