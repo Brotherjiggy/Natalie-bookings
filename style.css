@@ -2179,3 +2179,61 @@ footer a:hover {
   display: block;
   object-fit: cover;
 }
+/* =========================================================
+   SMART EXPERIENCE SELECTION
+   ========================================================= */
+
+.experience-card {
+  cursor: pointer;
+  position: relative;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.experience-card:hover {
+  transform: translateY(-6px);
+}
+
+.experience-card.selected {
+  border-color: #ff7a00;
+  box-shadow:
+    0 18px 45px rgba(255, 122, 0, 0.18),
+    0 0 0 2px rgba(255, 122, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.experience-card.selected::after {
+  content: "✓ SELECTED";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #ff7a00;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.experience-card input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.experience-card .experience-content {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 600px) {
+  .experience-card.selected::after {
+    top: 12px;
+    right: 12px;
+    font-size: 9px;
+  }
+}
