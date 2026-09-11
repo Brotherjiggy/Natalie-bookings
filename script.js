@@ -1191,7 +1191,166 @@ function renderSelectedPerfumes() {
 function calculateBookingTotal() {
   let total = 0;
 
-  /*
+  /* =========================================================
+     EXPERIENCES
+     ========================================================= */
+
+  const selectedExperiences = [];
+
+  $$(".experience-card input[type='checkbox']:checked")
+    .forEach((checkbox) => {
+      const card = checkbox.closest(".experience-card");
+
+      const name =
+        checkbox.dataset.name ||
+        checkbox.value ||
+        card?.querySelector("h3")?.textContent?.trim() ||
+        "Experience";
+
+      const price = Number(
+        checkbox.dataset.price || 0
+      );
+
+      selectedExperiences.push({
+        name: name.trim(),
+        price
+      });
+
+      total += price;
+    });
+
+
+  /* =========================================================
+     PERFUMES / FRAGRANCES
+     ========================================================= */
+
+  const selectedPerfumes = [];
+
+  $$(".perfume-select-checkbox").forEach((checkbox) => {
+
+    if (!checkbox.checked) return;
+
+    const card = checkbox.closest(".perfume-card");
+
+    if (!card) return;
+
+    const name =
+      checkbox.dataset.name ||
+      card.querySelector("h3")?.textContent?.trim() ||
+      "Perfume";
+
+    const price = Number(
+      checkbox.dataset.price || 0
+    );
+
+    const quantity = Math.max(
+      1,
+      Number(card.dataset.quantity || 1)
+    );
+
+    const lineTotal = price * quantity;
+
+    selectedPerfumes.push({
+      name: name.trim(),
+      price,
+      quantity,
+      lineTotal
+    });
+
+    total += lineTotal;
+  });
+
+
+  /* =========================================================
+     UPDATE EXPERIENCE SUMMARY
+     ========================================================= */
+
+  const experienceSummary =
+    $("#selectedExperiences");
+
+  if (experienceSummary) {
+
+    if (selectedExperiences.length) {
+
+      experienceSummary.value =
+        selectedExperiences
+          .map((item) => item.name)
+          .join(", ");
+
+    } else {
+
+      experienceSummary.value =
+        "No experience selected";
+    }
+  }
+
+
+  /* =========================================================
+     UPDATE FRAGRANCE SUMMARY
+     ========================================================= */
+
+  const perfumeSummary =
+    $("#selectedPerfumesSummary");
+
+  if (perfumeSummary) {
+
+    if (selectedPerfumes.length) {
+
+      perfumeSummary.value =
+        selectedPerfumes
+          .map((item) => {
+
+            if (item.quantity > 1) {
+              return `${item.name} × ${item.quantity}`;
+            }
+
+            return item.name;
+          })
+          .join(", ");
+
+    } else {
+
+      perfumeSummary.value =
+        "No perfume selected";
+    }
+  }
+
+
+  /* =========================================================
+     UPDATE COMBINED TOTAL
+     ========================================================= */
+
+  const totalDisplay =
+    $("#combinedTotalDisplay");
+
+  if (totalDisplay) {
+
+    totalDisplay.textContent =
+      "$" + total.toFixed(2);
+  }
+
+
+  /* =========================================================
+     GLOBAL BOOKING TOTAL
+     ========================================================= */
+
+  window.NatalyaBookingTotal = total;
+
+
+  /* =========================================================
+     REFRESH BASKET
+     ========================================================= */
+
+  if (
+    typeof window.NatalyaRefreshBasket ===
+    "function"
+  ) {
+    window.NatalyaRefreshBasket();
+  }
+
+
+  return total;
+}
    * -------------------------------------------------------
    * EXPERIENCE TOTAL
    * -------------------------------------------------------
