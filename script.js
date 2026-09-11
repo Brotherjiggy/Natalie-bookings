@@ -1,5 +1,5 @@
 "use strict";
- 
+
 /* =========================================================
    NATALYA BOOKINGS
    PREMIUM FRONTEND ENGINE
