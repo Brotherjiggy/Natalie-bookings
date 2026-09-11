@@ -195,6 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupBookingForm();
 
+   setupBookingBasket();
+
     setupImageFallbacks();
 
     setupEscapeKey();
@@ -206,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     calculateBookingTotal();
 
     calculateFlightSummary();
+   
 
     console.log(
         "%cNATALYA BOOKINGS",
@@ -3073,3 +3076,233 @@ window.NatalyaBookings = {
     }
 
 };
+/* =========================================================
+   NATALYA BOOKINGS — LIVE BOOKING BASKET ENGINE
+   ========================================================= */
+
+function setupBookingBasket() {
+  const basket = $("#bookingBasket");
+  const backdrop = $("#basketBackdrop");
+  const trigger = $("#basketTrigger");
+  const closeButton = $("#basketClose");
+  const itemsContainer = $("#basketItems");
+  const emptyState = $("#basketEmpty");
+  const basketTotal = $("#basketTotal");
+  const basketCount = $("#basketCount");
+  const checkoutButton = $("#basketCheckout");
+
+  if (!basket || !trigger) return;
+
+  function openBasket() {
+    basket.classList.add("open");
+    backdrop?.classList.add("open");
+
+    basket.setAttribute("aria-hidden", "false");
+
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeBasket() {
+    basket.classList.remove("open");
+    backdrop?.classList.remove("open");
+
+    basket.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+  }
+
+  trigger.addEventListener("click", openBasket);
+
+  closeButton?.addEventListener(
+    "click",
+    closeBasket
+  );
+
+  backdrop?.addEventListener(
+    "click",
+    closeBasket
+  );
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key === "Escape") {
+        closeBasket();
+      }
+    }
+  );
+
+  function renderBasket() {
+    if (!itemsContainer) return;
+
+    const items = [];
+
+    /*
+     * Experiences
+     */
+    $$(".experience-card input[type='checkbox']:checked")
+      .forEach((checkbox) => {
+        const card =
+          checkbox.closest(".experience-card");
+
+        const name =
+          checkbox.dataset.name ||
+          card?.querySelector("h3")?.textContent?.trim() ||
+          checkbox.value ||
+          "Experience";
+
+        const price =
+          Number(checkbox.dataset.price || 0);
+
+        items.push({
+          name,
+          quantity: 1,
+          price,
+          type: "Experience"
+        });
+      });
+
+    /*
+     * Perfumes
+     */
+    $$(".perfume-select-checkbox:checked")
+      .forEach((checkbox) => {
+        const card =
+          checkbox.closest(".perfume-card");
+
+        const name =
+          checkbox.dataset.name ||
+          "Perfume";
+
+        const price =
+          Number(checkbox.dataset.price || 0);
+
+        const quantity =
+          Number(card?.dataset.quantity || 1);
+
+        items.push({
+          name,
+          quantity,
+          price: price * quantity,
+          type: "Perfume"
+        });
+      });
+
+    /*
+     * Empty state
+     */
+    if (!items.length) {
+      emptyState.style.display = "block";
+      itemsContainer.innerHTML = "";
+
+      basketTotal.textContent = "$0.00";
+      basketCount.textContent = "0";
+
+      return;
+    }
+
+    emptyState.style.display = "none";
+
+    /*
+     * Render items
+     */
+    itemsContainer.innerHTML = items
+      .map((item) => {
+        const quantityText =
+          item.quantity > 1
+            ? `Quantity: ${item.quantity}`
+            : item.type;
+
+        return `
+          <div class="basket-item">
+            <div class="basket-item-info">
+              <strong>${escapeHTML(item.name)}</strong>
+              <span>${escapeHTML(quantityText)}</span>
+            </div>
+
+            <div class="basket-item-price">
+              $${item.price.toFixed(2)}
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    /*
+     * Total
+     */
+    const total =
+      items.reduce(
+        (sum, item) => sum + item.price,
+        0
+      );
+
+    basketTotal.textContent =
+      "$" + total.toFixed(2);
+
+    basketCount.textContent =
+      String(items.length);
+
+    window.NatalyaBookingTotal = total;
+  }
+
+  /*
+   * Watch selection changes
+   */
+  document.addEventListener("change", (event) => {
+    if (
+      event.target.matches(
+        ".experience-card input[type='checkbox'], .perfume-select-checkbox"
+      )
+    ) {
+      setTimeout(renderBasket, 0);
+    }
+  });
+
+  /*
+   * Watch perfume quantity buttons
+   */
+  document.addEventListener("click", (event) => {
+    if (
+      event.target.closest(".quantity-button")
+    ) {
+      setTimeout(renderBasket, 0);
+    }
+  });
+
+  /*
+   * Continue to booking
+   */
+  checkoutButton?.addEventListener(
+    "click",
+    () => {
+      closeBasket();
+
+      const bookingSection =
+        $("#book");
+
+      if (bookingSection) {
+        bookingSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    }
+  );
+
+  renderBasket();
+}
+
+
+/* =========================================================
+   SAFE HTML ESCAPE
+   ========================================================= */
+
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
