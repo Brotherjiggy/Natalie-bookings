@@ -2340,3 +2340,133 @@ footer a:hover {
     line-height: 1.55;
   }
 }
+/* =========================================================
+   NATALYA BOOKINGS — PREMIUM PERFUME SELECTION
+   ========================================================= */
+
+.perfume-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.perfume-card:hover {
+  transform: translateY(-6px);
+}
+
+.perfume-card.selected {
+  border-color: #ff7a00;
+  box-shadow:
+    0 18px 40px rgba(255, 122, 0, 0.16),
+    0 0 0 2px rgba(255, 122, 0, 0.12);
+}
+
+.perfume-card.selected::after {
+  content: "✓ SELECTED";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ff7a00;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.perfume-card .perfume-img-wrapper {
+  position: relative;
+}
+
+.perfume-card .perfume-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.perfume-card .perfume-info {
+  position: relative;
+}
+
+.perfume-card .perfume-info h3 {
+  margin-bottom: 6px;
+}
+
+.perfume-card .perfume-info p {
+  line-height: 1.5;
+}
+
+.perfume-select-checkbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Quantity controls */
+.perfume-quantity {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.perfume-card.selected .perfume-quantity {
+  display: flex;
+}
+
+.quantity-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 122, 0, 0.35);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-button:hover {
+  background: #ff7a00;
+  color: #ffffff;
+}
+
+.quantity-value {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.perfume-line-total {
+  margin-left: auto;
+  font-weight: 800;
+  color: #ff7a00;
+}
+
+/* Dark mode */
+html.dark .perfume-card {
+  background: #151515;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .perfume-card.selected {
+  border-color: #ff7a00;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .perfume-card.selected::after {
+    top: 10px;
+    right: 10px;
+  }
+}
