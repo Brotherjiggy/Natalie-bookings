@@ -728,6 +728,80 @@
             Managed by Budget Designs.
         </div>
     </footer>
+    <!-- =========================================================
+     NATALYA BOOKINGS — LIVE BOOKING BASKET
+     ========================================================= -->
+
+<aside
+  class="booking-basket"
+  id="bookingBasket"
+  aria-label="Booking summary"
+  aria-hidden="true"
+>
+  <div class="basket-header">
+    <div>
+      <span class="basket-eyebrow">YOUR SELECTION</span>
+      <h3>Booking Basket</h3>
+    </div>
+
+    <button
+      type="button"
+      class="basket-close"
+      id="basketClose"
+      aria-label="Close booking basket"
+    >
+      ×
+    </button>
+  </div>
+
+  <div class="basket-body">
+
+    <div class="basket-empty" id="basketEmpty">
+      <span class="basket-empty-icon">✦</span>
+      <p>Your basket is currently empty.</p>
+      <small>Select an experience or perfume to begin.</small>
+    </div>
+
+    <div
+      class="basket-items"
+      id="basketItems"
+    ></div>
+
+  </div>
+
+  <div class="basket-footer">
+
+    <div class="basket-total-row">
+      <span>Total</span>
+      <strong id="basketTotal">$0.00</strong>
+    </div>
+
+    <button
+      type="button"
+      class="button button-orange basket-checkout"
+      id="basketCheckout"
+    >
+      Continue to Booking
+    </button>
+
+  </div>
+</aside>
+
+<div
+  class="basket-backdrop"
+  id="basketBackdrop"
+  aria-hidden="true"
+></div>
+
+<button
+  type="button"
+  class="basket-trigger"
+  id="basketTrigger"
+  aria-label="Open booking basket"
+>
+  <span class="basket-trigger-icon">🛍</span>
+  <span class="basket-count" id="basketCount">0</span>
+</button>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
