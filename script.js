@@ -882,35 +882,198 @@ function setupExperienceSelection() {
    ========================================================= */
 
 function setupPerfumeSelection() {
+  const cards = $$(".perfume-card");
 
-    const perfumeInputs =
-        $$(".perfume-select-checkbox");
+  if (!cards.length) return;
 
-    if (!perfumeInputs.length) {
-        return;
-    }
-
-    perfumeInputs.forEach(
-        input => {
-
-            input.addEventListener(
-                "change",
-                () => {
-
-                    updateSelectedPerfumes();
-
-                    calculateBookingTotal();
-
-                    saveBookingDraft();
-
-                }
-            );
-
-        }
+  cards.forEach((card) => {
+    const checkbox = card.querySelector(
+      ".perfume-select-checkbox"
     );
 
-    updateSelectedPerfumes();
+    if (!checkbox) return;
 
+    const footer = card.querySelector(".perfume-card-footer");
+
+    if (!footer) return;
+
+    /*
+     * -------------------------------------------------------
+     * CREATE QUANTITY CONTROLS
+     * -------------------------------------------------------
+     */
+
+    let quantityBox = card.querySelector(".perfume-quantity");
+
+    if (!quantityBox) {
+      quantityBox = document.createElement("div");
+
+      quantityBox.className = "perfume-quantity";
+
+      quantityBox.innerHTML = `
+        <button
+          type="button"
+          class="quantity-button quantity-minus"
+          aria-label="Decrease quantity"
+        >−</button>
+
+        <span class="quantity-value">1</span>
+
+        <button
+          type="button"
+          class="quantity-button quantity-plus"
+          aria-label="Increase quantity"
+        >+</button>
+
+        <span class="perfume-line-total">$0.00</span>
+      `;
+
+      card.querySelector(".perfume-info").appendChild(quantityBox);
+    }
+
+    const minusButton =
+      quantityBox.querySelector(".quantity-minus");
+
+    const plusButton =
+      quantityBox.querySelector(".quantity-plus");
+
+    const quantityValue =
+      quantityBox.querySelector(".quantity-value");
+
+    const lineTotal =
+      quantityBox.querySelector(".perfume-line-total");
+
+    /*
+     * -------------------------------------------------------
+     * QUANTITY STATE
+     * -------------------------------------------------------
+     */
+
+    let quantity = Number(card.dataset.quantity || 1);
+
+    if (quantity < 1) quantity = 1;
+
+    function getPrice() {
+      return Number(checkbox.dataset.price || 0);
+    }
+
+    function updateCard() {
+      const price = getPrice();
+
+      card.dataset.quantity = quantity;
+
+      card.classList.toggle(
+        "selected",
+        checkbox.checked
+      );
+
+      quantityValue.textContent = quantity;
+
+      lineTotal.textContent =
+        "$" + (price * quantity).toFixed(2);
+
+      /*
+       * Keep the selected state visible even if
+       * the user interacts with the checkbox itself.
+       */
+      checkbox.setAttribute(
+        "aria-label",
+        `Select ${checkbox.dataset.name || "perfume"}`
+      );
+    }
+
+    /*
+     * -------------------------------------------------------
+     * CHECKBOX
+     * -------------------------------------------------------
+     */
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked && quantity < 1) {
+        quantity = 1;
+      }
+
+      updateCard();
+      calculateBookingTotal();
+    });
+
+    /*
+     * -------------------------------------------------------
+     * PLUS
+     * -------------------------------------------------------
+     */
+
+    plusButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      checkbox.checked = true;
+
+      quantity += 1;
+
+      updateCard();
+      calculateBookingTotal();
+    });
+
+    /*
+     * -------------------------------------------------------
+     * MINUS
+     * -------------------------------------------------------
+     */
+
+    minusButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (quantity > 1) {
+        quantity -= 1;
+      } else {
+        checkbox.checked = false;
+      }
+
+      updateCard();
+      calculateBookingTotal();
+    });
+
+    /*
+     * -------------------------------------------------------
+     * CLICK CARD TO SELECT
+     * -------------------------------------------------------
+     */
+
+    card.addEventListener("click", (event) => {
+      /*
+       * Don't interfere with the checkbox,
+       * quantity buttons or links.
+       */
+      if (
+        event.target.closest(
+          ".select-checkbox-btn"
+        ) ||
+        event.target.closest(
+          ".quantity-button"
+        ) ||
+        event.target.closest("a") ||
+        event.target.closest("button")
+      ) {
+        return;
+      }
+
+      checkbox.checked = !checkbox.checked;
+
+      if (checkbox.checked && quantity < 1) {
+        quantity = 1;
+      }
+
+      updateCard();
+      calculateBookingTotal();
+    });
+
+    /*
+     * Initial state
+     */
+    updateCard();
+  });
 }
 
 
@@ -1023,85 +1186,120 @@ function renderSelectedPerfumes() {
    ========================================================= */
 
 function calculateBookingTotal() {
+  let total = 0;
 
-    const form =
-        $("#bookingForm");
+  /*
+   * -------------------------------------------------------
+   * EXPERIENCE TOTAL
+   * -------------------------------------------------------
+   */
 
-    if (!form) {
-        return 0;
-    }
+  $$(".experience-card input[type='checkbox']:checked")
+    .forEach((checkbox) => {
+      total += Number(
+        checkbox.dataset.price || 0
+      );
+    });
 
-    let total = 0;
+  /*
+   * -------------------------------------------------------
+   * PERFUME TOTAL
+   * -------------------------------------------------------
+   */
 
-    /* Experience checkboxes */
+  $$(".perfume-select-checkbox:checked")
+    .forEach((checkbox) => {
+      const card = checkbox.closest(".perfume-card");
 
-    const checked =
-        form.querySelectorAll(
-            'input[type="checkbox"]:checked'
-        );
+      const price = Number(
+        checkbox.dataset.price || 0
+      );
 
-    checked.forEach(
-        checkbox => {
+      const quantity = Number(
+        card?.dataset.quantity || 1
+      );
 
-            /*
-             Only experience checkboxes have
-             data-price or recognizable values.
-            */
+      total += price * quantity;
+    });
 
-            if (
-                checkbox.classList.contains(
-                    "perfume-select-checkbox"
-                )
-            ) {
-                return;
-            }
+  /*
+   * -------------------------------------------------------
+   * UPDATE MAIN TOTAL
+   * -------------------------------------------------------
+   */
 
-            const price =
-                getCheckboxPrice(
-                    checkbox
-                );
+  const totalDisplay =
+    $("#combinedTotalDisplay");
 
-            total += price;
+  if (totalDisplay) {
+    totalDisplay.textContent =
+      "$" + total.toFixed(2);
+  }
 
-        }
-    );
+  /*
+   * -------------------------------------------------------
+   * UPDATE SELECTED EXPERIENCE SUMMARY
+   * -------------------------------------------------------
+   */
 
-    /* Perfumes */
+  const experienceSummary =
+    $("#selectedExperiences");
 
-    selectedPerfumes.forEach(
-        perfume => {
+  if (experienceSummary) {
+    const selectedExperiences =
+      $$(".experience-card input[type='checkbox']:checked")
+        .map((checkbox) => {
+          return checkbox.value ||
+            checkbox.dataset.name ||
+            checkbox.closest(".experience-card")
+              ?.querySelector("h3")
+              ?.textContent
+              ?.trim() ||
+            "Experience";
+        });
 
-            total += perfume.price;
+    experienceSummary.value =
+      selectedExperiences.join(", ");
+  }
 
-        }
-    );
+  /*
+   * -------------------------------------------------------
+   * UPDATE PERFUME SUMMARY
+   * -------------------------------------------------------
+   */
 
-    /* Update visible totals */
+  const perfumeSummary =
+    $("#selectedPerfumesSummary");
 
-    updateElementText(
-        "#combinedTotalDisplay",
-        `$${formatMoney(total)}`
-    );
+  if (perfumeSummary) {
+    const selectedPerfumes =
+      $$(".perfume-select-checkbox:checked")
+        .map((checkbox) => {
+          const card =
+            checkbox.closest(".perfume-card");
 
-    updateElementText(
-        "#bookingTotalDisplay",
-        `$${formatMoney(total)}`
-    );
+          const quantity =
+            Number(card?.dataset.quantity || 1);
 
-    updateElementText(
-        "#combinedTotal",
-        `$${formatMoney(total)}`
-    );
+          const name =
+            checkbox.dataset.name || "Perfume";
 
-    updateElementText(
-        "#bookingTotal",
-        `$${formatMoney(total)}`
-    );
+          return `${name} × ${quantity}`;
+        });
 
-    return total;
+    perfumeSummary.value =
+      selectedPerfumes.join(", ");
+  }
 
+  /*
+   * Make total available to the rest of the
+   * Natalya Bookings frontend.
+   */
+
+  window.NatalyaBookingTotal = total;
+
+  return total;
 }
-
 
 /* =========================================================
    GET EXPERIENCE PRICE
